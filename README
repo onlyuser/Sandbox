@@ -1,11 +1,11 @@
 About:
 
-    This is a sandbox chiefly for testing experimental stuff.
-    It is divided into following sub-projects:
+    This is a repo chiefly for storing experimental stuff.
+    It is divided into following sub-sections:
 
     boost_unicode:
 
-        tutorial demonstrating how to encode/decode unicode using boost utf8_codecvt_facet.hpp
+        Tutorial demonstrating how to encode/decode unicode using boost utf8_codecvt_facet.hpp
 
 References:
 
