@@ -1,0 +1,26 @@
+Document
++ Declaration
++ Element [MyApp]
+ (No attributes)
+  + Comment: [ Settings for MyApp ]
+  + Element [Messages]
+ (No attributes)
+    + Element [Welcome]
+ (No attributes)
+      + Text: [Welcome to MyApp]
+    + Element [Farewell]
+ (No attributes)
+      + Text: [Thank you for using MyApp]
+  + Element [Windows]
+ (No attributes)
+    + Element [Window]
+      + name: value=[MainFrame]
+      + x: value=[5] int=5 d=5.0
+      + y: value=[15] int=15 d=15.0
+      + w: value=[400] int=400 d=400.0
+      + h: value=[250] int=250 d=250.0
+      5 attributes
+  + Element [Connection]
+    + ip: value=[192.168.0.1] int=192 d=192.2
+    + timeout: value=[123.456000] int=123 d=123.5
+    2 attributes

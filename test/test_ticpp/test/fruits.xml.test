@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Fruits>
+        <Apple colour="green" price="1.1" amount="10" />
+        <Banana colour="yellow" price="1.5" amount="10" />
+        <Cherry colour="red" price="2.5" amount="1" />
+</Fruits>

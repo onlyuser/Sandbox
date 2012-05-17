@@ -1,0 +1,25 @@
+static coroutine:
+got number 0
+got number 1
+got number 2
+got number 3
+got number 4
+got number 5
+got number 6
+got number 7
+got number 8
+got number 9
+got number -1
+
+reentrant coroutine:
+got number 0
+got number 1
+got number 2
+got number 3
+got number 4
+got number 5
+got number 6
+got number 7
+got number 8
+got number 9
+got number -1
