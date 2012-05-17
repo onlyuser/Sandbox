@@ -17,8 +17,7 @@ Requirements:
 
     Unix tools (must be accessible from $PATH):
 
-        gcc (with -std=c++0x support), flex, bison, valgrind, cppcheck, doxygen,
-        graphviz, ticpp (static library and headers)
+        gcc (with -std=c++0x support), ticpp (static library and headers)
 
     Environment variables:
 
