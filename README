@@ -1,0 +1,46 @@
+Sandbox
+
+Copyright (C) 2011-2012 Jerry Chen <mailto:onlyuser@gmail.com>
+
+About:
+
+    The Sandbox is a collection of tests for 3rd party components used by XLang.
+    Currently, it includes the following:
+
+        test_coroutine
+        test_functor
+        test_ticpp
+        test_tinyxml
+        test_visitor
+
+Requirements:
+
+    Unix tools (must be accessible from $PATH):
+
+        gcc (with -std=c++0x support), flex, bison, valgrind, cppcheck, doxygen,
+        graphviz, ticpp (static library and headers)
+
+    Environment variables:
+
+        $EXTERN_INCLUDE_PATH -- where "ticpp/ticpp.h" resides
+        $EXTERN_LIB_PATH -- where "libticppd.a" resides
+
+Make targets:
+
+    all, test, clean.
+
+    all:    make binaries
+    test:   all + run tests
+    clean:  remove all intermediate files
+
+References:
+
+    "Coroutines in C"
+    http://www.chiark.greenend.org.uk/~sgtatham/coroutines.html
+
+    "Cooperative Visitor: A Template Technique for Visitor Creation"
+    http://www.artima.com/cppsource/cooperative_visitor.html
+
+Keywords:
+
+    stl, functor, visitor, tinyxml, ticpp
