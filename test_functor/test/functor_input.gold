@@ -1,9 +1,9 @@
-line: 12 abc
-line: 13 def
-line: 7 zxc
-int 13
-string def
-int 12
-string abc
-int 7
-string zxc
+before sort:
+12 abc
+13 def
+7 zxc
+
+after sort:
+13 def
+12 abc
+7 zxc

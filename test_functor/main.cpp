@@ -4,11 +4,11 @@
 #include <vector>
 #include <algorithm>
 
-typedef std::pair<int, std::string> PAIR_T;
+typedef std::pair<int, std::string> pair_t;
 
 struct LessThan
 {
-    bool operator()(const PAIR_T& x, const PAIR_T& y) const
+    bool operator()(const pair_t& x, const pair_t& y) const
     {
         return x.first > y.first;
     }
@@ -21,33 +21,30 @@ int main(int argc, char** argv)
         std::cout << "expect 1 arg" << std::endl;
         return 1;
     }
+    std::cout << "before sort:" << std::endl;
     std::ifstream myFile(argv[1]);
     if(!myFile.is_open())
         return 1;
-    std::vector<PAIR_T> myVec;
+    std::vector<pair_t> myVec;
     while(!myFile.eof())
     {
         char buf[256];
         myFile.getline(buf, 256);
         if(myFile.eof())
             break;
-        std::cout << "line: " << buf << std::endl;
+        std::cout << buf << std::endl;
         std::stringstream ss;
         ss << buf;
-        int x;
-        ss >> x;
-        std::string s;
-        ss >> s;
-        myVec.push_back(PAIR_T(x, s));
+        int key;
+        std::string value;
+        ss >> key >> value;
+        myVec.push_back(pair_t(key, value));
     }
     myFile.close();
+    std::cout << std::endl;
+    std::cout << "after sort:" << std::endl;
     std::sort(myVec.begin(), myVec.end(), LessThan());
-    for(std::vector<PAIR_T>::iterator p = myVec.begin(); p != myVec.end(); ++p)
-    {
-        int x = (*p).first;
-        std::cout << "int " << x << std::endl;
-        std::string s = (*p).second;
-        std::cout << "string " << s << std::endl;
-    }
+    for(std::vector<pair_t>::iterator p = myVec.begin(); p != myVec.end(); ++p)
+        std::cout << (*p).first << ' ' << (*p).second << std::endl;
     return 0;
 }
