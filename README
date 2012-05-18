@@ -15,27 +15,40 @@ About:
 
 Requirements:
 
-    Unix tools (must be accessible from $PATH):
+    Unix tools and 3rd party components (accessible from $PATH):
 
-        gcc (with -std=c++0x support), ticpp (static library and headers)
+        gcc (with -std=c++0x support), coroutine, ticpp, tinyxml
 
     Environment variables:
 
-        $EXTERN_INCLUDE_PATH -- where "ticpp/ticpp.h" resides
+        $EXTERN_INCLUDE_PATH:
+            where "coroutine/coroutine.h" resides
+            where "ticpp/ticpp.h" resides
+            where "tinyxml/tinyxml.h" resides
+
         $EXTERN_LIB_PATH -- where "libticppd.a" resides
 
 Make targets:
 
     all, test, clean.
 
-    all:    make binaries
-    test:   all + run tests
-    clean:  remove all intermediate files
+    all:   make binaries
+    test:  all + run tests
+    clean: remove all intermediate files
 
 References:
 
     "Coroutines in C"
     http://www.chiark.greenend.org.uk/~sgtatham/coroutines.html
+
+    "Function Objects"
+    http://www.sgi.com/tech/stl/functors.html
+
+    "ticpp"
+    http://code.google.com/p/ticpp/
+
+    "tinyxml"
+    http://sourceforge.net/projects/tinyxml/
 
     "Cooperative Visitor: A Template Technique for Visitor Creation"
     http://www.artima.com/cppsource/cooperative_visitor.html
