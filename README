@@ -7,11 +7,11 @@ About:
     Sandbox is a collection of tests for 3rd party components used by XLang.
     Currently, it includes the following:
 
-        test_coroutine -- an example demonstrating how to use coroutine
-        test_functor -- an example demonstrating stl functors
-        test_ticpp -- an example demonstrating how to use ticpp
-        test_tinyxml -- an example demonstrating how to use tinyxml
-        test_visitor -- an example demonstrating visitor pattern
+        test_coroutine -- an example testing coroutine
+        test_functor -- an example testing stl functors
+        test_ticpp -- an example testing ticpp
+        test_tinyxml -- an example testing tinyxml
+        test_visitor -- an example testing the visitor pattern
 
 Requirements:
 
