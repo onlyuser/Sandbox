@@ -1,12 +1,12 @@
 #include "coroutine/coroutine_cpp.h"
-#include "stdio.h"
+#include <stdio.h>
 #include <iostream>
 
 int static_ascending()
 {
     static int i;
     scrBegin;
-    for (i=0; i<10; i++)
+    for(i=0; i<10; i++)
     {
         scrReturn(i);
     }
@@ -20,7 +20,7 @@ int reentrant_ascending(ccrContParam)
     ccrEndContext(foo);
 
     ccrBegin(foo);
-    for (foo->i=0; foo->i<10; foo->i++) {
+    for(foo->i=0; foo->i<10; foo->i++) {
         ccrReturn(foo->i);
     }
     ccrFinish(-1);
@@ -33,7 +33,7 @@ void test_static_coroutine()
     {
         i = static_ascending();
         printf("got number %d\n", i);
-    } while (i != -1);
+    } while(i != -1);
 }
 
 void test_reentrant_coroutine()
@@ -42,7 +42,7 @@ void test_reentrant_coroutine()
     do
     {
         printf("got number %d\n", reentrant_ascending(&z));
-    } while (z);
+    } while(z);
 }
 
 int main()

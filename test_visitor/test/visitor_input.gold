@@ -1,15 +1,15 @@
 ThingVisitor2::visit(Thing*) {
-	ThingVisitor2::visit(ThingElem*) {
-		visit ThingElem: _0x
-	}
-	ThingVisitor2::visit(ThingElem*) {
-		visit ThingElem: _0x
-	}
-	ThingVisitor2::visit(ThingElem*) {
-		visit ThingElem: _0x
-	}
-	ThingVisitor2::visit(ThingElem*) {
-		visit ThingElem: _0x
-	}
-	visit Thing: _0x
+    ThingVisitor2::visit(ThingElem*) {
+        visit ThingElem: _0x
+    }
+    ThingVisitor2::visit(ThingElem*) {
+        visit ThingElem: _0x
+    }
+    ThingVisitor2::visit(ThingElem*) {
+        visit ThingElem: _0x
+    }
+    ThingVisitor2::visit(ThingElem*) {
+        visit ThingElem: _0x
+    }
+    visit Thing: _0x
 }

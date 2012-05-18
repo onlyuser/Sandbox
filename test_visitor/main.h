@@ -5,25 +5,25 @@
 
 struct TypeIdent
 {
-	typedef enum
-	{
-		TYPE_THING,
-		TYPE_THING_ELEM,
-	} type;
+    typedef enum
+    {
+        TYPE_THING,
+        TYPE_THING_ELEM,
+    } type;
 
-	type m_type;
+    type m_type;
 
-	TypeIdent(type _type) : m_type(_type)
-	{}
-	virtual ~TypeIdent()
-	{}
+    TypeIdent(type _type) : m_type(_type)
+    {}
+    virtual ~TypeIdent()
+    {}
 };
 
 struct Visitor
 {
     virtual ~Visitor()
     {}
-	virtual void dispatch_visit(TypeIdent* unknown) = 0;
+    virtual void dispatch_visit(TypeIdent* unknown) = 0;
 };
 
 template<class T>
@@ -57,24 +57,24 @@ struct Thing : public TypeIdent, public Visitable<Thing>
 
 struct ThingVisitor : public Visitor
 {
-	size_t m_depth;
-	std::string m_indent_string;
+    size_t m_depth;
+    std::string m_indent_string;
 
-	ThingVisitor() : m_depth(0)
-	{}
+    ThingVisitor() : m_depth(0)
+    {}
     virtual void visit(Thing* thing);
     virtual void visit(ThingElem* thing_elem);
-	void dispatch_visit(TypeIdent* unknown);
-	void enter_scope()
-	{
-		m_depth++;
-		m_indent_string = std::string(m_depth, '\t');
-	}
-	void leave_scope()
-	{
-		m_depth--;
-		m_indent_string = std::string(m_depth, '\t');
-	}
+    void dispatch_visit(TypeIdent* unknown);
+    void enter_scope()
+    {
+        m_depth++;
+        m_indent_string = std::string(m_depth*4, ' ');
+    }
+    void leave_scope()
+    {
+        m_depth--;
+        m_indent_string = std::string(m_depth*4, ' ');
+    }
 };
 
 struct ThingVisitor2 : public ThingVisitor
