@@ -1,15 +1,10 @@
-ThingVisitor2::visit(Thing*) {
-    ThingVisitor2::visit(ThingElem*) {
-        visit ThingElem: _0x
-    }
-    ThingVisitor2::visit(ThingElem*) {
-        visit ThingElem: _0x
-    }
-    ThingVisitor2::visit(ThingElem*) {
-        visit ThingElem: _0x
-    }
-    ThingVisitor2::visit(ThingElem*) {
-        visit ThingElem: _0x
-    }
-    visit Thing: _0x
-}
+name="child_0"
+name="child_1"
+name="child_2"
+name="child_3"
+name="parent"
+[override] name="child_3"
+[override] name="child_2"
+[override] name="child_1"
+[override] name="child_0"
+[override] name="parent"

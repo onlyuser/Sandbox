@@ -1,63 +1,51 @@
 #include "main.h"
 #include <iostream>
-#include <sstream>
-
-static std::string ptr_to_string(const void* x)
-{
-    std::stringstream ss;
-    ss << '_' << x;
-    std::string s = ss.str();
-    return s;
-}
 
 void ThingVisitor::visit(Thing* thing)
 {
-    for(int i=0; i<4; i++)
+	for(int i=0; i<static_cast<int>(thing->size()); i++) // default traversal
     {
-        thing->m_thing[i].accept(this);
+    	if(thing->child(i))
+    		thing->child(i)->accept(this);
     }
-    std::cout << m_indent_string << "visit Thing: " << ptr_to_string(thing) << std::endl;
+    std::cout << "name=\"" << thing->name() << '\"' << std::endl;
 }
 
 void ThingVisitor::visit(ThingElem* thing_elem)
 {
-    std::cout << m_indent_string << "visit ThingElem: " << ptr_to_string(thing_elem) << std::endl;
+    std::cout << "name=\"" << thing_elem->name() << '\"' << std::endl;
 }
 
-void ThingVisitor::dispatch_visit(TypeIdent* unknown)
+void ThingVisitorOverride::visit(Thing* thing)
 {
-    switch(unknown->m_type)
+	for(int i=static_cast<int>(thing->size())-1; i >=0; i--) // reverse traversal
     {
-    case TypeIdent::TYPE_THING:
-        visit(dynamic_cast<Thing*>(unknown));
-        break;
-    case TypeIdent::TYPE_THING_ELEM:
-        visit(dynamic_cast<ThingElem*>(unknown));
-        break;
+    	if(thing->child(i))
+    		thing->child(i)->accept(this);
     }
+    std::cout << "[override] name=\"" << thing->name() << '\"' << std::endl;
 }
 
-void ThingVisitor2::visit(Thing* thing)
+void ThingVisitorOverride::visit(ThingElem* thing_elem)
 {
-    std::cout << m_indent_string << "ThingVisitor2::visit(Thing*) {" << std::endl;
-    enter_scope();
-    ThingVisitor::visit(thing);
-    leave_scope();
-    std::cout << m_indent_string << '}' << std::endl;
-}
-
-void ThingVisitor2::visit(ThingElem* thing_elem)
-{
-    std::cout << m_indent_string << "ThingVisitor2::visit(ThingElem*) {" << std::endl;
-    enter_scope();
+    std::cout << "[override] ";
     ThingVisitor::visit(thing_elem);
-    leave_scope();
-    std::cout << m_indent_string << '}' << std::endl;
 }
 
 int main()
 {
-    Thing thing;
-    ThingVisitor2 v;
+	// set up
+    Thing thing(4, "parent");
+    thing.child(0)->name() = "child_0";
+    thing.child(1)->name() = "child_1";
+    thing.child(2)->name() = "child_2";
+    thing.child(3)->name() = "child_3";
+
+    // visit
+    ThingVisitor v;
     thing.accept(&v);
+
+    // visit override
+    ThingVisitorOverride v2;
+    thing.accept(&v2);
 }
