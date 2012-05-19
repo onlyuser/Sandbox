@@ -97,9 +97,9 @@ private:
     size_t m_size;
 };
 
-struct ThingVisitor : public Visitor
+struct DefaultTour : public Visitor
 {
-    ThingVisitor()
+    DefaultTour()
     {}
     virtual void visit(Thing* thing);
     virtual void visit(ThingElem* thing_elem);
@@ -117,7 +117,7 @@ struct ThingVisitor : public Visitor
     }
 };
 
-struct ThingVisitorOverride : public ThingVisitor
+struct DefaultTourOverride : public DefaultTour
 {
     void visit(Thing* thing);
     void visit(ThingElem* thing_elem);
