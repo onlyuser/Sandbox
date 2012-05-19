@@ -18,11 +18,11 @@ public:
     {}
     TypeIdent::type_t type()
     {
-    	return m_type;
+        return m_type;
     }
     std::string &name()
     {
-    	return m_name;
+        return m_name;
     }
 
 private:
@@ -57,7 +57,7 @@ private:
 struct ThingElem : public TypeIdent, public Visitable<ThingElem>
 {
     ThingElem(std::string name = "")
-    	: TypeIdent(TypeIdent::TYPE_THING_ELEM, name), Visitable<ThingElem>(this)
+        : TypeIdent(TypeIdent::TYPE_THING_ELEM, name), Visitable<ThingElem>(this)
     {}
 };
 
@@ -65,31 +65,31 @@ struct Thing : public TypeIdent, public Visitable<Thing>
 {
 public:
     Thing(size_t n, std::string name = "")
-    	: TypeIdent(TypeIdent::TYPE_THING, name), Visitable<Thing>(this), m_size(n)
+        : TypeIdent(TypeIdent::TYPE_THING, name), Visitable<Thing>(this), m_size(n)
     {
-    	m_thing = new ThingElem*[n];
-    	for(int i=0; i<static_cast<int>(n); i++)
-    		m_thing[i] = new ThingElem();
+        m_thing = new ThingElem*[n];
+        for(int i=0; i<static_cast<int>(n); i++)
+            m_thing[i] = new ThingElem();
     }
     ~Thing()
     {
-    	if(m_thing)
-    	{
-        	for(int i=0; i<static_cast<int>(m_size); i++)
-        	{
-        		if(m_thing[i])
-        			delete m_thing[i];
-        	}
-    		delete[] m_thing;
-    	}
+        if(m_thing)
+        {
+            for(int i=0; i<static_cast<int>(m_size); i++)
+            {
+                if(m_thing[i])
+                    delete m_thing[i];
+            }
+            delete[] m_thing;
+        }
     }
     ThingElem* child(int index)
     {
-    	return m_thing[index];
+        return m_thing[index];
     }
     size_t size() const
     {
-    	return m_size;
+        return m_size;
     }
 
 private:
