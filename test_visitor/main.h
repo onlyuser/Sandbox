@@ -34,24 +34,24 @@ struct Visitor
 {
     virtual ~Visitor()
     {}
-    virtual void dispatch_visit(TypeIdent* unknown) = 0;
+    virtual void visit_any(TypeIdent* unknown) = 0;
 };
 
 template<class T>
 class Visitable
 {
 public:
-    Visitable(T* elem) : m_ref_inst(*elem)
+    Visitable(T* instance) : m_instance(*instance)
     {}
     virtual ~Visitable()
     {}
     virtual void accept(Visitor* v)
     {
-        v->dispatch_visit(&m_ref_inst);
+        v->visit_any(&m_instance);
     }
 
 private:
-    T &m_ref_inst;
+    T &m_instance;
 };
 
 struct ThingElem : public TypeIdent, public Visitable<ThingElem>
@@ -103,7 +103,7 @@ struct DefaultTour : public Visitor
     {}
     virtual void visit(Thing* thing);
     virtual void visit(ThingElem* thing_elem);
-    void dispatch_visit(TypeIdent* unknown)
+    void visit_any(TypeIdent* unknown)
     {
         switch(unknown->type())
         {

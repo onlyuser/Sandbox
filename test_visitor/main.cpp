@@ -41,8 +41,8 @@ int main()
     thing.child(3)->name() = "child_3";
 
     DefaultTour v;
-    thing.accept(&v);
+    v.visit_any(&thing);
 
     DefaultTourOverride v2;
-    thing.accept(&v2);
+    v2.visit_any(&thing);
 }
