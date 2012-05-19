@@ -16,7 +16,7 @@ public:
     {}
     virtual ~TypeIdent()
     {}
-    TypeIdent::type_t type()
+    TypeIdent::type_t type() const
     {
         return m_type;
     }
