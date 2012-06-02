@@ -8,10 +8,10 @@ About:
     Currently, it includes the following:
 
         test_coroutine -- an example testing coroutine
-        test_functor -- an example testing stl functors
-        test_ticpp -- an example testing ticpp
-        test_tinyxml -- an example testing tinyxml
-        test_visitor -- an example testing the visitor pattern
+        test_functor   -- an example testing stl functors
+        test_ticpp     -- an example testing ticpp
+        test_tinyxml   -- an example testing tinyxml
+        test_visitor   -- an example testing the visitor pattern
 
 Requirements:
 
