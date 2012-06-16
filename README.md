@@ -27,9 +27,11 @@ Unix tools and 3rd party components (accessible from $PATH):
 
 * $EXTERN_INCLUDE_PATH:
 
+<pre>
     where "coroutine/coroutine.h" resides
     where "ticpp/ticpp.h" resides
     where "tinyxml/tinyxml.h" resides
+</pre>
 
 * $EXTERN_LIB_PATH -- where "libticppd.a" resides
 
@@ -40,9 +42,9 @@ Make targets:
 
 <table>
     <tr><th> target </th><th> action                        </th></tr>
-    <tr><td> all:   </td><td> make binaries                 </th></tr>
-    <tr><td> test:  </td><td> all + run tests               </th></tr>
-    <tr><td> clean: </td><td> remove all intermediate files </th></tr>
+    <tr><td> all    </td><td> make binaries                 </th></tr>
+    <tr><td> test   </td><td> all + run tests               </th></tr>
+    <tr><td> clean  </td><td> remove all intermediate files </th></tr>
 </table>
 
 References:
