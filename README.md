@@ -27,11 +27,11 @@ Unix tools and 3rd party components (accessible from $PATH):
 
 * $EXTERN_INCLUDE_PATH:
 
-<pre>
-    where "coroutine/coroutine.h" resides
-    where "ticpp/ticpp.h" resides
-    where "tinyxml/tinyxml.h" resides
-</pre>
+    <pre>
+        where "coroutine/coroutine.h" resides
+        where "ticpp/ticpp.h" resides
+        where "tinyxml/tinyxml.h" resides
+    </pre>
 
 * $EXTERN_LIB_PATH -- where "libticppd.a" resides
 
