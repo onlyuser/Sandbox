@@ -6,7 +6,7 @@ Copyright (C) 2011-2012 Jerry Chen <mailto:onlyuser@gmail.com>
 About:
 ------
 
-Sandbox is a collection of tests for 3rd party components used by XLang.
+Sandbox is a collection of experimental code.
 
 **Currently, it includes the following:**
 
