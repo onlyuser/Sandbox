@@ -63,7 +63,7 @@ References:
     <dt>"tinyxml"</dt>
     <dd>http://sourceforge.net/projects/tinyxml/</dd>
 
-    <dt>"Cooperative Visitor: A Template Technique for Visitor Creation"</dt>
+    <dt>"Cooperative VisitorIFace: A Template Technique for VisitorIFace Creation"</dt>
     <dd>http://www.artima.com/cppsource/cooperative_visitor.html</dd>
 </dl>
 

@@ -3,7 +3,7 @@
 
 #include <string>
 
-class TypeIdent
+class TypeIdentIface
 {
 public:
     typedef enum
@@ -12,11 +12,11 @@ public:
         TYPE_THING_ELEM,
     } type_t;
 
-    TypeIdent(type_t _type, std::string name) : m_type(_type), m_name(name)
+    TypeIdentIface(type_t _type, std::string name) : m_type(_type), m_name(name)
     {}
-    virtual ~TypeIdent()
+    virtual ~TypeIdentIface()
     {}
-    TypeIdent::type_t type() const
+    TypeIdentIface::type_t type() const
     {
         return m_type;
     }
@@ -30,11 +30,11 @@ private:
     std::string m_name;
 };
 
-struct Visitor
+struct VisitorIFace
 {
-    virtual ~Visitor()
+    virtual ~VisitorIFace()
     {}
-    virtual void visit_any(TypeIdent* unknown) = 0;
+    virtual void visit_any(TypeIdentIface* unknown) = 0;
 };
 
 template<class T>
@@ -45,7 +45,7 @@ public:
     {}
     virtual ~Visitable()
     {}
-    virtual void accept(Visitor* v)
+    virtual void accept(VisitorIFace* v)
     {
         v->visit_any(&m_instance);
     }
@@ -54,18 +54,18 @@ private:
     T &m_instance;
 };
 
-struct ThingElem : public TypeIdent, public Visitable<ThingElem>
+struct ThingElem : public TypeIdentIface, public Visitable<ThingElem>
 {
     ThingElem(std::string name = "")
-        : TypeIdent(TypeIdent::TYPE_THING_ELEM, name), Visitable<ThingElem>(this)
+        : TypeIdentIface(TypeIdentIface::TYPE_THING_ELEM, name), Visitable<ThingElem>(this)
     {}
 };
 
-struct Thing : public TypeIdent, public Visitable<Thing>
+struct Thing : public TypeIdentIface, public Visitable<Thing>
 {
 public:
     Thing(size_t n, std::string name = "")
-        : TypeIdent(TypeIdent::TYPE_THING, name), Visitable<Thing>(this), m_size(n)
+        : TypeIdentIface(TypeIdentIface::TYPE_THING, name), Visitable<Thing>(this), m_size(n)
     {
         m_thing = new ThingElem*[n];
         for(int i=0; i<static_cast<int>(n); i++)
@@ -97,27 +97,27 @@ private:
     size_t m_size;
 };
 
-struct DefaultTour : public Visitor
+struct VisitorDFS : public VisitorIFace
 {
-    DefaultTour()
+    VisitorDFS()
     {}
     virtual void visit(Thing* thing);
     virtual void visit(ThingElem* thing_elem);
-    void visit_any(TypeIdent* unknown)
+    void visit_any(TypeIdentIface* unknown)
     {
         switch(unknown->type())
         {
-        case TypeIdent::TYPE_THING:
+        case TypeIdentIface::TYPE_THING:
             visit(dynamic_cast<Thing*>(unknown));
             break;
-        case TypeIdent::TYPE_THING_ELEM:
+        case TypeIdentIface::TYPE_THING_ELEM:
             visit(dynamic_cast<ThingElem*>(unknown));
             break;
         }
     }
 };
 
-struct DefaultTourOverride : public DefaultTour
+struct MyVisitorDFS : public VisitorDFS
 {
     void visit(Thing* thing);
     void visit(ThingElem* thing_elem);
