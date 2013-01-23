@@ -22,6 +22,7 @@ SUBPATHS = \
 	test_functor \
 	test_ticpp \
 	test_tinyxml \
+	test_variant \
 	test_visitor
 
 .DEFAULT_GOAL : all
