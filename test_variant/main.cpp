@@ -12,7 +12,7 @@ int main(int argc, char**argv)
     std::cout << "value=" << boost::get<int>(v) << ", type_id=" << v.which() << std::endl;
     boost::apply_visitor(MyVisitor(), v);
 
-    v = 3.14f;
+    v = 3.14;
     std::cout << "value=" << boost::get<double>(v) << ", type_id=" << v.which() << std::endl;
     boost::apply_visitor(MyVisitor(), v);
 
