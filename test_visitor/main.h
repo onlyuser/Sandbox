@@ -117,7 +117,7 @@ struct VisitorDFS : public VisitorIFace
     }
 };
 
-struct MyVisitorDFS : public VisitorDFS
+struct ReverseVisitorDFS : public VisitorDFS
 {
     void visit(Thing* thing);
     void visit(ThingElem* thing_elem);

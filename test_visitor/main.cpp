@@ -16,19 +16,19 @@ void VisitorDFS::visit(ThingElem* thing_elem)
     std::cout << "name=\"" << thing_elem->name() << '\"' << std::endl;
 }
 
-void MyVisitorDFS::visit(Thing* thing)
+void ReverseVisitorDFS::visit(Thing* thing)
 {
     for(int i=static_cast<int>(thing->size())-1; i >=0; i--) // reverse traversal
     {
         if(thing->child(i))
             thing->child(i)->accept(this);
     }
-    std::cout << "[override] name=\"" << thing->name() << '\"' << std::endl;
+    std::cout << "[reverse] name=\"" << thing->name() << '\"' << std::endl;
 }
 
-void MyVisitorDFS::visit(ThingElem* thing_elem)
+void ReverseVisitorDFS::visit(ThingElem* thing_elem)
 {
-    std::cout << "[override] ";
+    std::cout << "[reverse] ";
     VisitorDFS::visit(thing_elem);
 }
 
@@ -43,6 +43,6 @@ int main()
     VisitorDFS v;
     v.visit_any(&thing);
 
-    MyVisitorDFS v2;
+    ReverseVisitorDFS v2;
     v2.visit_any(&thing);
 }
