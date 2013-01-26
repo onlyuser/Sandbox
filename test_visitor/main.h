@@ -3,20 +3,20 @@
 
 #include <string>
 
-class TypeIdentIface
+class NodeIdentIface
 {
 public:
     typedef enum
     {
-        TYPE_THING,
-        TYPE_THING_ELEM,
+        TYPE_INNER_NODE,
+        TYPE_TERM_NODE,
     } type_t;
 
-    TypeIdentIface(type_t _type, std::string name) : m_type(_type), m_name(name)
+    NodeIdentIface(type_t _type, std::string name) : m_type(_type), m_name(name)
     {}
-    virtual ~TypeIdentIface()
+    virtual ~NodeIdentIface()
     {}
-    TypeIdentIface::type_t type() const
+    NodeIdentIface::type_t type() const
     {
         return m_type;
     }
@@ -34,7 +34,7 @@ struct VisitorIFace
 {
     virtual ~VisitorIFace()
     {}
-    virtual void visit_any(TypeIdentIface* unknown) = 0;
+    virtual void visit_any(NodeIdentIface* unknown) = 0;
 };
 
 template<class T>
@@ -54,38 +54,38 @@ private:
     T &m_instance;
 };
 
-struct ThingElem : public TypeIdentIface, public Visitable<ThingElem>
+struct TermNode : public NodeIdentIface, public Visitable<TermNode>
 {
-    ThingElem(std::string name = "")
-        : TypeIdentIface(TypeIdentIface::TYPE_THING_ELEM, name), Visitable<ThingElem>(this)
+    TermNode(std::string name = "")
+        : NodeIdentIface(NodeIdentIface::TYPE_TERM_NODE, name), Visitable<TermNode>(this)
     {}
 };
 
-struct Thing : public TypeIdentIface, public Visitable<Thing>
+struct InnerNode : public NodeIdentIface, public Visitable<InnerNode>
 {
 public:
-    Thing(size_t n, std::string name = "")
-        : TypeIdentIface(TypeIdentIface::TYPE_THING, name), Visitable<Thing>(this), m_size(n)
+    InnerNode(size_t n, std::string name = "")
+        : NodeIdentIface(NodeIdentIface::TYPE_INNER_NODE, name), Visitable<InnerNode>(this), m_size(n)
     {
-        m_thing = new ThingElem*[n];
+        m_children = new TermNode*[n];
         for(int i=0; i<static_cast<int>(n); i++)
-            m_thing[i] = new ThingElem();
+            m_children[i] = new TermNode();
     }
-    ~Thing()
+    ~InnerNode()
     {
-        if(m_thing)
+        if(m_children)
         {
             for(int i=0; i<static_cast<int>(m_size); i++)
             {
-                if(m_thing[i])
-                    delete m_thing[i];
+                if(m_children[i])
+                    delete m_children[i];
             }
-            delete[] m_thing;
+            delete[] m_children;
         }
     }
-    ThingElem* child(int index)
+    TermNode* child(int index)
     {
-        return m_thing[index];
+        return m_children[index];
     }
     size_t size() const
     {
@@ -93,7 +93,7 @@ public:
     }
 
 private:
-    ThingElem** m_thing;
+    TermNode** m_children;
     size_t m_size;
 };
 
@@ -101,17 +101,17 @@ struct VisitorDFS : public VisitorIFace
 {
     VisitorDFS()
     {}
-    virtual void visit(Thing* thing);
-    virtual void visit(ThingElem* thing_elem);
-    void visit_any(TypeIdentIface* unknown)
+    virtual void visit(InnerNode* inner_node);
+    virtual void visit(TermNode* term_node);
+    void visit_any(NodeIdentIface* unknown)
     {
         switch(unknown->type())
         {
-        case TypeIdentIface::TYPE_THING:
-            visit(dynamic_cast<Thing*>(unknown));
+        case NodeIdentIface::TYPE_INNER_NODE:
+            visit(dynamic_cast<InnerNode*>(unknown));
             break;
-        case TypeIdentIface::TYPE_THING_ELEM:
-            visit(dynamic_cast<ThingElem*>(unknown));
+        case NodeIdentIface::TYPE_TERM_NODE:
+            visit(dynamic_cast<TermNode*>(unknown));
             break;
         }
     }
@@ -119,8 +119,8 @@ struct VisitorDFS : public VisitorIFace
 
 struct ReverseVisitorDFS : public VisitorDFS
 {
-    void visit(Thing* thing);
-    void visit(ThingElem* thing_elem);
+    void visit(InnerNode* inner_node);
+    void visit(TermNode* term_node);
 };
 
 #endif

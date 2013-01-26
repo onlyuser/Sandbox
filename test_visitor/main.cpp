@@ -1,48 +1,48 @@
 #include "main.h"
 #include <iostream>
 
-void VisitorDFS::visit(Thing* thing)
+void VisitorDFS::visit(InnerNode* inner_node)
 {
-    for(int i=0; i<static_cast<int>(thing->size()); i++) // default traversal
+    for(int i=0; i<static_cast<int>(inner_node->size()); i++) // default traversal
     {
-        if(thing->child(i))
-            thing->child(i)->accept(this);
+        if(inner_node->child(i))
+            inner_node->child(i)->accept(this);
     }
-    std::cout << "name=\"" << thing->name() << '\"' << std::endl;
+    std::cout << "name=\"" << inner_node->name() << '\"' << std::endl;
 }
 
-void VisitorDFS::visit(ThingElem* thing_elem)
+void VisitorDFS::visit(TermNode* term_node)
 {
-    std::cout << "name=\"" << thing_elem->name() << '\"' << std::endl;
+    std::cout << "name=\"" << term_node->name() << '\"' << std::endl;
 }
 
-void ReverseVisitorDFS::visit(Thing* thing)
+void ReverseVisitorDFS::visit(InnerNode* inner_node)
 {
-    for(int i=static_cast<int>(thing->size())-1; i >=0; i--) // reverse traversal
+    for(int i=static_cast<int>(inner_node->size())-1; i >=0; i--) // reverse traversal
     {
-        if(thing->child(i))
-            thing->child(i)->accept(this);
+        if(inner_node->child(i))
+            inner_node->child(i)->accept(this);
     }
-    std::cout << "[reverse] name=\"" << thing->name() << '\"' << std::endl;
+    std::cout << "[reverse] name=\"" << inner_node->name() << '\"' << std::endl;
 }
 
-void ReverseVisitorDFS::visit(ThingElem* thing_elem)
+void ReverseVisitorDFS::visit(TermNode* term_node)
 {
     std::cout << "[reverse] ";
-    VisitorDFS::visit(thing_elem);
+    VisitorDFS::visit(term_node);
 }
 
 int main()
 {
-    Thing thing(4, "parent");
-    thing.child(0)->name() = "child_0";
-    thing.child(1)->name() = "child_1";
-    thing.child(2)->name() = "child_2";
-    thing.child(3)->name() = "child_3";
+    InnerNode inner_node(4, "parent");
+    inner_node.child(0)->name() = "child_0";
+    inner_node.child(1)->name() = "child_1";
+    inner_node.child(2)->name() = "child_2";
+    inner_node.child(3)->name() = "child_3";
 
     VisitorDFS v;
-    v.visit_any(&thing);
+    v.visit_any(&inner_node);
 
     ReverseVisitorDFS v2;
-    v2.visit_any(&thing);
+    v2.visit_any(&inner_node);
 }
