@@ -10,11 +10,12 @@ Sandbox is a collection of experimental code.
 
 **Currently, it includes the following:**
 
-* test_coroutine -- an example testing coroutine
-* test_functor   -- an example testing stl functors
-* test_ticpp     -- an example testing ticpp
-* test_tinyxml   -- an example testing tinyxml
-* test_visitor   -- an example testing the visitor pattern
+* test_coroutine -- test for coroutine
+* test_functor   -- test for stl functor
+* test_ticpp     -- test for ticpp
+* test_tinyxml   -- test for tinyxml
+* test_variant   -- test for boost variant
+* test_visitor   -- test for visitor pattern
 
 Requirements:
 -------------
@@ -63,6 +64,9 @@ References:
     <dt>"tinyxml"</dt>
     <dd>http://sourceforge.net/projects/tinyxml/</dd>
 
+    <dt>"Chapter 34. Boost.Variant"</dt>
+    <dd>http://www.boost.org/doc/libs/1_52_0/doc/html/variant.html</dd>
+
     <dt>"Cooperative VisitorIFace: A Template Technique for VisitorIFace Creation"</dt>
     <dd>http://www.artima.com/cppsource/cooperative_visitor.html</dd>
 </dl>
@@ -70,4 +74,4 @@ References:
 Keywords:
 ---------
 
-    stl, functor, visitor, tinyxml, ticpp
+    stl, boost, functor, visitor, variant, tinyxml, ticpp
