@@ -4,23 +4,37 @@
 #include <boost/variant/get.hpp>
 #include <string>
 
+template<>
+void ExtendedVisitor::operator()<Node*>(Node* &x) const
+{
+	x->accept(this);
+}
+
 int main(int argc, char**argv)
 {
-    boost::variant<int, double, std::string, char> v;
+    boost::variant<int, double, std::string, char, Node*> x;
 
-    v = 13;
-    std::cout << "value=" << boost::get<int>(v) << ", type_id=" << v.which() << std::endl;
-    boost::apply_visitor(MyVisitor(), v);
+    x = 13;
+    std::cout << "value=" << boost::get<int>(x) << ", type_id=" << x.which() << std::endl;
+    boost::apply_visitor(ExtendedVisitor(), x);
 
-    v = 3.14;
-    std::cout << "value=" << boost::get<double>(v) << ", type_id=" << v.which() << std::endl;
-    boost::apply_visitor(MyVisitor(), v);
+    x = 3.14;
+    std::cout << "value=" << boost::get<double>(x) << ", type_id=" << x.which() << std::endl;
+    boost::apply_visitor(ExtendedVisitor(), x);
 
-    v = "hello";
-    std::cout << "value=" << boost::get<std::string>(v) << ", type_id=" << v.which() << std::endl;
-    boost::apply_visitor(MyVisitor(), v);
+    x = "hello";
+    std::cout << "value=" << boost::get<std::string>(x) << ", type_id=" << x.which() << std::endl;
+    boost::apply_visitor(ExtendedVisitor(), x);
 
-    v = 'c';
-    std::cout << "value=" << boost::get<char>(v) << ", type_id=" << v.which() << std::endl;
-    boost::apply_visitor(MyVisitor(), v);
+    x = 'c';
+    std::cout << "value=" << boost::get<char>(x) << ", type_id=" << x.which() << std::endl;
+    boost::apply_visitor(ExtendedVisitor(), x);
+
+    x = new Node();
+    std::cout << "value=" << boost::get<Node*>(x) << ", type_id=" << x.which() << std::endl;
+    boost::apply_visitor(ExtendedVisitor(), x);
+
+    x = new ExtendedNode();
+    std::cout << "value=" << boost::get<Node*>(x) << ", type_id=" << x.which() << std::endl;
+    boost::apply_visitor(ExtendedVisitor(), x);
 }
