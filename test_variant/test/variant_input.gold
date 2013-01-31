@@ -6,3 +6,7 @@ value=hello, type_id=2
 value=hello
 value=c, type_id=3
 value=c
+value=0x??, type_id=4
+Node
+value=0x??, type_id=4
+ExtendedNode

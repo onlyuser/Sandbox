@@ -3,7 +3,6 @@
 
 #include <boost/variant/static_visitor.hpp>
 #include <iostream>
-#include <string>
 
 typedef boost::static_visitor<> Visitor;
 
@@ -16,18 +15,12 @@ struct Visitable
 
 struct Node : public Visitable
 {
-	void accept(const Visitor* v)
-	{
-	    std::cout << "Node" << std::endl;
-	}
+	void accept(const Visitor* v);
 };
 
 struct ExtendedNode : public Node
 {
-	void accept(const Visitor* v)
-	{
-	    std::cout << "ExtendedNode" << std::endl;
-	}
+	void accept(const Visitor* v);
 };
 
 class ExtendedVisitor : public Visitor
