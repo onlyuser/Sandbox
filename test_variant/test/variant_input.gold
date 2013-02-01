@@ -7,6 +7,6 @@ value=hello
 value=c, type_id=3
 value=c
 value=0x??, type_id=4
-Node
+ExtendedVisitor visits ExtendedVisitable
 value=0x??, type_id=4
-ExtendedNode
+ExtendedVisitor2 visits ExtendedVisitable2

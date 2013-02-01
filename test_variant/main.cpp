@@ -5,46 +5,58 @@
 #include <string>
 
 template<>
-void ExtendedVisitor::operator()<Node*>(Node* &x) const
+void Visitor::operator()<Visitable*>(Visitable* &x) const
 {
 	x->accept(this);
 }
 
-void Node::accept(const Visitor* v)
+void ExtendedVisitor::visit(ExtendedVisitable* x) const
 {
-    std::cout << "Node" << std::endl;
+    std::cout << "ExtendedVisitor visits ExtendedVisitable" << std::endl;
 }
 
-void ExtendedNode::accept(const Visitor* v)
+void ExtendedVisitor::visit(ExtendedVisitable2* x) const
 {
-    std::cout << "ExtendedNode" << std::endl;
+    std::cout << "ExtendedVisitor visits ExtendedVisitable2" << std::endl;
+}
+
+void ExtendedVisitor2::visit(ExtendedVisitable* x) const
+{
+    std::cout << "ExtendedVisitor2 visits ExtendedVisitable" << std::endl;
+}
+
+void ExtendedVisitor2::visit(ExtendedVisitable2* x) const
+{
+    std::cout << "ExtendedVisitor2 visits ExtendedVisitable2" << std::endl;
 }
 
 int main(int argc, char**argv)
 {
-    boost::variant<int, double, std::string, char, Node*> x;
+    boost::variant<int, double, std::string, char, Visitable*> x;
+    ExtendedVisitor v;
+    ExtendedVisitor2 v2;
 
     x = 13;
     std::cout << "value=" << boost::get<int>(x) << ", type_id=" << x.which() << std::endl;
-    boost::apply_visitor(ExtendedVisitor(), x);
+    boost::apply_visitor(v, x);
 
     x = 3.14;
     std::cout << "value=" << boost::get<double>(x) << ", type_id=" << x.which() << std::endl;
-    boost::apply_visitor(ExtendedVisitor(), x);
+    boost::apply_visitor(v, x);
 
     x = "hello";
     std::cout << "value=" << boost::get<std::string>(x) << ", type_id=" << x.which() << std::endl;
-    boost::apply_visitor(ExtendedVisitor(), x);
+    boost::apply_visitor(v, x);
 
     x = 'c';
     std::cout << "value=" << boost::get<char>(x) << ", type_id=" << x.which() << std::endl;
-    boost::apply_visitor(ExtendedVisitor(), x);
+    boost::apply_visitor(v, x);
 
-    x = new Node();
+    x = new ExtendedVisitable();
     std::cout << "value=" << "0x??" /*boost::get<Node*>(x)*/ << ", type_id=" << x.which() << std::endl;
-    boost::apply_visitor(ExtendedVisitor(), x);
+    boost::apply_visitor(v, x);
 
-    x = new ExtendedNode();
+    x = new ExtendedVisitable2();
     std::cout << "value=" << "0x??" /*boost::get<Node*>(x)*/ << ", type_id=" << x.which() << std::endl;
-    boost::apply_visitor(ExtendedVisitor(), x);
+    boost::apply_visitor(v2, x);
 }
