@@ -53,10 +53,10 @@ int main(int argc, char**argv)
     boost::apply_visitor(v, x);
 
     x = new ExtendedVisitable();
-    std::cout << "value=" << "0x??" /*boost::get<Node*>(x)*/ << ", type_id=" << x.which() << std::endl;
+    std::cout << "value=" << "0x??" /*boost::get<Visitable*>(x)*/ << ", type_id=" << x.which() << std::endl;
     boost::apply_visitor(v, x);
 
     x = new ExtendedVisitable2();
-    std::cout << "value=" << "0x??" /*boost::get<Node*>(x)*/ << ", type_id=" << x.which() << std::endl;
+    std::cout << "value=" << "0x??" /*boost::get<Visitable*>(x)*/ << ", type_id=" << x.which() << std::endl;
     boost::apply_visitor(v2, x);
 }
