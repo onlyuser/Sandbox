@@ -34,7 +34,7 @@ struct VisitorIFace
 {
     virtual ~VisitorIFace()
     {}
-    virtual void visit_any(NodeIdentIface* unknown) = 0;
+    virtual void dispatch_visit(NodeIdentIface* unknown) = 0;
 };
 
 template<class T>
@@ -47,7 +47,7 @@ public:
     {}
     virtual void accept(VisitorIFace* v)
     {
-        v->visit_any(&m_instance);
+        v->dispatch_visit(&m_instance);
     }
 
 private:
@@ -103,16 +103,16 @@ struct VisitorDFS : public VisitorIFace
     {}
     virtual void visit(InnerNode* inner_node);
     virtual void visit(TermNode* term_node);
-    void visit_any(NodeIdentIface* unknown)
+    void dispatch_visit(NodeIdentIface* unknown)
     {
         switch(unknown->type())
         {
-        case NodeIdentIface::TYPE_INNER_NODE:
-            visit(dynamic_cast<InnerNode*>(unknown));
-            break;
-        case NodeIdentIface::TYPE_TERM_NODE:
-            visit(dynamic_cast<TermNode*>(unknown));
-            break;
+			case NodeIdentIface::TYPE_INNER_NODE:
+				visit(dynamic_cast<InnerNode*>(unknown));
+				break;
+			case NodeIdentIface::TYPE_TERM_NODE:
+				visit(dynamic_cast<TermNode*>(unknown));
+				break;
         }
     }
 };

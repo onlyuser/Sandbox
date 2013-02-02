@@ -41,8 +41,8 @@ int main()
     inner_node.child(3)->name() = "child_3";
 
     VisitorDFS v;
-    v.visit_any(&inner_node);
+    v.dispatch_visit(&inner_node);
 
     ReverseVisitorDFS v2;
-    v2.visit_any(&inner_node);
+    v2.dispatch_visit(&inner_node);
 }
