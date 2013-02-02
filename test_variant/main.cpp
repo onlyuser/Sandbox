@@ -4,8 +4,6 @@
 #include <boost/variant/get.hpp>
 #include <string>
 
-// STEP #1: Lock Visitor and Visitee to static type through
-//          boost::apply_visitor magic
 // STEP #2: Promote Visitee to dynamic type through "accept" vtable-lookup
 template<>
 void Visitor::operator()<Visitable*>(Visitable* &x) const
@@ -57,9 +55,13 @@ int main(int argc, char**argv)
 
     x = new ExtendedVisitable();
     std::cout << "value=" << "0x??" /*boost::get<Visitable*>(x)*/ << ", type_id=" << x.which() << std::endl;
+    // STEP #1A: Begin by locking Visitor and Visitee to static type through
+    //           boost::apply_visitor magic
     boost::apply_visitor(v, x);
 
     x = new ExtendedVisitable2();
     std::cout << "value=" << "0x??" /*boost::get<Visitable*>(x)*/ << ", type_id=" << x.which() << std::endl;
+    // STEP #1B: Begin by locking Visitor and Visitee to static type through
+    //           boost::apply_visitor magic
     boost::apply_visitor(v2, x);
 }

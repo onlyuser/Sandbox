@@ -41,8 +41,12 @@ int main()
     inner_node.child(3)->name() = "child_3";
 
     VisitorDFS v;
+    // STEP #1A: Begin by promoting Visitor to dynamic type through
+    //           "dispatch_visit" vtable-lookup
     v.dispatch_visit(&inner_node);
 
     ReverseVisitorDFS v2;
+    // STEP #1B: Begin by promoting Visitor to dynamic type through
+    //           "dispatch_visit" vtable-lookup
     v2.dispatch_visit(&inner_node);
 }
