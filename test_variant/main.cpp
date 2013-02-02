@@ -4,6 +4,9 @@
 #include <boost/variant/get.hpp>
 #include <string>
 
+// BASIC FLOW: boost::apply_visitor => Visitor::operator() =>
+//             Visitable::accept => Visitor::visit
+
 // STEP #2: Promote Visitee to dynamic type through "accept" vtable-lookup
 template<>
 void Visitor::operator()<Visitable*>(Visitable* &x) const

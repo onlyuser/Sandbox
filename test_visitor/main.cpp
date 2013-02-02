@@ -1,6 +1,9 @@
 #include "main.h"
 #include <iostream>
 
+// BASIC FLOW: Visitor::dispatch_visit => Visitor::visit =>
+//             Visitable::accept => Visitor::visit
+
 void VisitorDFS::visit(InnerNode* inner_node) const
 {
     for(int i=0; i<static_cast<int>(inner_node->size()); i++) // default traversal
