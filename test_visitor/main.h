@@ -41,17 +41,18 @@ template<class T>
 class Visitable
 {
 public:
-    Visitable(T* instance) : m_instance(*instance)
+    Visitable(T* instance) : m_instance(instance)
     {}
     virtual ~Visitable()
     {}
     virtual void accept(VisitorIFace* v)
     {
-        v->dispatch_visit(&m_instance);
+		// "Java Tip 98" from http://en.wikipedia.org/wiki/Visitor_pattern
+        v->dispatch_visit(m_instance);
     }
 
 private:
-    T &m_instance;
+    T *m_instance;
 };
 
 struct TermNode : public NodeIdentIface, public Visitable<TermNode>
