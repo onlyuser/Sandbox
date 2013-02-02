@@ -32,7 +32,7 @@ void ReverseVisitorDFS::visit(TermNode* term_node) const
     VisitorDFS::visit(term_node);
 }
 
-int main()
+int main(int argc, char** argv)
 {
     InnerNode inner_node(4, "parent");
     inner_node.child(0)->name() = "child_0";
@@ -49,4 +49,6 @@ int main()
     // STEP #1B: Begin by promoting Visitor to dynamic type through
     //           "dispatch_visit" vtable-lookup
     v2.dispatch_visit(&inner_node);
+
+    return 0;
 }

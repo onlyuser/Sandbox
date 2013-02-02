@@ -31,7 +31,7 @@ void ExtendedVisitor2::visit(ExtendedVisitable2* x) const
     std::cout << "ExtendedVisitor2 visits ExtendedVisitable2" << std::endl;
 }
 
-int main(int argc, char**argv)
+int main(int argc, char** argv)
 {
     boost::variant<int, double, std::string, char, Visitable*> x;
     ExtendedVisitor v;
@@ -64,4 +64,6 @@ int main(int argc, char**argv)
     // STEP #1B: Begin by locking Visitor and Visitee to static type through
     //           boost::apply_visitor magic
     boost::apply_visitor(v2, x);
+
+    return 0;
 }

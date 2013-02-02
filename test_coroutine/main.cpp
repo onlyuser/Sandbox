@@ -45,7 +45,7 @@ void test_reentrant_coroutine()
     } while(z);
 }
 
-int main()
+int main(int argc, char** argv)
 {
     std::cout << "static coroutine:" << std::endl;
     test_static_coroutine();

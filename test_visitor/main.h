@@ -109,7 +109,8 @@ struct VisitorDFS : public VisitorIFace
     virtual void visit(InnerNode* inner_node) const;
     virtual void visit(TermNode* term_node) const;
     // STEP #2: Simulate promoting Visitee to dynamic type through matching
-    //          method-overload of "visit" to dynamic casted Visitee type
+    //          method-overload of "visit" to dynamically casted Visitee static
+    //          type
     void dispatch_visit(NodeIdentIface* unknown) const
     {
         switch(unknown->type())

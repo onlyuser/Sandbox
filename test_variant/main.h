@@ -4,12 +4,6 @@
 #include <boost/variant/static_visitor.hpp>
 #include <iostream>
 
-// DESIGN GOALS:
-// 1) Visitor visits Visitee
-// 2) Visitor uses double dispatch
-// 3) Visitee does not depend on Visitor
-// 4) Visitation uses boost::apply_visitor, albeit forced
-
 class ExtendedVisitable;
 class ExtendedVisitable2;
 
