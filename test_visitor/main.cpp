@@ -1,7 +1,7 @@
 #include "main.h"
 #include <iostream>
 
-void VisitorDFS::visit(InnerNode* inner_node)
+void VisitorDFS::visit(InnerNode* inner_node) const
 {
     for(int i=0; i<static_cast<int>(inner_node->size()); i++) // default traversal
     {
@@ -11,12 +11,12 @@ void VisitorDFS::visit(InnerNode* inner_node)
     std::cout << "name=\"" << inner_node->name() << '\"' << std::endl;
 }
 
-void VisitorDFS::visit(TermNode* term_node)
+void VisitorDFS::visit(TermNode* term_node) const
 {
     std::cout << "name=\"" << term_node->name() << '\"' << std::endl;
 }
 
-void ReverseVisitorDFS::visit(InnerNode* inner_node)
+void ReverseVisitorDFS::visit(InnerNode* inner_node) const
 {
     for(int i=static_cast<int>(inner_node->size())-1; i >=0; i--) // reverse traversal
     {
@@ -26,7 +26,7 @@ void ReverseVisitorDFS::visit(InnerNode* inner_node)
     std::cout << "[reverse] name=\"" << inner_node->name() << '\"' << std::endl;
 }
 
-void ReverseVisitorDFS::visit(TermNode* term_node)
+void ReverseVisitorDFS::visit(TermNode* term_node) const
 {
     std::cout << "[reverse] ";
     VisitorDFS::visit(term_node);

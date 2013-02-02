@@ -34,7 +34,7 @@ struct VisitorIFace
 {
     virtual ~VisitorIFace()
     {}
-    virtual void dispatch_visit(NodeIdentIface* unknown) = 0;
+    virtual void dispatch_visit(NodeIdentIface* unknown) const = 0;
 };
 
 template<class T>
@@ -45,7 +45,7 @@ public:
     {}
     virtual ~Visitable()
     {}
-    virtual void accept(VisitorIFace* v)
+    virtual void accept(const VisitorIFace* v)
     {
 		// "Java Tip 98" from http://en.wikipedia.org/wiki/Visitor_pattern
         v->dispatch_visit(m_instance);
@@ -102,9 +102,9 @@ struct VisitorDFS : public VisitorIFace
 {
     VisitorDFS()
     {}
-    virtual void visit(InnerNode* inner_node);
-    virtual void visit(TermNode* term_node);
-    void dispatch_visit(NodeIdentIface* unknown)
+    virtual void visit(InnerNode* inner_node) const;
+    virtual void visit(TermNode* term_node) const;
+    void dispatch_visit(NodeIdentIface* unknown) const
     {
         switch(unknown->type())
         {
@@ -120,8 +120,8 @@ struct VisitorDFS : public VisitorIFace
 
 struct ReverseVisitorDFS : public VisitorDFS
 {
-    void visit(InnerNode* inner_node);
-    void visit(TermNode* term_node);
+    void visit(InnerNode* inner_node) const;
+    void visit(TermNode* term_node) const;
 };
 
 #endif
