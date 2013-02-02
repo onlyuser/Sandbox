@@ -67,7 +67,7 @@ struct TermNode : public NodeIdentIface, public Visitable<TermNode>
     {}
 };
 
-struct InnerNode : public NodeIdentIface, public Visitable<InnerNode>
+class InnerNode : public NodeIdentIface, public Visitable<InnerNode>
 {
 public:
     InnerNode(size_t n, std::string name = "")
@@ -105,8 +105,6 @@ private:
 
 struct VisitorDFS : public VisitorIFace
 {
-    VisitorDFS()
-    {}
     virtual void visit(InnerNode* inner_node) const;
     virtual void visit(TermNode* term_node) const;
     // STEP #2: Simulate promoting Visitee to dynamic type through matching

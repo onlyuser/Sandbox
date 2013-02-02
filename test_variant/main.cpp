@@ -4,14 +4,14 @@
 #include <boost/variant/get.hpp>
 #include <string>
 
-// BASIC FLOW: STEP #1:   boost::apply_visitor(Visitor, boost::variant<Visitable*, ...>)
-//             STEP #2:   => Visitor::operator()(Visitable*)
-//             STEP #3,4: => Visitable::accept(Visitor*)
-//                        => Visitor::visit(Visitable*)
+// BASIC FLOW: STEP #1:   boost::apply_visitor(Visitor&, boost::variant<VisitableIFace*, ...>&)
+//             STEP #2:   => Visitor::operator()(VisitableIFace*)
+//             STEP #3,4: => VisitableIFace::accept(Visitor*)
+//                        => Visitor::visit(VisitableIFace*)
 
 // STEP #2: Promote Visitee to dynamic type through "accept" vtable-lookup
 template<>
-void Visitor::operator()<Visitable*>(Visitable* &x) const
+void Visitor::operator()<VisitableIFace*>(VisitableIFace* &x) const
 {
     x->accept(this);
 }
@@ -38,7 +38,7 @@ void ExtendedVisitor2::visit(ExtendedVisitable2* x) const
 
 int main(int argc, char** argv)
 {
-    boost::variant<int, double, std::string, char, Visitable*> x;
+    boost::variant<int, double, std::string, char, VisitableIFace*> x;
     ExtendedVisitor v;
     ExtendedVisitor2 v2;
 
@@ -59,13 +59,13 @@ int main(int argc, char** argv)
     boost::apply_visitor(v, x);
 
     x = new ExtendedVisitable();
-    std::cout << "value=" << "0x??" /*boost::get<Visitable*>(x)*/ << ", type_id=" << x.which() << std::endl;
+    std::cout << "value=" << "0x??" /*boost::get<VisitableIFace*>(x)*/ << ", type_id=" << x.which() << std::endl;
     // STEP #1A: Begin by locking Visitor and Visitee to static type through
     //           boost::apply_visitor magic
     boost::apply_visitor(v, x);
 
     x = new ExtendedVisitable2();
-    std::cout << "value=" << "0x??" /*boost::get<Visitable*>(x)*/ << ", type_id=" << x.which() << std::endl;
+    std::cout << "value=" << "0x??" /*boost::get<VisitableIFace*>(x)*/ << ", type_id=" << x.which() << std::endl;
     // STEP #1B: Begin by locking Visitor and Visitee to static type through
     //           boost::apply_visitor magic
     boost::apply_visitor(v2, x);

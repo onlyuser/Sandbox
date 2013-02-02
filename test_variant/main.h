@@ -32,19 +32,18 @@ struct ExtendedVisitor2 : public Visitor
     void visit(ExtendedVisitable2* x) const;
 };
 
-struct Visitable
+struct VisitableIFace
 {
-    virtual ~Visitable()
+    virtual ~VisitableIFace()
     {}
     virtual void accept(const Visitor* v) = 0;
 };
 
 template<class T>
-struct VisitableImplement : public Visitable
+class Visitable : public VisitableIFace
 {
-    T *m_instance;
-
-    VisitableImplement(T* instance) : m_instance(instance)
+public:
+    Visitable(T* instance) : m_instance(instance)
     {}
     // STEP #3: Promote Visitor to dynamic type through "visit" vtable-lookup
     // STEP #4: Simulate promoting Visitee to dynamic type through matching
@@ -55,17 +54,20 @@ struct VisitableImplement : public Visitable
         // "Java Tip 98" from http://en.wikipedia.org/wiki/Visitor_pattern
         v->visit(m_instance);
     }
+
+private:
+    T *m_instance;
 };
 
-struct ExtendedVisitable : public VisitableImplement<ExtendedVisitable>
+struct ExtendedVisitable : public Visitable<ExtendedVisitable>
 {
-    ExtendedVisitable() : VisitableImplement<ExtendedVisitable>(this)
+    ExtendedVisitable() : Visitable<ExtendedVisitable>(this)
     {}
 };
 
-struct ExtendedVisitable2 : public VisitableImplement<ExtendedVisitable2>
+struct ExtendedVisitable2 : public Visitable<ExtendedVisitable2>
 {
-    ExtendedVisitable2() : VisitableImplement<ExtendedVisitable2>(this)
+    ExtendedVisitable2() : Visitable<ExtendedVisitable2>(this)
     {}
 };
 
