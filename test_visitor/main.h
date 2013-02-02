@@ -45,7 +45,8 @@ public:
     {}
     virtual ~Visitable()
     {}
-    // STEP #3: Promote Visitor to dynamic type through "visit" vtable-lookup
+    // STEP #3: Promote Visitor to dynamic type through "dispatch_visit"
+    //          vtable-lookup
     // STEP #4: Simulate promoting Visitee to dynamic type through matching
     //          method-overload of "visit" to template-specialized Visitee
     //          static type (borrowing ideas from CRTP and Java Tip 98)

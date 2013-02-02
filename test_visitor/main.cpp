@@ -1,8 +1,10 @@
 #include "main.h"
 #include <iostream>
 
-// BASIC FLOW: Visitor::dispatch_visit => Visitor::visit =>
-//             Visitable::accept => Visitor::visit
+// BASIC FLOW: STEP #1,2: Visitor::dispatch_visit(Visitable*)
+//                        => Visitor::visit(Visitable*)
+//             STEP #3,4: => Visitable::accept(Visitor*)
+//                        => Visitor::dispatch_visit(Visitable*)
 
 void VisitorDFS::visit(InnerNode* inner_node) const
 {
