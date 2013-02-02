@@ -53,8 +53,9 @@ struct VisitableImplement : public Visitable
     VisitableImplement(T* instance) : m_instance(instance)
     {}
     // STEP #3: Promote Visitor to dynamic type through "visit" vtable-lookup
-    // STEP #4: Simulate promoting Visitee to dynamic type through overloading
-    //          to template-specialized static type (Java Tip 98)
+    // STEP #4: Simulate promoting Visitee to dynamic type through matching
+    //          method-overload of "visit" to template-specialized Visitee
+    //          static type (borrowing ideas from CRTP and Java Tip 98)
     void accept(const Visitor* v)
     {
         // "Java Tip 98" from http://en.wikipedia.org/wiki/Visitor_pattern
