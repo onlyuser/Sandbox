@@ -52,7 +52,7 @@ public:
     //          static type (borrowing ideas from CRTP and Java Tip 98)
     virtual void accept(const VisitorIFace* v)
     {
-		// "Java Tip 98" from http://en.wikipedia.org/wiki/Visitor_pattern
+        // "Java Tip 98" from http://en.wikipedia.org/wiki/Visitor_pattern
         v->dispatch_visit(m_instance);
     }
 
@@ -116,12 +116,12 @@ struct VisitorDFS : public VisitorIFace
     {
         switch(unknown->type())
         {
-			case NodeIdentIface::TYPE_INNER_NODE:
-				visit(dynamic_cast<InnerNode*>(unknown));
-				break;
-			case NodeIdentIface::TYPE_TERM_NODE:
-				visit(dynamic_cast<TermNode*>(unknown));
-				break;
+            case NodeIdentIface::TYPE_INNER_NODE:
+                visit(dynamic_cast<InnerNode*>(unknown));
+                break;
+            case NodeIdentIface::TYPE_TERM_NODE:
+                visit(dynamic_cast<TermNode*>(unknown));
+                break;
         }
     }
 };
