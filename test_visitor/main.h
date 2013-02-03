@@ -45,11 +45,6 @@ public:
     {}
     virtual ~Visitable()
     {}
-    // STEP #3: Promote Visitor to dynamic type through "dispatch_visit"
-    //          vtable-lookup
-    // STEP #4: Simulate promoting Visitee to dynamic type through matching
-    //          method-overload of "visit" to template-specialized Visitee
-    //          static type (borrowing ideas from CRTP and Java Tip 98)
     virtual void accept(const VisitorIFace* v)
     {
         // "Java Tip 98" from http://en.wikipedia.org/wiki/Visitor_pattern
@@ -107,9 +102,6 @@ struct VisitorDFS : public VisitorIFace
 {
     virtual void visit(InnerNode* inner_node) const;
     virtual void visit(TermNode* term_node) const;
-    // STEP #2: Simulate promoting Visitee to dynamic type through matching
-    //          method-overload of "visit" to dynamically casted Visitee static
-    //          type
     void dispatch_visit(NodeIdentIface* unknown) const
     {
         switch(unknown->type())

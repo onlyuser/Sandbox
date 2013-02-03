@@ -1,11 +1,6 @@
 #include "main.h"
 #include <iostream>
 
-// BASIC FLOW: STEP #1,2: Visitor::dispatch_visit(Visitable*)
-//                        => Visitor::visit(Visitable*)
-//             STEP #3,4: => Visitable::accept(Visitor*)
-//                        => Visitor::dispatch_visit(Visitable*)
-
 void VisitorDFS::visit(InnerNode* inner_node) const
 {
     for(int i=0; i<static_cast<int>(inner_node->size()); i++) // default traversal
@@ -46,13 +41,9 @@ int main(int argc, char** argv)
     inner_node.child(3)->name() = "child_3";
 
     VisitorDFS v;
-    // STEP #1A: Begin by promoting Visitor to dynamic type through
-    //           "dispatch_visit" vtable-lookup
     v.dispatch_visit(&inner_node);
 
     ReverseVisitorDFS v2;
-    // STEP #1B: Begin by promoting Visitor to dynamic type through
-    //           "dispatch_visit" vtable-lookup
     v2.dispatch_visit(&inner_node);
 
     return 0;

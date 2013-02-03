@@ -4,20 +4,27 @@
 #include <boost/variant/static_visitor.hpp>
 #include <iostream>
 
+class VisitableIFace;
 class ExtendedVisitable;
 class ExtendedVisitable2;
 
-struct Visitor : public boost::static_visitor<>
+struct VisitorIFace : public boost::static_visitor<>
 {
-    virtual ~Visitor()
+    virtual ~VisitorIFace()
     {}
     template<typename T>
     void operator()(T &x) const
     {
         std::cout << "value=" << x << std::endl;
     }
+    virtual void dispatch_visit(VisitableIFace* x) const = 0;
+};
+
+struct Visitor : public VisitorIFace
+{
     virtual void visit(ExtendedVisitable* x) const = 0;
     virtual void visit(ExtendedVisitable2* x) const = 0;
+    void dispatch_visit(VisitableIFace* x) const;
 };
 
 struct ExtendedVisitor : public Visitor
@@ -36,7 +43,7 @@ struct VisitableIFace
 {
     virtual ~VisitableIFace()
     {}
-    virtual void accept(const Visitor* v) = 0;
+    virtual void accept(const VisitorIFace* v) = 0;
 };
 
 template<class T>
@@ -45,14 +52,10 @@ class Visitable : public VisitableIFace
 public:
     Visitable(T* instance) : m_instance(instance)
     {}
-    // STEP #3: Promote Visitor to dynamic type through "visit" vtable-lookup
-    // STEP #4: Simulate promoting Visitee to dynamic type through matching
-    //          method-overload of "visit" to template-specialized Visitee
-    //          static type (borrowing ideas from CRTP and Java Tip 98)
-    void accept(const Visitor* v)
+    void accept(const VisitorIFace* v)
     {
         // "Java Tip 98" from http://en.wikipedia.org/wiki/Visitor_pattern
-        v->visit(m_instance);
+        v->dispatch_visit(m_instance);
     }
 
 private:

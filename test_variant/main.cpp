@@ -3,17 +3,20 @@
 #include <boost/variant.hpp>
 #include <boost/variant/get.hpp>
 #include <string>
+#include <typeinfo>
 
-// BASIC FLOW: STEP #1:   boost::apply_visitor(Visitor&, boost::variant<VisitableIFace*, ...>&)
-//             STEP #2:   => Visitor::operator()(VisitableIFace*)
-//             STEP #3,4: => VisitableIFace::accept(Visitor*)
-//                        => Visitor::visit(VisitableIFace*)
-
-// STEP #2: Promote Visitee to dynamic type through "accept" vtable-lookup
 template<>
-void Visitor::operator()<VisitableIFace*>(VisitableIFace* &x) const
+void VisitorIFace::operator()<VisitableIFace*>(VisitableIFace* &x) const
 {
     x->accept(this);
+}
+
+void Visitor::dispatch_visit(VisitableIFace* x) const
+{
+    if(typeid(*x) == typeid(ExtendedVisitable))
+        visit(dynamic_cast<ExtendedVisitable*>(x));
+    if(typeid(*x) == typeid(ExtendedVisitable2))
+        visit(dynamic_cast<ExtendedVisitable2*>(x));
 }
 
 void ExtendedVisitor::visit(ExtendedVisitable* x) const
@@ -60,14 +63,10 @@ int main(int argc, char** argv)
 
     x = new ExtendedVisitable();
     std::cout << "value=" << "0x??" /*boost::get<VisitableIFace*>(x)*/ << ", type_id=" << x.which() << std::endl;
-    // STEP #1A: Begin by locking Visitor and Visitee to static type through
-    //           boost::apply_visitor magic
     boost::apply_visitor(v, x);
 
     x = new ExtendedVisitable2();
     std::cout << "value=" << "0x??" /*boost::get<VisitableIFace*>(x)*/ << ", type_id=" << x.which() << std::endl;
-    // STEP #1B: Begin by locking Visitor and Visitee to static type through
-    //           boost::apply_visitor magic
     boost::apply_visitor(v2, x);
 
     return 0;
