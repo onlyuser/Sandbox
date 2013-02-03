@@ -55,11 +55,7 @@ public:
     void accept(const VisitorIFace* v)
     {
         // "Java Tip 98" from http://en.wikipedia.org/wiki/Visitor_pattern
-        v->dispatch_visit(m_instance);
-
-        // Alternatively, since the type of m_instance is static, you can do
-        // this to the same effect:
-        //dynamic_cast<const Visitor*>(v)->visit(m_instance);
+        dynamic_cast<const Visitor*>(v)->visit(m_instance);
     }
 
 private:

@@ -8,7 +8,11 @@
 template<>
 void VisitorIFace::operator()<VisitableIFace*>(VisitableIFace* &x) const
 {
+	// Simulate RTTI via double dispatch
     x->accept(this);
+
+    // Alternatively, if RTTI is available, we can do this to the same effect:
+    //dispatch_visit(x);
 }
 
 void Visitor::dispatch_visit(VisitableIFace* x) const
