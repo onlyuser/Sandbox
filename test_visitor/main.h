@@ -2,6 +2,7 @@
 #define MAIN_H_
 
 #include <string>
+#include <vector>
 
 class NodeIdentIface
 {
@@ -66,36 +67,32 @@ class InnerNode : public NodeIdentIface, public Visitable<InnerNode>
 {
 public:
     InnerNode(size_t n, std::string name = "")
-        : NodeIdentIface(NodeIdentIface::TYPE_INNER_NODE, name), Visitable<InnerNode>(this), m_size(n)
+        : NodeIdentIface(NodeIdentIface::TYPE_INNER_NODE, name), Visitable<InnerNode>(this)
     {
-        m_children = new TermNode*[n];
         for(int i=0; i<static_cast<int>(n); i++)
-            m_children[i] = new TermNode();
+            m_children.push_back(new TermNode());
     }
     ~InnerNode()
     {
-        if(m_children)
+        for(auto p = m_children.begin(); p != m_children.end(); p++)
         {
-            for(int i=0; i<static_cast<int>(m_size); i++)
-            {
-                if(m_children[i])
-                    delete m_children[i];
-            }
-            delete[] m_children;
+            if(*p)
+                delete *p;
         }
     }
-    TermNode* child(int index)
+    TermNode* child(size_t index)
     {
+        if(index >= m_children.size())
+            return NULL;
         return m_children[index];
     }
     size_t size() const
     {
-        return m_size;
+        return m_children.size();
     }
 
 private:
-    TermNode** m_children;
-    size_t m_size;
+    std::vector<TermNode*> m_children;
 };
 
 struct VisitorDFS : public VisitorIFace
