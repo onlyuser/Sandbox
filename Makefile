@@ -17,7 +17,13 @@
 
 LIB_PATH = lib
 
-SUBPATHS = $(shell find $(CHILD_PATH) -mindepth 1 -maxdepth 1 -name "*" -type d | sort)
+SUBPATHS = \
+   test_coroutine \
+   test_functor \
+   test_tinyxml \
+   test_variant \
+   test_visitor \
+   #test_ticpp
 
 .DEFAULT_GOAL : all
 all :
