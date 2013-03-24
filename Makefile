@@ -17,13 +17,7 @@
 
 LIB_PATH = lib
 
-SUBPATHS = \
-   test_coroutine \
-   test_functor \
-   test_visitor
-   #test_ticpp \
-   test_tinyxml \
-   test_variant
+SUBPATHS = test_visitor
 
 .DEFAULT_GOAL : all
 all :
