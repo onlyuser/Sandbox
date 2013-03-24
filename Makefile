@@ -19,11 +19,11 @@ LIB_PATH = lib
 
 SUBPATHS = \
     test_functor \
+    test_tinyxml \
     test_variant \
     test_visitor #\
     test_coroutine \
-    test_ticpp \
-    test_tinyxml
+    test_ticpp
 
 .DEFAULT_GOAL : all
 all :
