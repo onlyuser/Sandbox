@@ -12,7 +12,7 @@ Sandbox is a collection of experimental code.
 
 * test_coroutine -- test for coroutine
 * test_functor   -- test for stl functor
-* test_lexyacc   -- test for lexyacc
+* test_lexyacc   -- test for Lex-Yacc
 * test_ticpp     -- test for ticpp
 * test_tinyxml   -- test for tinyxml
 * test_variant   -- test for boost variant

@@ -120,7 +120,7 @@ clean_binaries : clean_objects
 
 TEST_PATH = test
 TEST_SH = $(SCRIPT_PATH)/test.sh
-TEST_FILE_STEMS = $(BIN_STEMS)
+TEST_FILE_STEMS = calc1 calc2 calc3a calc3b #calc3g
 TEST_FILES = $(patsubst %, $(BUILD_PATH)/%.test, $(TEST_FILE_STEMS))
 TEST_PASS_FILES = $(patsubst %, %.pass, $(TEST_FILES))
 TEST_FAIL_FILES = $(patsubst %, %.fail, $(TEST_FILES))
