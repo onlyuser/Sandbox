@@ -12,6 +12,7 @@ Sandbox is a collection of experimental code.
 
 * test_coroutine -- test for coroutine
 * test_functor   -- test for stl functor
+* test_lexyacc   -- test for lexyacc
 * test_ticpp     -- test for ticpp
 * test_tinyxml   -- test for tinyxml
 * test_variant   -- test for boost variant
@@ -58,6 +59,9 @@ References:
     <dt>"Function Objects"</dt>
     <dd>http://www.sgi.com/tech/stl/functors.html</dd>
 
+    <dt>"Lex & Yacc Tutorial"</dt>
+    <dd>http://epaperpress.com/lexandyacc/</dd>
+
     <dt>"ticpp"</dt>
     <dd>http://code.google.com/p/ticpp/</dd>
 
@@ -74,4 +78,4 @@ References:
 Keywords:
 ---------
 
-    stl, boost, functor, visitor, variant, tinyxml, ticpp
+    stl, boost, functor, Lex, Yacc, visitor, variant, tinyxml, ticpp

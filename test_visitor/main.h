@@ -74,7 +74,7 @@ public:
     }
     ~InnerNode()
     {
-        for(auto p = m_children.begin(); p != m_children.end(); p++)
+        for(std::vector<TermNode*>::iterator p = m_children.begin(); p != m_children.end(); p++)
         {
             if(*p)
                 delete *p;

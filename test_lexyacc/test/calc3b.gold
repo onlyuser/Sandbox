@@ -1,0 +1,19 @@
+	push	0
+	pop	a
+L000:
+	push	a
+	push	10
+	compLT
+	jz	L001
+	push	a
+	push	1
+	add
+	pop	a
+	push	b
+	push	a
+	add
+	pop	b
+	jmp	L000
+L001:
+	push	b
+	print

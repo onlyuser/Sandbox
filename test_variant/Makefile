@@ -1,5 +1,3 @@
-CXX = g++
-
 #==================
 # compile flags
 #==================
@@ -10,7 +8,7 @@ LIB_PATH = $(EXTERN_LIB_PATH)
 SRC_PATH = .
 BUILD_PATH = build
 BIN_PATH = bin
-BINARY = $(BIN_PATH)/test_variant.exe
+BINARY = $(BIN_PATH)/test_variant
 
 INCLUDE_PATHS = $(INCLUDE_PATH) $(COMMON_INCLUDE_PATH)
 INCLUDE_PATH_FLAGS = $(patsubst %, -I%, $(INCLUDE_PATHS))
@@ -22,6 +20,7 @@ LIB_STEMS =
 LIBS = $(patsubst %, $(LIB_PATH)/lib%.a, $(LIB_STEMS))
 LIB_FLAGS = $(patsubst %, -l%, $(LIB_STEMS))
 
+CXX = g++
 DEBUG = -g
 CXXFLAGS = -Wall $(DEBUG) $(INCLUDE_PATH_FLAGS)
 LDFLAGS = -Wall $(DEBUG) $(LIB_PATH_FLAGS) $(LIB_FLAGS)
