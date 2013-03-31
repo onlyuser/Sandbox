@@ -3,15 +3,15 @@
 #==================
 
 LIB_SRC_PATH = .
-INCLUDE_PATH = include
+INCLUDE_PATH = .
 LIB_PATH = $(EXTERN_LIB_PATH)
-SRC_PATH = src
+SRC_PATH = .
 BUILD_PATH = build
 BIN_PATH = bin
 BIN_STEMS = calc1 calc2 calc3a calc3b calc3g
 BINARIES = $(patsubst %, $(BIN_PATH)/%, $(BIN_STEMS))
 
-INCLUDE_PATHS = $(INCLUDE_PATH) $(COMMON_INCLUDE_PATH)
+INCLUDE_PATHS = $(INCLUDE_PATH) $(COMMON_INCLUDE_PATH) $(EXTERN_INCLUDE_PATH)
 INCLUDE_PATH_FLAGS = $(patsubst %, -I%, $(INCLUDE_PATHS))
 
 LIB_PATHS = $(LIB_PATH)
@@ -48,8 +48,6 @@ YACC_GEN = \
 
 $(SRC_PATH)/%.tab.c $(INCLUDE_PATH)/%.tab.h : $(SRC_PATH)/%.y
 	bison -d $<
-	mv $*.tab.c $(SRC_PATH)/$*.tab.c
-	mv $*.tab.h $(INCLUDE_PATH)/$*.tab.h
 
 .PHONY : clean_yacc
 clean_yacc :
@@ -65,7 +63,6 @@ LEX_GEN = $(patsubst %, $(SRC_PATH)/%.c, $(LEX_STEMS))
 
 $(SRC_PATH)/lex.%.c : $(SRC_PATH)/%.l $(YACC_GEN)
 	flex $<
-	mv lex.$*.c $(SRC_PATH)/lex.$*.c
 
 .PHONY : clean_lex
 clean_lex :

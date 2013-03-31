@@ -3,14 +3,14 @@
 #==================
 
 LIB_SRC_PATH = $(EXTERN_INCLUDE_PATH)/ticpp
-INCLUDE_PATH = $(EXTERN_INCLUDE_PATH)
+INCLUDE_PATH = .
 LIB_PATH = $(EXTERN_LIB_PATH)
 SRC_PATH = .
 BUILD_PATH = build
 BIN_PATH = bin
 BINARY = $(BIN_PATH)/test_ticpp
 
-INCLUDE_PATHS = $(INCLUDE_PATH) $(COMMON_INCLUDE_PATH)
+INCLUDE_PATHS = $(INCLUDE_PATH) $(COMMON_INCLUDE_PATH) $(EXTERN_INCLUDE_PATH)
 INCLUDE_PATH_FLAGS = $(patsubst %, -I%, $(INCLUDE_PATHS))
 
 LIB_PATHS = $(LIB_PATH)
@@ -40,7 +40,7 @@ all : $(BINARY)
 #==================
 
 $(LIBS) :
-	cd $(LIB_SRC_PATH); $(MAKE) -f Makefile
+	cd $(LIB_SRC_PATH); $(MAKE)
 
 #==================
 # objects
