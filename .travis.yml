@@ -4,6 +4,7 @@ compiler:
     - clang
 before_script:
     - sudo apt-get install libboost-dev
+    - sudo apt-get install llvm-2.8-dev
 script: make && make test
 branches:
     only:

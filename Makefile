@@ -20,6 +20,7 @@ LIB_PATH = lib
 SUBPATHS = \
     test_functor \
     test_lexyacc \
+    test_llvm \
     test_tinyxml \
     test_variant \
     test_visitor #\
