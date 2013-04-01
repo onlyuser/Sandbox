@@ -1,0 +1,6 @@
+Read function definition:
+define double @test(double %x) {
+entry:
+  %addtmp = fadd double %x, 3.000000e+00
+  ret double %addtmp
+}
