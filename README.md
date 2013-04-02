@@ -13,6 +13,7 @@ Sandbox is a collection of experimental code.
 * test_coroutine -- test for coroutine
 * test_functor   -- test for stl functor
 * test_lexyacc   -- test for Lex-Yacc
+* test_llvm      -- test for LLVM
 * test_ticpp     -- test for ticpp
 * test_tinyxml   -- test for tinyxml
 * test_variant   -- test for boost variant
@@ -62,6 +63,9 @@ References:
     <dt>"Lex & Yacc Tutorial"</dt>
     <dd>http://epaperpress.com/lexandyacc/</dd>
 
+    <dt>"Kaleidoscope: Implementing a Language with LLVM"</dt>
+    <dd>http://llvm.org/docs/tutorial/index.html</dd>
+
     <dt>"ticpp"</dt>
     <dd>http://code.google.com/p/ticpp/</dd>
 
@@ -78,4 +82,4 @@ References:
 Keywords:
 ---------
 
-    stl, boost, functor, Lex, Yacc, visitor, variant, tinyxml, ticpp
+    stl, boost, functor, Lex, Yacc, LLVM, visitor, variant, tinyxml, ticpp
