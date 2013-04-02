@@ -1,0 +1,18 @@
+Read extern: 
+declare double @printd(double)
+
+Read function definition:
+define double @"binary:"(double %x, double %y) {
+entry:
+  ret double %y
+}
+
+Read function definition:
+define double @test(double %x) {
+entry:
+  %calltmp = call double @printd(double %x)
+  %binop = call double @"binary:"(double %calltmp, double 4.000000e+00)
+  %calltmp4 = call double @printd(double 4.000000e+00)
+  %binop5 = call double @"binary:"(double %binop, double %calltmp4)
+  ret double %binop5
+}

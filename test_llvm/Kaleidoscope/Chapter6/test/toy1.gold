@@ -1,0 +1,41 @@
+Read function definition:
+define double @"unary!"(double %v) {
+entry:
+  %ifcond = fcmp ueq double %v, 0.000000e+00
+  %iftmp = select i1 %ifcond, double 1.000000e+00, double 0.000000e+00
+  ret double %iftmp
+}
+
+Read function definition:
+define double @"binary>"(double %LHS, double %RHS) {
+entry:
+  %cmptmp = fcmp ult double %RHS, %LHS
+  %booltmp = uitofp i1 %cmptmp to double
+  ret double %booltmp
+}
+
+Read function definition:
+define double @"binary|"(double %LHS, double %RHS) {
+entry:
+  %ifcond = fcmp ueq double %LHS, 0.000000e+00
+  br i1 %ifcond, label %else, label %ifcont4
+
+else:                                             ; preds = %entry
+  %ifcond1 = fcmp ueq double %RHS, 0.000000e+00
+  %iftmp = select i1 %ifcond1, double 0.000000e+00, double 1.000000e+00
+  ret double %iftmp
+
+ifcont4:                                          ; preds = %entry
+  ret double 1.000000e+00
+}
+
+Read function definition:
+define double @"binary="(double %LHS, double %RHS) {
+entry:
+  %cmptmp = fcmp ult double %LHS, %RHS
+  %booltmp = uitofp i1 %cmptmp to double
+  %binop = call double @"binary>"(double %LHS, double %RHS)
+  %binop1 = call double @"binary|"(double %booltmp, double %binop)
+  %unop = call double @"unary!"(double %binop1)
+  ret double %unop
+}
