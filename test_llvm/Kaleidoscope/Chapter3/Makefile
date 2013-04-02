@@ -33,7 +33,7 @@ clean_binary :
 
 TEST_PATH = test
 TEST_SH = $(SCRIPT_PATH)/test.sh
-TEST_FILE_STEMS = toy1 toy2 toy3 toy4
+TEST_FILE_STEMS = toy1 toy2 toy3
 TEST_FILES = $(patsubst %, $(BUILD_PATH)/%.test, $(TEST_FILE_STEMS))
 TEST_PASS_FILES = $(patsubst %, %.pass, $(TEST_FILES))
 TEST_FAIL_FILES = $(patsubst %, %.fail, $(TEST_FILES))

@@ -1,9 +1,0 @@
-Read extern: 
-declare double @cos(double)
-
-Read top-level expression:
-define double @0() {
-entry:
-  %calltmp = call double @cos(double 1.234000e+00)
-  ret double %calltmp
-}
