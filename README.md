@@ -10,10 +10,12 @@ Sandbox is a collection of experimental code.
 
 **Currently, it includes the following:**
 
+* test_backtrace -- test for backtrace
 * test_coroutine -- test for coroutine
 * test_functor   -- test for stl functor
 * test_lexyacc   -- test for Lex-Yacc
 * test_llvm      -- test for LLVM
+* test_regex     -- test for posix regex
 * test_ticpp     -- test for ticpp
 * test_tinyxml   -- test for tinyxml
 * test_variant   -- test for boost variant
@@ -77,9 +79,27 @@ References:
 
     <dt>"Cooperative VisitorIFace: A Template Technique for VisitorIFace Creation"</dt>
     <dd>http://www.artima.com/cppsource/cooperative_visitor.html</dd>
+
+    <dt>"Stack Backtracing Inside Your Program"</dt>
+    <dd>http://www.linuxjournal.com/article/6391</dd>
+
+    <dt>"Stack Overflow - How to generate a stacktrace when my gcc C++ app crashes"</dt>
+    <dd>http://stackoverflow.com/questions/77005/how-to-generate-a-stacktrace-when-my-gcc-c-app-crashes</dd>
+
+    <dt>"C++ Code Snippet - Print Stack Backtrace Programmatically with Demangled Function Names"</dt>
+    <dd>http://panthema.net/2008/0901-stacktrace-demangled/</dd>
+
+    <dt>"Stack trace for C++ using gcc"</dt>
+    <dd>http://stackoverflow.com/questions/4636456/stack-trace-for-c-using-gcc/4732119#4732119</dd>
+
+    <dt>"Stack Overflow - How it's better to invoke gdb from program to print its stacktrace?"</dt>
+    <dd>http://stackoverflow.com/questions/3151779/how-its-better-to-invoke-gdb-from-program-to-print-its-stacktrace</dd>
+
+    <dt>"How do you capture a group with regex?"</dt>
+    <dd>http://stackoverflow.com/questions/2577193/how-do-you-capture-a-group-with-regex</dd>
 </dl>
 
 Keywords:
 ---------
 
-    stl, boost, functor, Lex, Yacc, LLVM, visitor, variant, tinyxml, ticpp
+    stl, boost, functor, Lex, Yacc, LLVM, visitor, variant, tinyxml, ticpp, regex, backtrace

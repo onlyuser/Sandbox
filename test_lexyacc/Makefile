@@ -108,7 +108,7 @@ $(BIN_PATH)/calc3g : $(BUILD_PATH)/calc3.tab.o $(BUILD_PATH)/lex.calc3.o $(BUILD
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 .PHONY : clean_binaries
-clean_binaries : clean_objects
+clean_binaries :
 	-rm $(BINARIES)
 
 #==================

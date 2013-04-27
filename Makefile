@@ -19,9 +19,11 @@ SUBPATHS = \
     test_functor \
     test_lexyacc \
     test_llvm \
+    test_regex \
     test_tinyxml \
     test_variant \
     test_visitor #\
+    test_backtrace \
     test_coroutine \
     test_ticpp
 
