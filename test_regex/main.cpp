@@ -1,4 +1,9 @@
+// REFERENCE:
 // http://stackoverflow.com/questions/2577193/how-do-you-capture-a-group-with-regex
+
+// DEMONSTRATES:
+// * posix regex
+// * capturing regex groups
 
 #include <stdio.h>
 #include <regex.h>

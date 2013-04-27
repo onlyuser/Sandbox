@@ -1,8 +1,11 @@
+// REFERENCE:
 // http://stackoverflow.com/questions/3151779/how-its-better-to-invoke-gdb-from-program-to-print-its-stacktrace
 
-// demonstrates:
+// DEMONSTRATES:
 // * backtrace
 // * gdb attach process
+// * fork-exec
+// * waitpid
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,9 +27,7 @@ void print_trace()
         abort(); // if gdb failed to start
     }
     else
-    {
         waitpid(child_pid, NULL, 0);
-    }
 }
 
 void baz()

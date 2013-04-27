@@ -1,6 +1,7 @@
+// REFERENCE:
 // http://stackoverflow.com/questions/4636456/stack-trace-for-c-using-gcc/4732119#4732119
 
-// demonstrates:
+// DEMONSTRATES:
 // * backtrace
 // * line number resolution using addr2line
 
@@ -45,8 +46,10 @@ void bt_sighandler(int sig, siginfo_t* info, void* secret)
 
     // do something useful with siginfo_t
     if(sig == SIGSEGV)
+    {
         printf("Got signal %d, faulty address is %p, from %ld\n",
                 sig, info->si_addr, uc->uc_mcontext.gregs[REG_EIP]);
+    }
     else
         printf("Got signal %d#92;\n", sig);
 
@@ -87,7 +90,7 @@ int func_b()
     return res;
 }
 
-int main()
+int main(int argc, char** argv)
 {
     // install our signal handler
     struct sigaction sa;
@@ -102,4 +105,5 @@ int main()
 
     // do something
     printf("%d#92;n", func_b());
+    return 0;
 }

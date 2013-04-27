@@ -1,6 +1,7 @@
+// REFERENCE:
 // http://panthema.net/2008/0901-stacktrace-demangled/
 
-// demonstrates:
+// DEMONSTRATES:
 // * backtrace
 // * name demangling using abi::__cxa_demangle
 
@@ -44,7 +45,9 @@ static inline void print_stacktrace(FILE* out = stderr, unsigned int max_frames 
     // address of this function.
     for(int i = 1; i<addrlen; i++)
     {
-        char *begin_name = 0, *begin_offset = 0, *end_offset = 0;
+        char* begin_name = 0;
+        char* begin_offset = 0;
+        char* end_offset = 0;
 
         // find parentheses and +address offset surrounding the mangled name:
         // ./module(function+0x15c) [0x8048a6d]
@@ -136,10 +139,11 @@ void Gamma::unroll<0>(double)
 
 }
 
-int main()
+int main(int argc, char** argv)
 {
     Nu::Alpha<int>::Beta().func(42);
     Nu::Alpha<const char*>::Beta().func("42");
     Nu::Alpha<Nu::Alpha<std::map<int, double> > >::Beta().func();
     Nu::Gamma().unroll<5>(42.0);
+    return 0;
 }

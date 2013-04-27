@@ -1,6 +1,7 @@
+// REFERENCE:
 // http://stackoverflow.com/questions/77005/how-to-generate-a-stacktrace-when-my-gcc-c-app-crashes
 
-// demonstrates:
+// DEMONSTRATES:
 // * backtrace
 // * signal handling
 
@@ -11,14 +12,12 @@
 
 void handler(int sig)
 {
-    void* array[10];
-    size_t size;
-
-    // get void* for all entries on the stack
-    size = backtrace(array, 10);
-
     // print out all the frames to stderr
     fprintf(stderr, "Error: signal %d:\n", sig);
+
+    // get void* for all entries on the stack
+    void* array[10];
+    size_t size = backtrace(array, 10);
     backtrace_symbols_fd(array, size, 2);
     exit(1);
 }
@@ -36,4 +35,5 @@ int main(int argc, char** argv)
 {
     signal(SIGSEGV, handler); // install our handler
     foo(); // this will call foo, bar, and baz. baz segfaults.
+    return 0;
 }
