@@ -7,6 +7,9 @@
 // * fork-exec
 // * waitpid
 
+// NOTE: for Ubuntu 10.10 or later, must run as root
+// http://askubuntu.com/questions/41629/after-upgrade-gdb-wont-attach-to-process
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
