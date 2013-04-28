@@ -1,5 +1,6 @@
 // REFERENCE:
-// http://stackoverflow.com/questions/3151779/how-its-better-to-invoke-gdb-from-program-to-print-its-stacktrace
+// "Stack trace for C++ using gcc"
+// http://stackoverflow.com/questions/4636456/stack-trace-for-c-using-gcc/4732119#4732119
 
 // DEMONSTRATES:
 // * backtrace

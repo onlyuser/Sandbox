@@ -1,5 +1,6 @@
 // REFERENCE:
-// http://stackoverflow.com/questions/77005/how-to-generate-a-stacktrace-when-my-gcc-c-app-crashes
+// "How to generate a stacktrace when my gcc C++ app crashes"
+// http://stackoverflow.com/questions/77005/how-to-generate-a-stacktrace-when-my-gcc-c-app-crashes/77336#77336
 
 // DEMONSTRATES:
 // * backtrace

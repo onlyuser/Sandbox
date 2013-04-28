@@ -83,17 +83,20 @@ References:
     <dt>"Stack Backtracing Inside Your Program"</dt>
     <dd>http://www.linuxjournal.com/article/6391</dd>
 
-    <dt>"Stack Overflow - How to generate a stacktrace when my gcc C++ app crashes"</dt>
-    <dd>http://stackoverflow.com/questions/77005/how-to-generate-a-stacktrace-when-my-gcc-c-app-crashes</dd>
+    <dt>"Listing 3. Using the SA_SIGINFO Option"</dt>
+    <dd>http://www.linuxjournal.com/files/linuxjournal.com/linuxjournal/articles/063/6391/6391l3.html</dd>
+
+    <dt>"How to generate a stacktrace when my gcc C++ app crashes"</dt>
+    <dd>http://stackoverflow.com/questions/77005/how-to-generate-a-stacktrace-when-my-gcc-c-app-crashes/77336#77336</dd>
 
     <dt>"C++ Code Snippet - Print Stack Backtrace Programmatically with Demangled Function Names"</dt>
     <dd>http://panthema.net/2008/0901-stacktrace-demangled/</dd>
 
+    <dt>"How it's better to invoke gdb from program to print its stacktrace?"</dt>
+    <dd>http://stackoverflow.com/questions/3151779/how-its-better-to-invoke-gdb-from-program-to-print-its-stacktrace/4611112#4611112</dd>
+
     <dt>"Stack trace for C++ using gcc"</dt>
     <dd>http://stackoverflow.com/questions/4636456/stack-trace-for-c-using-gcc/4732119#4732119</dd>
-
-    <dt>"Stack Overflow - How it's better to invoke gdb from program to print its stacktrace?"</dt>
-    <dd>http://stackoverflow.com/questions/3151779/how-its-better-to-invoke-gdb-from-program-to-print-its-stacktrace</dd>
 
     <dt>"How do you capture a group with regex?"</dt>
     <dd>http://stackoverflow.com/questions/2577193/how-do-you-capture-a-group-with-regex</dd>
