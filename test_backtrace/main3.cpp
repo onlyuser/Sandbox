@@ -52,7 +52,7 @@ void bt_sighandler(int sig, siginfo_t* info, void* secret)
                 sig, info->si_addr, uc->uc_mcontext.gregs[REG_EIP]);
     }
     else
-        printf("Got signal %d#92;\n", sig);
+        printf("Got signal %d\n", sig);
 
     void* trace[16];
     int trace_size = backtrace(trace, 16);
@@ -63,10 +63,10 @@ void bt_sighandler(int sig, siginfo_t* info, void* secret)
     char** messages = backtrace_symbols(trace, trace_size);
 
     // skip first stack frame (points here)
-    printf("[bt] Execution path:#92;\n");
+    printf("[bt] Execution path:\n");
     for(int i=1; i<trace_size; ++i)
     {
-        printf("[bt] %s#92;\n", messages[i]);
+        printf("[bt] %s\n", messages[i]);
         char syscom[256];
         // last parameter is the name of this app
         sprintf(syscom, "addr2line %p -e %s", trace[i], getExecutableName());
@@ -104,6 +104,6 @@ int main(int argc, char** argv)
     // ... add any other signal here
 
     // do something
-    printf("%d#92;\n", func_b());
+    printf("%d\n", func_b());
     return 0;
 }
