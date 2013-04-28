@@ -83,7 +83,6 @@ int func_a(int a, char b)
     return 2*a;
 }
 
-
 int func_b()
 {
     int a = 5;
