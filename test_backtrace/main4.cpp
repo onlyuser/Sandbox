@@ -2,7 +2,7 @@
 // "Stack trace for C++ using gcc"
 // http://stackoverflow.com/questions/4636456/stack-trace-for-c-using-gcc/4732119#4732119
 
-// DEMONSTRATES:
+// CONCEPTS:
 // * backtrace
 // * gdb attach process
 // * fork-exec

@@ -2,7 +2,7 @@
 // "C++ Code Snippet - Print Stack Backtrace Programmatically with Demangled Function Names"
 // http://panthema.net/2008/0901-stacktrace-demangled/
 
-// DEMONSTRATES:
+// CONCEPTS:
 // * backtrace
 // * name demangling using abi::__cxa_demangle
 

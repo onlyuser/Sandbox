@@ -2,7 +2,7 @@
 // "How it's better to invoke gdb from program to print its stacktrace?"
 // http://stackoverflow.com/questions/3151779/how-its-better-to-invoke-gdb-from-program-to-print-its-stacktrace/4611112#4611112
 
-// DEMONSTRATES:
+// CONCEPTS:
 // * backtrace
 // * line number resolution using addr2line
 

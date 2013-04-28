@@ -1,7 +1,8 @@
 // REFERENCE:
+// "How do you capture a group with regex?"
 // http://stackoverflow.com/questions/2577193/how-do-you-capture-a-group-with-regex
 
-// DEMONSTRATES:
+// CONCEPTS:
 // * posix regex
 // * capturing regex groups
 
