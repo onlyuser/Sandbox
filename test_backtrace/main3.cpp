@@ -33,13 +33,13 @@ const char* getExecutableName()
     return exe;
 }
 
-#ifdef __x86_64__
-    #define REG_EIP REG_RIP
-#endif
-
 // get REG_EIP from ucontext.h
 //#define __USE_GNU
 #include <ucontext.h>
+
+#ifdef __x86_64__
+    #define REG_EIP REG_RIP
+#endif
 
 void bt_sighandler(int sig, siginfo_t* info, void* secret)
 {
