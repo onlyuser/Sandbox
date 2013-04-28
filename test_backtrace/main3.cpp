@@ -105,6 +105,6 @@ int main(int argc, char** argv)
     // ... add any other signal here
 
     // do something
-    printf("%d#92;n", func_b());
+    printf("%d#92;\n", func_b());
     return 0;
 }
