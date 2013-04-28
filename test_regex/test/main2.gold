@@ -1,0 +1,5 @@
+match #0: qwe (asd+123) [zxc]
+match #1: qwe 
+match #2: asd
+match #3: 123
+match #4: zxc

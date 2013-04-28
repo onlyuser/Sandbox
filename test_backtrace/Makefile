@@ -8,7 +8,7 @@ LIB_PATH = $(EXTERN_LIB_PATH)
 SRC_PATH = .
 BUILD_PATH = build
 BIN_PATH = bin
-BIN_STEMS = main main2 main3 main4
+BIN_STEMS = main main2 main3 main3_ex main4
 BINARIES = $(patsubst %, $(BIN_PATH)/%, $(BIN_STEMS))
 
 INCLUDE_PATHS = $(INCLUDE_PATH) $(COMMON_INCLUDE_PATH) $(EXTERN_INCLUDE_PATH)
@@ -23,7 +23,7 @@ LIB_FLAGS = $(patsubst %, -l%, $(LIB_STEMS))
 
 CXX = g++
 DEBUG = -g
-CXXFLAGS = -Wall $(DEBUG) $(INCLUDE_PATH_FLAGS)
+CXXFLAGS = -Wall $(DEBUG) $(INCLUDE_PATH_FLAGS) -D_GNU_SOURCE
 LDFLAGS = -Wall $(DEBUG) $(LIB_PATH_FLAGS) $(LIB_FLAGS) -rdynamic
 
 SCRIPT_PATH = test
@@ -64,6 +64,10 @@ $(BIN_PATH)/main2 : $(BUILD_PATH)/main2.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(BIN_PATH)/main3 : $(BUILD_PATH)/main3.o
+	mkdir -p $(BIN_PATH)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+$(BIN_PATH)/main3_ex : $(BUILD_PATH)/main3_ex.o
 	mkdir -p $(BIN_PATH)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 

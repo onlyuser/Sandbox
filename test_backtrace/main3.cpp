@@ -23,7 +23,7 @@ void initialiseExecutableName()
         fprintf(stderr, "ERRORRRRR\n");
         exit(1);
     }
-    printf("Executable name initialised: %s\n",exe);
+    printf("Executable name initialised: %s\n", exe);
 }
 
 const char* getExecutableName()
