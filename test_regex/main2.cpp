@@ -11,32 +11,36 @@
 #include <vector>
 #include <iostream>
 
-static bool match_regex(std::string s, std::string pattern, int n, ...)
+static bool match_regex(std::string s, std::string pattern, int nmatch, ...)
 {
-    std::vector<std::string*> results;
-    va_list ap;
-    va_start(ap, n);
-    for(int i = 0; i<n; i++)
-        results.push_back(va_arg(ap, std::string*));
-    va_end(ap);
-    regex_t regex;
-    if(regcomp(&regex, pattern.c_str(), REG_ICASE|REG_EXTENDED))
+    bool result = true;
+    regex_t preg;
+    if(regcomp(&preg, pattern.c_str(), REG_ICASE|REG_EXTENDED))
         return false;
-    regmatch_t* regmatch = new regmatch_t[n];
-    if(!regmatch)
-        return false;
-    int status = regexec(&regex, s.c_str(), n, regmatch, 0);
-    regfree(&regex);
-    if(!status)
+    regmatch_t* pmatch = new regmatch_t[nmatch];
+    if(pmatch)
     {
-        for(int i = 0; i<n; i++)
+        int status = regexec(&preg, s.c_str(), nmatch, pmatch, 0);
+        regfree(&preg);
+        if(!status)
         {
-            if(results[i])
-                *results[i] = s.substr(regmatch[i].rm_so, regmatch[i].rm_eo-regmatch[i].rm_so);
+            va_list ap;
+            va_start(ap, nmatch);
+            for(int i = 0; i<nmatch; i++)
+            {
+                std::string* ptr = va_arg(ap, std::string*);
+                if(ptr)
+                    *ptr = s.substr(pmatch[i].rm_so, pmatch[i].rm_eo-pmatch[i].rm_so);
+            }
+            va_end(ap);
         }
+        else
+            result = false;
+        delete[] pmatch;
     }
-    delete[] regmatch;
-    return true;
+    else
+        result = false;
+    return result;
 }
 
 int main(int argc, char** argv)

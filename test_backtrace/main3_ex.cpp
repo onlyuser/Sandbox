@@ -57,32 +57,36 @@ static std::string _exec(std::string cmd)
     return result;
 }
 
-static bool match_regex(std::string s, std::string pattern, int n, ...)
+static bool match_regex(std::string s, std::string pattern, int nmatch, ...)
 {
-    std::vector<std::string*> results;
-    va_list ap;
-    va_start(ap, n);
-    for(int i = 0; i<n; i++)
-        results.push_back(va_arg(ap, std::string*));
-    va_end(ap);
-    regex_t regex;
-    if(regcomp(&regex, pattern.c_str(), REG_ICASE|REG_EXTENDED))
+    bool result = true;
+    regex_t preg;
+    if(regcomp(&preg, pattern.c_str(), REG_ICASE|REG_EXTENDED))
         return false;
-    regmatch_t* regmatch = new regmatch_t[n];
-    if(!regmatch)
-        return false;
-    int status = regexec(&regex, s.c_str(), n, regmatch, 0);
-    regfree(&regex);
-    if(!status)
+    regmatch_t* pmatch = new regmatch_t[nmatch];
+    if(pmatch)
     {
-        for(int i = 0; i<n; i++)
+        int status = regexec(&preg, s.c_str(), nmatch, pmatch, 0);
+        regfree(&preg);
+        if(!status)
         {
-            if(results[i])
-                *results[i] = s.substr(regmatch[i].rm_so, regmatch[i].rm_eo-regmatch[i].rm_so);
+            va_list ap;
+            va_start(ap, nmatch);
+            for(int i = 0; i<nmatch; i++)
+            {
+                std::string* ptr = va_arg(ap, std::string*);
+                if(ptr)
+                    *ptr = s.substr(pmatch[i].rm_so, pmatch[i].rm_eo-pmatch[i].rm_so);
+            }
+            va_end(ap);
         }
+        else
+            result = false;
+        delete[] pmatch;
     }
-    delete[] regmatch;
-    return true;
+    else
+        result = false;
+    return result;
 }
 
 // get REG_EIP from ucontext.h
@@ -95,76 +99,51 @@ static bool match_regex(std::string s, std::string pattern, int n, ...)
 
 void bt_sighandler(int sig, siginfo_t* info, void* secret)
 {
-    std::cout << "stack trace for " << getExecutableName() << " pid=" << getpid() << std::endl;
-
+    std::cout << "stack array for " << getExecutableName() << " pid=" << getpid() << std::endl;
+    std::cout << "Error: signal " << sig << ":" << std::endl;
     ucontext_t* uc = (ucontext_t*)secret;
-
-    // do something useful with siginfo_t
-    if(sig == SIGSEGV)
-    {
-        printf("Got signal %d, faulty address is %p, from %ld\n",
-                sig, info->si_addr, uc->uc_mcontext.gregs[REG_EIP]);
-    }
-    else
-        printf("Got signal %d\n", sig);
-
-    void* trace[16];
-    int trace_size = backtrace(trace, 16);
-
-    // overwrite sigaction with caller's address
-    trace[1] = reinterpret_cast<void*>(uc->uc_mcontext.gregs[REG_EIP]);
-
-    char** messages = backtrace_symbols(trace, trace_size);
-
-    // allocate string which will be filled with the demangled function name
-    size_t funcnamesize = 256;
-    char* funcname = (char*)malloc(funcnamesize);
-
-    // skip first stack frame (points here)
-    for(int i=1; i<trace_size; ++i)
+    void* array[16];
+    int size = backtrace(array, 16);
+    array[1] = reinterpret_cast<void*>(uc->uc_mcontext.gregs[REG_EIP]);
+    char** symbols = backtrace_symbols(array, size);
+    size_t length = 256;
+    char* output_buffer = (char*)malloc(length);
+    for(int i=1; i<size; ++i)
     {
         std::stringstream ss;
-        // last parameter is the name of this app
-        ss << "basename `addr2line " << trace[i] << " -e " << getExecutableName() << "`";
+        ss << "basename `addr2line " << array[i] << " -e " << getExecutableName() << "`";
         std::string filename = _exec(ss.str());
         filename = filename.substr(0, filename.length()-1);
-
-        std::string module, proc, offset, address;
+        std::string module, mangled_name, offset, address;
         bool regex_status =
-                match_regex(messages[i], "(.*)[\(](.*)[+](.*)[)] [\[](.*)[]]", 5,
+                match_regex(symbols[i], "(.*)[\(](.*)[+](.*)[)] [\[](.*)[]]", 5,
                         NULL,
                         &module,
-                        &proc,
+                        &mangled_name,
                         &offset,
                         &address);
-
         if(regex_status)
         {
             int status;
-            char* ret = abi::__cxa_demangle(proc.c_str(), funcname, &funcnamesize, &status);
+            char* ret = abi::__cxa_demangle(mangled_name.c_str(), output_buffer, &length, &status);
             if(status == 0)
             {
-                funcname = ret; // use possibly realloc()-ed string
+                output_buffer = ret;
                 std::cout << "#" << i
                         << "  0x" << std::setfill('0') << std::setw(16) << std::hex
-                        << reinterpret_cast<size_t>(trace[i])
-                        << " in " << funcname << " at " << filename << std::endl;
+                        << reinterpret_cast<size_t>(array[i])
+                        << " in " << output_buffer << " at " << filename << std::endl;
             }
             else
             {
-                // demangling failed. Output function name as a C function with
-                // no arguments.
                 std::cout << "#" << i
                         << "  0x" << std::setfill('0') << std::setw(16) << std::hex
-                        << reinterpret_cast<size_t>(trace[i])
-                        << " in " << proc << " at " << filename << std::endl;
+                        << reinterpret_cast<size_t>(array[i])
+                        << " in " << mangled_name << " at " << filename << std::endl;
             }
         }
         else
-        {
-            // couldn't parse the line? print the whole line.
-            std::cout << "#" << i << "  " << messages[i] << std::endl;
-        }
+            std::cout << "#" << i << "  " << symbols[i] << std::endl;
     }
     exit(0);
 }
@@ -173,7 +152,7 @@ int func_a(int a, char b)
 {
     char* p = (char*)0xdeadbeef;
     a = a+b;
-    *p = 10; // CRASH here!!
+    *p = 10;
     return 2*a;
 }
 
@@ -186,18 +165,12 @@ int func_b()
 
 int main(int argc, char** argv)
 {
-    // install our signal handler
     struct sigaction sa;
-
     sa.sa_sigaction = bt_sighandler;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = SA_RESTART|SA_SIGINFO;
-
     sigaction(SIGSEGV, &sa, NULL);
     sigaction(SIGUSR1, &sa, NULL);
-    // ... add any other signal here
-
-    // do something
     printf("%d\n", func_b());
     return 0;
 }

@@ -52,7 +52,7 @@ clean_objects :
 # binaries
 #==================
 
-CPP_STEMS = main main2 main3 main4
+CPP_STEMS = main main2 main3 main3_ex main4
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 
 $(BIN_PATH)/main : $(BUILD_PATH)/main.o
