@@ -6,43 +6,54 @@
 // * backtrace
 // * line number resolution using addr2line
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <execinfo.h>
-#include <unistd.h>
-#include <cxxabi.h>
-#include <string.h>
-#include <string>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <regex.h>
-#include <stdarg.h>
-#include <vector>
-#include <sys/wait.h>
+#include <stdio.h> // FILE
+#include <stdlib.h> // free
+#include <execinfo.h> // backtrace_symbols
+#include <unistd.h> // getpid
+#include <cxxabi.h> // abi::__cxa_demangle
+#include <string.h> // strdup
+#include <string> // std::string
+#include <iostream> // std::cout
+#include <iomanip> // std::setfill
+#include <sstream> // std::stringstream
+#include <regex.h> // regex_t
+#include <stdarg.h> // va_list
+#include <vector> // std::vector
+#include <sys/wait.h> // waitpid
+#include <bits/signum.h> // SIGSEGV
 
 //#define __USE_GNU
-#include <ucontext.h> // REG_EIP
+#include <ucontext.h> // ucontext_t
 
-#define MAX_EXEC_NAME_SIZE 1024
-#define MAX_PIPE_BUF_SIZE 128
+#ifdef __x86_64__
+    #define REG_EIP REG_RIP
+#endif
 
-static std::string get_exec_name()
+#define MAX_EXECNAME_SIZE   1024
+#define MAX_PIPEBUF_SIZE    128
+#define MAX_BACKTRACE_DEPTH 16
+#define LIBC_START_MAIN     "__libc_start_main"
+
+static std::string get_execname()
 {
-    char buf[MAX_EXEC_NAME_SIZE];
-    ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf)-1);
-    if(len == -1)
+    static std::string execname;
+    if(!execname.empty())
+        return execname;
+    char buf[MAX_EXECNAME_SIZE];
+    int n = readlink("/proc/self/exe", buf, sizeof(buf)-1);
+    if(n == -1)
         return "";
-    buf[len] = '\0';
-    return buf;
+    buf[n] = '\0';
+    execname = buf;
+    return execname;
 }
 
-static std::string system_capture_stdout(std::string cmd)
+static std::string shell_capture(std::string cmd)
 {
     FILE* file = popen(cmd.c_str(), "r");
     if(!file)
         return "";
-    char buf[MAX_PIPE_BUF_SIZE];
+    char buf[MAX_PIPEBUF_SIZE];
     std::string result = "";
     while(!feof(file))
     {
@@ -51,6 +62,15 @@ static std::string system_capture_stdout(std::string cmd)
     }
     pclose(file);
     return result.substr(0, result.length()-1);
+}
+
+static std::string get_basename(std::string filename)
+{
+    std::string _basename;
+    char* buf = strdup(filename.c_str());
+    _basename = basename(buf);
+    free(buf);
+    return _basename;
 }
 
 static bool match_regex(std::string s, std::string pattern, int nmatch, ...)
@@ -85,34 +105,30 @@ static bool match_regex(std::string s, std::string pattern, int nmatch, ...)
     return result;
 }
 
-#ifdef __x86_64__
-    #define REG_EIP REG_RIP
-#endif
-
-static void backtrace_signal_handler(int sig, siginfo_t* info, void* secret)
+static void backtrace_sighandler(int sig, siginfo_t* info, void* secret)
 {
-    std::cout << "stack array for " << get_exec_name() << " pid=" << getpid() << std::endl;
+    std::cout << "stack array for " << get_execname() << " pid=" << getpid() << std::endl;
     std::cout << "Error: signal " << sig << ":" << std::endl;
-    ucontext_t* uc = (ucontext_t*)secret;
-    void* array[16];
-    int size = backtrace(array, 16);
-    array[1] = reinterpret_cast<void*>(uc->uc_mcontext.gregs[REG_EIP]);
+    void* array[MAX_BACKTRACE_DEPTH];
+    int size = backtrace(array, MAX_BACKTRACE_DEPTH);
+    array[1] = reinterpret_cast<void*>(
+            reinterpret_cast<ucontext_t*>(secret)->uc_mcontext.gregs[REG_EIP]);
     char** symbols = backtrace_symbols(array, size);
     for(int i = 1; i<size; i++)
     {
         std::stringstream ss;
-        ss << "basename `addr2line " << array[i] << " -e " << get_exec_name() << "`";
-        std::string exec_basename = system_capture_stdout(ss.str());
+        ss << "addr2line " << array[i] << " -e " << get_execname();
+        std::string exec_basename = get_basename(shell_capture(ss.str()));
         std::string module, mangled_name, offset, address;
-        bool regex_status =
-                match_regex(symbols[i], "(.*)[\(](.*)[+](.*)[)] [\[](.*)[]]", 5,
-                        NULL,
-                        &module,
-                        &mangled_name,
-                        &offset,
-                        &address);
-        if(regex_status)
+        if(match_regex(symbols[i], "(.*)[\(](.*)[+](.*)[)] [\[](.*)[]]", 5,
+                NULL,
+                &module,
+                &mangled_name,
+                &offset,
+                &address))
         {
+            if(mangled_name == LIBC_START_MAIN)
+                break;
             int status;
             char* demangled_name = abi::__cxa_demangle(mangled_name.c_str(), NULL, 0, &status);
             if(status == 0)
@@ -131,6 +147,16 @@ static void backtrace_signal_handler(int sig, siginfo_t* info, void* secret)
                         << " in " << mangled_name << " at " << exec_basename << std::endl;
             }
         }
+        else if(match_regex(symbols[i], "(.*)() [\[](.*)[]]", 3,
+                NULL,
+                &module,
+                &address))
+        {
+            std::cout << "#" << i
+                    << "  0x" << std::setfill('0') << std::setw(16) << std::hex
+                    << reinterpret_cast<size_t>(array[i])
+                    << " in ?? at " << exec_basename << std::endl;
+        }
         else
             std::cout << "#" << i << "  " << symbols[i] << std::endl;
     }
@@ -138,15 +164,15 @@ static void backtrace_signal_handler(int sig, siginfo_t* info, void* secret)
     exit(0);
 }
 
-static void gdb_signal_handler(int sig, siginfo_t* info, void* secret)
+static void gdb_sighandler(int sig, siginfo_t* info, void* secret)
 {
     std::stringstream ss;
     ss << getpid();
     int child_pid = fork();
     if(!child_pid)
     {
-        std::string exec_name = get_exec_name();
-        execlp("gdb", "-n", "-ex", "bt", exec_name.c_str(), ss.str().c_str(), NULL);
+        std::string execname = get_execname();
+        execlp("gdb", "-n", "-ex", "bt", execname.c_str(), ss.str().c_str(), NULL);
         abort();
     }
     else
@@ -154,10 +180,10 @@ static void gdb_signal_handler(int sig, siginfo_t* info, void* secret)
     exit(0);
 }
 
-void add_signal_handler(int sig, bool launch_gdb)
+void add_sighandler(int sig, void (*_sa_sigaction)(int, siginfo_t*, void*))
 {
     struct sigaction sa;
-    sa.sa_sigaction = launch_gdb ? gdb_signal_handler : backtrace_signal_handler;
+    sa.sa_sigaction = _sa_sigaction;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = SA_RESTART|SA_SIGINFO;
     sigaction(sig, &sa, NULL);
@@ -180,7 +206,10 @@ int func_b()
 
 int main(int argc, char** argv)
 {
-    add_signal_handler(SIGSEGV, false);
+    add_sighandler(SIGSEGV, backtrace_sighandler);
+    add_sighandler(SIGINT, backtrace_sighandler);
+    add_sighandler(SIGFPE, backtrace_sighandler);
+    add_sighandler(SIGBUS, backtrace_sighandler);
     printf("%d\n", func_b());
     return 0;
 }
