@@ -20,6 +20,7 @@
 #include <execinfo.h> // backtrace_symbols
 #include <ucontext.h> // ucontext_t
 #include <cxxabi.h> // abi::__cxa_demangle
+#include <signal.h> // siginfo_t
 #include <sys/wait.h> // waitpid
 #include <bits/signum.h> // SIGSEGV
 
