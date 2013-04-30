@@ -18,12 +18,10 @@
 #include <vector> // std::vector
 #include <sstream> // std::stringstream
 #include <execinfo.h> // backtrace_symbols
+#include <ucontext.h> // ucontext_t
 #include <cxxabi.h> // abi::__cxa_demangle
 #include <sys/wait.h> // waitpid
 #include <bits/signum.h> // SIGSEGV
-
-//#define __USE_GNU
-#include <ucontext.h> // ucontext_t
 
 #ifdef __x86_64__
     #define REG_EIP REG_RIP
