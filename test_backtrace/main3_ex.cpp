@@ -207,9 +207,10 @@ int func_b()
 int main(int argc, char** argv)
 {
     add_sighandler(SIGSEGV, backtrace_sighandler);
-    add_sighandler(SIGINT, backtrace_sighandler);
-    add_sighandler(SIGFPE, backtrace_sighandler);
-    add_sighandler(SIGBUS, backtrace_sighandler);
+    add_sighandler(SIGINT,  backtrace_sighandler);
+    add_sighandler(SIGFPE,  backtrace_sighandler);
+    add_sighandler(SIGBUS,  backtrace_sighandler);
+    add_sighandler(SIGILL,  backtrace_sighandler);
     printf("%d\n", func_b());
     return 0;
 }
