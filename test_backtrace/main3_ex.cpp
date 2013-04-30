@@ -23,6 +23,8 @@
 #include <sys/wait.h> // waitpid
 #include <bits/signum.h> // SIGSEGV
 
+//#define DEBUG
+
 #ifdef __x86_64__
     #define REG_EIP REG_RIP
 #endif
@@ -204,11 +206,19 @@ int func_b()
 
 int main(int argc, char** argv)
 {
+#ifdef DEBUG
+    add_sighandler(SIGSEGV, gdb_sighandler);
+    //add_sighandler(SIGINT,  gdb_sighandler);
+    add_sighandler(SIGFPE,  gdb_sighandler);
+    add_sighandler(SIGBUS,  gdb_sighandler);
+    add_sighandler(SIGILL,  gdb_sighandler);
+#else
     add_sighandler(SIGSEGV, backtrace_sighandler);
     add_sighandler(SIGINT,  backtrace_sighandler);
     add_sighandler(SIGFPE,  backtrace_sighandler);
     add_sighandler(SIGBUS,  backtrace_sighandler);
     add_sighandler(SIGILL,  backtrace_sighandler);
+#endif
     printf("%d\n", func_b());
     return 0;
 }
