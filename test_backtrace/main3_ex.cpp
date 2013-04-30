@@ -19,12 +19,17 @@
 #include <regex.h>
 #include <stdarg.h>
 #include <vector>
+#include <sys/wait.h>
 
-//#define DEBUG
+//#define __USE_GNU
+#include <ucontext.h> // REG_EIP
 
-static std::string argv0()
+#define MAX_EXEC_NAME_SIZE 1024
+#define MAX_PIPE_BUF_SIZE 128
+
+static std::string get_exec_name()
 {
-    char buf[1024];
+    char buf[MAX_EXEC_NAME_SIZE];
     ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf)-1);
     if(len == -1)
         return "";
@@ -34,18 +39,18 @@ static std::string argv0()
 
 static std::string system_capture_stdout(std::string cmd)
 {
-    FILE* pipe = popen(cmd.c_str(), "r");
-    if(!pipe)
-        return "ERROR";
-    char pipe_buf[128];
+    FILE* file = popen(cmd.c_str(), "r");
+    if(!file)
+        return "";
+    char buf[MAX_PIPE_BUF_SIZE];
     std::string result = "";
-    while(!feof(pipe))
+    while(!feof(file))
     {
-        if(fgets(pipe_buf, sizeof(pipe_buf), pipe))
-            result += pipe_buf;
+        if(fgets(buf, sizeof(buf), file))
+            result += buf;
     }
-    pclose(pipe);
-    return result;
+    pclose(file);
+    return result.substr(0, result.length()-1);
 }
 
 static bool match_regex(std::string s, std::string pattern, int nmatch, ...)
@@ -80,38 +85,13 @@ static bool match_regex(std::string s, std::string pattern, int nmatch, ...)
     return result;
 }
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
-void launch_gdb_session()
-{
-    char pid_buf[30];
-    sprintf(pid_buf, "%d", getpid());
-    char name_buf[512];
-    name_buf[readlink("/proc/self/exe", name_buf, 511)] = 0;
-    int child_pid = fork();
-    if(!child_pid)
-    {
-        execlp("gdb", "-n", "-ex", "bt", name_buf, pid_buf, NULL);
-        abort(); // if gdb failed to start
-    }
-    else
-        waitpid(child_pid, NULL, 0);
-}
-
-// get REG_EIP from ucontext.h
-//#define __USE_GNU
-#include <ucontext.h>
-
 #ifdef __x86_64__
     #define REG_EIP REG_RIP
 #endif
 
-void bt_sighandler(int sig, siginfo_t* info, void* secret)
+static void backtrace_signal_handler(int sig, siginfo_t* info, void* secret)
 {
-    std::cout << "stack array for " << argv0() << " pid=" << getpid() << std::endl;
+    std::cout << "stack array for " << get_exec_name() << " pid=" << getpid() << std::endl;
     std::cout << "Error: signal " << sig << ":" << std::endl;
     ucontext_t* uc = (ucontext_t*)secret;
     void* array[16];
@@ -121,9 +101,8 @@ void bt_sighandler(int sig, siginfo_t* info, void* secret)
     for(int i = 1; i<size; i++)
     {
         std::stringstream ss;
-        ss << "basename `addr2line " << array[i] << " -e " << argv0() << "`";
-        std::string filename = system_capture_stdout(ss.str());
-        filename = filename.substr(0, filename.length()-1);
+        ss << "basename `addr2line " << array[i] << " -e " << get_exec_name() << "`";
+        std::string exec_basename = system_capture_stdout(ss.str());
         std::string module, mangled_name, offset, address;
         bool regex_status =
                 match_regex(symbols[i], "(.*)[\(](.*)[+](.*)[)] [\[](.*)[]]", 5,
@@ -141,7 +120,7 @@ void bt_sighandler(int sig, siginfo_t* info, void* secret)
                 std::cout << "#" << i
                         << "  0x" << std::setfill('0') << std::setw(16) << std::hex
                         << reinterpret_cast<size_t>(array[i])
-                        << " in " << demangled_name << " at " << filename << std::endl;
+                        << " in " << demangled_name << " at " << exec_basename << std::endl;
                 free(demangled_name);
             }
             else
@@ -149,17 +128,39 @@ void bt_sighandler(int sig, siginfo_t* info, void* secret)
                 std::cout << "#" << i
                         << "  0x" << std::setfill('0') << std::setw(16) << std::hex
                         << reinterpret_cast<size_t>(array[i])
-                        << " in " << mangled_name << " at " << filename << std::endl;
+                        << " in " << mangled_name << " at " << exec_basename << std::endl;
             }
         }
         else
             std::cout << "#" << i << "  " << symbols[i] << std::endl;
     }
     free(symbols);
-#ifdef DEBUG
-    launch_gdb_session();
-#endif
     exit(0);
+}
+
+static void gdb_signal_handler(int sig, siginfo_t* info, void* secret)
+{
+    std::stringstream ss;
+    ss << getpid();
+    int child_pid = fork();
+    if(!child_pid)
+    {
+        std::string exec_name = get_exec_name();
+        execlp("gdb", "-n", "-ex", "bt", exec_name.c_str(), ss.str().c_str(), NULL);
+        abort();
+    }
+    else
+        waitpid(child_pid, NULL, 0);
+    exit(0);
+}
+
+void add_signal_handler(int sig, bool launch_gdb)
+{
+    struct sigaction sa;
+    sa.sa_sigaction = launch_gdb ? gdb_signal_handler : backtrace_signal_handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART|SA_SIGINFO;
+    sigaction(sig, &sa, NULL);
 }
 
 int func_a(int a, char b)
@@ -179,12 +180,7 @@ int func_b()
 
 int main(int argc, char** argv)
 {
-    struct sigaction sa;
-    sa.sa_sigaction = bt_sighandler;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART|SA_SIGINFO;
-    sigaction(SIGSEGV, &sa, NULL);
-    sigaction(SIGUSR1, &sa, NULL);
+    add_signal_handler(SIGSEGV, false);
     printf("%d\n", func_b());
     return 0;
 }
