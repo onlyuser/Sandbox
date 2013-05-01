@@ -25,7 +25,8 @@ SUBPATHS = \
     test_visitor #\
     test_backtrace \
     test_coroutine \
-    test_ticpp
+    test_ticpp \
+    test_tokenize
 
 .DEFAULT_GOAL : all
 all :
