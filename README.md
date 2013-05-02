@@ -1,8 +1,6 @@
-[![Build Status](https://secure.travis-ci.org/onlyuser/Sandbox.png)](http://travis-ci.org/onlyuser/Sandbox)
-
 Sandbox
 =======
-
+[![Build Status](https://secure.travis-ci.org/onlyuser/Sandbox.png)](http://travis-ci.org/onlyuser/Sandbox)
 Copyright (C) 2011-2013 Jerry Chen <mailto:onlyuser@gmail.com>
 
 About:
