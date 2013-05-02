@@ -10,20 +10,20 @@
 
 int main(int argc, char** argv)
 {
-    char str[] = "q,w,e;a,s,d;z,x,c";
-    char* end_str;
-    char* token = strtok_r(str, ";", &end_str);
+    char s[] = "q,w,e;a,s,d;z,x,c";
+    char* save_ptr;
+    char* token = strtok_r(s, ";", &save_ptr);
     while(token)
     {
-        char* end_token;
         printf("a = %s\n", token);
-        char* token2 = strtok_r(token, ",", &end_token);
-        while (token2 != NULL)
+        char* save_ptr2;
+        char* token2 = strtok_r(token, ",", &save_ptr2);
+        while(token2)
         {
             printf("b = %s\n", token2);
-            token2 = strtok_r(NULL, ",", &end_token);
+            token2 = strtok_r(NULL, ",", &save_ptr2);
         }
-        token = strtok_r(NULL, ";", &end_str);
+        token = strtok_r(NULL, ";", &save_ptr);
     }
     return 0;
 }

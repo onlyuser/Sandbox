@@ -15,8 +15,7 @@
 
 int main(int argc, char** argv)
 {
-    std::string sentence = "The quick brown fox jumps over the lazy dog";
-    std::istringstream iss(sentence);
+    std::istringstream iss("The quick brown fox jumps over the lazy dog");
 //    std::copy(std::istream_iterator<std::string>(iss),
 //            std::istream_iterator<std::string>(),
 //            std::ostream_iterator<std::string>(std::cout, "\n"));

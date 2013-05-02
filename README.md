@@ -18,6 +18,7 @@ Sandbox is a collection of experimental code.
 * test_regex     -- test for posix regex
 * test_ticpp     -- test for ticpp
 * test_tinyxml   -- test for tinyxml
+* test_tokenize  -- test for stl tokenize
 * test_variant   -- test for boost variant
 * test_visitor   -- test for visitor pattern
 

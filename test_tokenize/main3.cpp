@@ -14,24 +14,24 @@
 #include <vector>
 #include <sstream>
 
-class my_ctype : public std::ctype<char>
+class facet : public std::ctype<char>
 {
-    mask my_table[table_size];
+    mask m_table[table_size];
 public:
-    my_ctype(size_t refs = 0) : std::ctype<char>(&my_table[0], false, refs)
+    facet(size_t refs = 0) : std::ctype<char>(&m_table[0], false, refs)
     {
-        std::copy(classic_table(), classic_table()+table_size, my_table);
-        my_table[','] = (mask)space;
-        my_table[';'] = (mask)space;
+        //std::copy_n(classic_table(), table_size, m_table);
+        std::copy(classic_table(), classic_table()+table_size, m_table);
+        m_table[','] = (mask)space;
+        m_table[';'] = (mask)space;
     }
 };
 
 int main(int argc, char** argv)
 {
-    std::istringstream input("q,w,e;a,s,d;z,x,c");
-    std::locale x(std::locale::classic(), new my_ctype);
-    input.imbue(x);
-    std::copy(std::istream_iterator<std::string>(input),
+    std::istringstream iss("q,w,e;a,s,d;z,x,c");
+    iss.imbue(std::locale(std::locale::classic(), new facet));
+    std::copy(std::istream_iterator<std::string>(iss),
             std::istream_iterator<std::string>(),
             std::ostream_iterator<std::string>(std::cout, "\n"));
     return 0;

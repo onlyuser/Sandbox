@@ -13,24 +13,24 @@
 #include <iterator>
 #include <iostream>
 
-struct csv_reader : public std::ctype<char>
+struct facet : public std::ctype<char>
 {
-    csv_reader() : std::ctype<char>(get_table())
+    facet() : std::ctype<char>(get_table())
     {}
     static std::ctype_base::mask const* get_table()
     {
-        static std::vector<std::ctype_base::mask> rc(table_size, std::ctype_base::mask());
-        rc[' '] = std::ctype_base::space;
-        rc['\n'] = std::ctype_base::space;
-        rc[','] = std::ctype_base::space;
-        rc[';'] = std::ctype_base::space;
-        return &rc[0];
+        static std::vector<std::ctype_base::mask> table(table_size, std::ctype_base::mask());
+        table[' '] = std::ctype_base::space;
+        table['\n'] = std::ctype_base::space;
+        table[','] = std::ctype_base::space;
+        table[';'] = std::ctype_base::space;
+        return &table[0];
     }
 };
 
 int main(int argc, char** argv)
 {
-    std::cin.imbue(std::locale(std::locale(), new csv_reader()));
+    std::cin.imbue(std::locale(std::locale(), new facet()));
     std::copy(std::istream_iterator<int>(std::cin),
             std::istream_iterator<int>(),
             std::ostream_iterator<int>(std::cout, "\n"));
