@@ -21,12 +21,12 @@ SUBPATHS = \
     test_llvm \
     test_regex \
     test_tinyxml \
+    test_tokenize \
     test_variant \
     test_visitor #\
     test_backtrace \
     test_coroutine \
-    test_ticpp \
-    test_tokenize
+    test_ticpp
 
 .DEFAULT_GOAL : all
 all :

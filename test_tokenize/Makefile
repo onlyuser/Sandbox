@@ -76,9 +76,43 @@ clean_binaries :
 	-rm $(BINARIES)
 
 #==================
+# test
+#==================
+
+TEST_PATH = test
+TEST_SH = $(SCRIPT_PATH)/test.sh
+TEST_FILE_STEMS = main main2 main3 main4
+TEST_FILES = $(patsubst %, $(BUILD_PATH)/%.test, $(TEST_FILE_STEMS))
+TEST_PASS_FILES = $(patsubst %, %.pass, $(TEST_FILES))
+TEST_FAIL_FILES = $(patsubst %, %.fail, $(TEST_FILES))
+
+$(BUILD_PATH)/main.test.pass : $(BIN_PATH)/main $(TEST_PATH)/main.test
+	-$(TEST_SH) $(BIN_PATH)/main arg $(TEST_PATH)/main.test $(TEST_PATH)/main.gold \
+			$(BUILD_PATH)/main.test
+
+$(BUILD_PATH)/main2.test.pass : $(BIN_PATH)/main2 $(TEST_PATH)/main2.test
+	-$(TEST_SH) $(BIN_PATH)/main2 stdin $(TEST_PATH)/main2.test $(TEST_PATH)/main2.gold \
+			$(BUILD_PATH)/main2.test
+
+$(BUILD_PATH)/main3.test.pass : $(BIN_PATH)/main3 $(TEST_PATH)/main3.test
+	-$(TEST_SH) $(BIN_PATH)/main3 arg $(TEST_PATH)/main3.test $(TEST_PATH)/main3.gold \
+			$(BUILD_PATH)/main3.test
+
+$(BUILD_PATH)/main4.test.pass : $(BIN_PATH)/main4 $(TEST_PATH)/main4.test
+	-$(TEST_SH) $(BIN_PATH)/main4 arg $(TEST_PATH)/main4.test $(TEST_PATH)/main4.gold \
+			$(BUILD_PATH)/main4.test
+
+.PHONY : test
+test : $(TEST_PASS_FILES)
+
+.PHONY : clean_tests
+clean_tests :
+	-rm $(TEST_PASS_FILES) $(TEST_FAIL_FILES)
+
+#==================
 # clean
 #==================
 
 .PHONY : clean
-clean : clean_binaries clean_objects
+clean : clean_binaries clean_objects clean_tests
 	-rmdir $(BUILD_PATH) $(BIN_PATH)

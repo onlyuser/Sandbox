@@ -15,12 +15,12 @@ int main(int argc, char** argv)
     char* token = strtok_r(s, ";", &save_ptr);
     while(token)
     {
-        printf("a = %s\n", token);
+        printf("token = %s\n", token);
         char* save_ptr2;
         char* token2 = strtok_r(token, ",", &save_ptr2);
         while(token2)
         {
-            printf("b = %s\n", token2);
+            printf("token2 = %s\n", token2);
             token2 = strtok_r(NULL, ",", &save_ptr2);
         }
         token = strtok_r(NULL, ";", &save_ptr);
