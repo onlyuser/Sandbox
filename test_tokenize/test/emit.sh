@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# XLang
-# -- A parser framework for language modeling
+# Sandbox
+# -- A collection of experimental code
 # Copyright (C) 2011 Jerry Chen <mailto:onlyuser@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
