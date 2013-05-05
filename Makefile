@@ -22,6 +22,7 @@ SUBPATHS = \
     test_regex \
     test_tinyxml \
     test_tokenize \
+    test_unicode \
     test_variant \
     test_visitor #\
     test_backtrace \
