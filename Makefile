@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 SUBPATHS = \
+    test_c \
     test_functor \
     test_lexyacc \
     test_llvm \
