@@ -10,7 +10,7 @@ struct LessThan
 {
     bool operator()(const pair_t& x, const pair_t& y) const
     {
-        return x.first > y.first;
+        return x.first < y.first;
     }
 };
 
