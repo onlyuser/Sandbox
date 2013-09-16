@@ -30,7 +30,7 @@ Requirements:
 
 Unix tools and 3rd party components (accessible from $PATH):
 
-    gcc (with -std=c++0x support), coroutine, ticpp, tinyxml
+    gcc (with -std=c++0x support), boost, llvm, ticpp, tinyxml, coroutine
 
 **Environment variables:**
 
