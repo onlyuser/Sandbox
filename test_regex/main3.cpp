@@ -22,8 +22,9 @@ std::string replace(std::string &s, std::string find_string, std::string replace
     return _s;
 }
 
-bool regexp(std::string &s, std::string pattern, int nmatch, std::vector<std::string*> &cap_groups)
+bool regexp(std::string &s, std::string pattern, std::vector<std::string*> &cap_groups)
 {
+    int nmatch = cap_groups.size();
     if(!nmatch)
         return false;
     regex_t preg;
@@ -59,36 +60,33 @@ bool regexp(std::string &s, std::string pattern, int nmatch, ...)
     for(int i = 0; i<nmatch; i++)
         args[i] = va_arg(ap, std::string*);
     va_end(ap);
-    return regexp(s, pattern, nmatch, args);
+    return regexp(s, pattern, args);
 }
 
 bool regsub(std::string &s, std::string pattern, int nmatch, std::string replace_string)
 {
     const int MAX_CAP_GROUPS = 10;
-    std::vector<std::string> cap_groups(MAX_CAP_GROUPS);
-    std::vector<std::string*> cap_groups_ref(MAX_CAP_GROUPS);
-    int i = 0;
-    for(auto p = cap_groups.begin(); p != cap_groups.end(); p++)
-    {
-        cap_groups_ref[i] = &(*p);
-        i++;
-    }
+    int cap_group_count = std::min(nmatch, MAX_CAP_GROUPS);
+    std::vector<std::string> cap_groups(cap_group_count);
+    std::vector<std::string*> cap_groups_ref(cap_group_count);
+    for(int i = 0; i<cap_group_count; i++)
+        cap_groups_ref[i] = &(cap_groups[i]);
     bool result = false;
     size_t p = 0;
-    while(regexp(s, pattern, nmatch, cap_groups_ref))
+    while(regexp(s, pattern, cap_groups_ref))
     {
-        result = true;
         if((p = s.find(cap_groups[0], p)) == std::string::npos)
             break;
-        std::string temp_replace_string = replace_string;
-        for(int j = 1; j<nmatch; j++)
+        result = true;
+        std::string _replace_string(replace_string);
+        for(int j = 1; j<cap_group_count; j++)
         {
             std::stringstream ss;
             ss << "\\" << j;
-            temp_replace_string = replace(temp_replace_string, ss.str(), cap_groups[j]);
+            _replace_string = replace(_replace_string, ss.str(), cap_groups[j]);
         }
-        s.replace(p, cap_groups[0].length(), temp_replace_string);
-        p += temp_replace_string.length();
+        s.replace(p, cap_groups[0].length(), _replace_string);
+        p += _replace_string.length();
     }
     return result;
 }
