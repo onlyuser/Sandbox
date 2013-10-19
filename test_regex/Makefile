@@ -8,7 +8,7 @@ LIB_PATH = $(EXTERN_LIB_PATH)
 SRC_PATH = .
 BUILD_PATH = build
 BIN_PATH = bin
-BIN_STEMS = main main2
+BIN_STEMS = main main2 main3
 BINARIES = $(patsubst %, $(BIN_PATH)/%, $(BIN_STEMS))
 
 INCLUDE_PATHS = $(INCLUDE_PATH) $(COMMON_INCLUDE_PATH) $(EXTERN_INCLUDE_PATH)
@@ -23,7 +23,7 @@ LIB_FLAGS = $(patsubst %, -l%, $(LIB_STEMS))
 
 CXX = g++
 DEBUG = -g
-CXXFLAGS = -Wall $(DEBUG) $(INCLUDE_PATH_FLAGS)
+CXXFLAGS = -Wall $(DEBUG) $(INCLUDE_PATH_FLAGS) -std=c++0x
 LDFLAGS = -Wall $(DEBUG) $(LIB_PATH_FLAGS) $(LIB_FLAGS)
 
 SCRIPT_PATH = test
@@ -59,7 +59,7 @@ clean_objects :
 # binaries
 #==================
 
-CPP_STEMS = main main2
+CPP_STEMS = main main2 main3
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 
 $(BIN_PATH)/main : $(BUILD_PATH)/main.o
@@ -67,6 +67,10 @@ $(BIN_PATH)/main : $(BUILD_PATH)/main.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(BIN_PATH)/main2 : $(BUILD_PATH)/main2.o
+	mkdir -p $(BIN_PATH)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+$(BIN_PATH)/main3 : $(BUILD_PATH)/main3.o
 	mkdir -p $(BIN_PATH)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
@@ -80,7 +84,7 @@ clean_binaries :
 
 TEST_PATH = test
 TEST_SH = $(SCRIPT_PATH)/test.sh
-TEST_FILE_STEMS = main main2
+TEST_FILE_STEMS = main main2 main3
 TEST_FILES = $(patsubst %, $(BUILD_PATH)/%.test, $(TEST_FILE_STEMS))
 TEST_PASS_FILES = $(patsubst %, %.pass, $(TEST_FILES))
 TEST_FAIL_FILES = $(patsubst %, %.fail, $(TEST_FILES))

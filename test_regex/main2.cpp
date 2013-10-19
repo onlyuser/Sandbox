@@ -11,7 +11,7 @@
 #include <vector>
 #include <iostream>
 
-static bool match_regex(std::string s, std::string pattern, int nmatch, ...)
+bool match_regex(std::string s, std::string pattern, int nmatch, ...)
 {
     bool result = true;
     regex_t preg;
