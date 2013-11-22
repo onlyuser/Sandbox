@@ -1,3 +1,17 @@
-f(int&)
-f(int&&)
-f(int&)
+test 1
+lvalue
+rvalue
+rvalue
+test 2
+lvalue
+lvalue
+lvalue
+test 3
+lvalue
+rvalue
+test 4
+lvalue
+lvalue
+test 5
+lvalue
+rvalue
