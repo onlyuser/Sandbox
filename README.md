@@ -102,6 +102,9 @@ References:
 
     <dt>"How do you capture a group with regex?"</dt>
     <dd>http://stackoverflow.com/questions/2577193/how-do-you-capture-a-group-with-regex</dd>
+
+    <dt>"Universal References in C++11 - Scott Meyers"</dt>
+    <dd>http://isocpp.org/blog/2012/11/universal-references-in-c11-scott-meyers</dd>
 </dl>
 
 Keywords:
