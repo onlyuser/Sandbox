@@ -18,6 +18,7 @@ Sandbox is a collection of experimental code.
 * test_functor   -- test for stl functor
 * test_lexyacc   -- test for Lex-Yacc
 * test_llvm      -- test for LLVM
+* test_pthread   -- test for pthread
 * test_regex     -- test for posix regex
 * test_ticpp     -- test for ticpp
 * test_tinyxml   -- test for tinyxml
@@ -105,6 +106,9 @@ References:
 
     <dt>"Universal References in C++11 - Scott Meyers"</dt>
     <dd>http://isocpp.org/blog/2012/11/universal-references-in-c11-scott-meyers</dd>
+
+    <dt>"POSIX thread (pthread) libraries"</dt>
+    <dd>http://www.cs.cmu.edu/afs/cs/academic/class/15492-f07/www/pthreads.html</dd>
 </dl>
 
 Keywords:

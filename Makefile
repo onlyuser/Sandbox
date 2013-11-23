@@ -28,6 +28,7 @@ SUBPATHS = \
     test_visitor #\
     test_backtrace \
     test_coroutine \
+    test_pthread \
     test_ticpp
 
 .DEFAULT_GOAL : all
