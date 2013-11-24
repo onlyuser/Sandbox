@@ -12,12 +12,13 @@ Sandbox is a collection of experimental code.
 
 **Currently, it includes the following:**
 
-* test_c         -- test for c-language curiosities
 * test_backtrace -- test for backtrace
+* test_c         -- test for c-language curiosities
 * test_coroutine -- test for coroutine
 * test_functor   -- test for stl functor
 * test_lexyacc   -- test for Lex-Yacc
 * test_llvm      -- test for LLVM
+* test_opengl    -- test for OpenGL
 * test_pthread   -- test for pthread
 * test_regex     -- test for posix regex
 * test_ticpp     -- test for ticpp
@@ -109,9 +110,12 @@ References:
 
     <dt>"POSIX thread (pthread) libraries"</dt>
     <dd>http://www.cs.cmu.edu/afs/cs/academic/class/15492-f07/www/pthreads.html</dd>
+
+    <dt>"Setting up an OpenGL development environment in Ubuntu Linux"</dt>
+    <dd>http://www.codeproject.com/Articles/182109/Setting-up-an-OpenGL-development-environment-in-Ub</dd>
 </dl>
 
 Keywords:
 ---------
 
-    stl, boost, functor, Lex, Yacc, LLVM, visitor, variant, tinyxml, ticpp, regex, backtrace
+    stl, boost, functor, Lex, Yacc, OpenGL, LLVM, visitor, variant, tinyxml, ticpp, regex, backtrace
