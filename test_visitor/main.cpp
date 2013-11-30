@@ -41,10 +41,10 @@ int main(int argc, char** argv)
     inner_node.child(3)->name() = "child_3";
 
     VisitorDFS v;
-    v.dispatch_visit(&inner_node);
+    inner_node.accept(&v);
 
     ReverseVisitorDFS v2;
-    v2.dispatch_visit(&inner_node);
+    inner_node.accept(&v2);
 
     return 0;
 }

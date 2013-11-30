@@ -35,6 +35,7 @@ struct VisitorIFace
 {
     virtual ~VisitorIFace()
     {}
+    // use promoted identity to visit the host
     virtual void dispatch_visit(NodeIdentIface* unknown) const = 0;
 };
 
@@ -46,6 +47,7 @@ public:
     {}
     virtual ~Visitable()
     {}
+    // use promoted identity to accept the visitor
     virtual void accept(const VisitorIFace* v)
     {
         // "Java Tip 98" from http://en.wikipedia.org/wiki/Visitor_pattern
