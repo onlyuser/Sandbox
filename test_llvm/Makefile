@@ -5,7 +5,7 @@ SUBPATHS = $(shell find $(CHILD_PATH) -mindepth 1 -maxdepth 1 -name "*" -type d 
 all :
 	@for i in $(SUBPATHS); do \
 	echo "make $@ in $$i..."; \
-	cd $$i; $(MAKE); done
+	cd $$i; $(MAKE); cd -; done
 
 .PHONY : test
 test :

@@ -113,6 +113,12 @@ References:
 
     <dt>"Setting up an OpenGL development environment in Ubuntu Linux"</dt>
     <dd>http://www.codeproject.com/Articles/182109/Setting-up-an-OpenGL-development-environment-in-Ub</dd>
+
+    <dt>"OpenGL Programming/Modern OpenGL Introduction"</dt>
+    <dd>http://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Introduction</dd>
+
+    <dt>"Chapter 1 - Introduction to OpenGL"</dt>
+    <dd>http://unreal.srk.fer.hr/theredbook/chapter01.html</dd>
 </dl>
 
 Keywords:
