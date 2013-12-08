@@ -119,6 +119,9 @@ References:
 
     <dt>"Chapter 1 - Introduction to OpenGL"</dt>
     <dd>http://unreal.srk.fer.hr/theredbook/chapter01.html</dd>
+
+    <dt>"Anton's OpenGL 4 Tutorials"</dt>
+    <dd>http://antongerdelan.net/opengl/</dd>
 </dl>
 
 Keywords:
