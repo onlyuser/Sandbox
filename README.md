@@ -8,7 +8,7 @@ Copyright (C) 2011-2013 Jerry Chen <mailto:onlyuser@gmail.com>
 About:
 ------
 
-Sandbox is a collection of experimental code.
+Sandbox is a collection of experimental code and tutorials.
 
 **Currently, it includes the following:**
 
