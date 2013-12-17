@@ -18,6 +18,7 @@ Sandbox is a collection of experimental code and tutorials.
 * test_functor   -- test for stl functor
 * test_lexyacc   -- test for Lex-Yacc
 * test_llvm      -- test for LLVM
+* test_math      -- test for math libraries
 * test_opengl    -- test for OpenGL
 * test_pthread   -- test for pthread
 * test_regex     -- test for posix regex
@@ -114,17 +115,20 @@ References:
     <dt>"Setting up an OpenGL development environment in Ubuntu Linux"</dt>
     <dd>http://www.codeproject.com/Articles/182109/Setting-up-an-OpenGL-development-environment-in-Ub</dd>
 
+    <dt>"The Official Guide to Learning OpenGL, Version 1.1 - Chapter 1 - Introduction to OpenGL"</dt>
+    <dd>http://www.glprogramming.com/red/chapter01.html</dd>
+
     <dt>"OpenGL Programming/Modern OpenGL Introduction"</dt>
     <dd>http://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Introduction</dd>
 
-    <dt>"Chapter 1 - Introduction to OpenGL"</dt>
-    <dd>http://unreal.srk.fer.hr/theredbook/chapter01.html</dd>
-
     <dt>"Anton's OpenGL 4 Tutorials"</dt>
     <dd>http://antongerdelan.net/opengl/</dd>
+
+    <dt>"OpenGL Mathematics (GLM) - A C++ mathematics library for graphics programming - Code samples"</dt>
+    <dd>http://glm.g-truc.net/0.9.4/code.html</dd>
 </dl>
 
 Keywords:
 ---------
 
-    stl, boost, functor, Lex, Yacc, OpenGL, LLVM, visitor, variant, tinyxml, ticpp, regex, backtrace
+    stl, boost, functor, Lex, Yacc, OpenGL, glm, LLVM, visitor, variant, tinyxml, ticpp, regex, backtrace

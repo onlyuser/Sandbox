@@ -1,6 +1,6 @@
 // REFERENCE:
-// "Setting up an OpenGL development environment in Ubuntu Linux"
-// http://www.codeproject.com/Articles/182109/Setting-up-an-OpenGL-development-environment-in-Ub
+// "Chapter 1 - Introduction to OpenGL"
+// http://www.glprogramming.com/red/chapter01.html
 
 // CONCEPTS:
 // * fixed-pipe opengl
@@ -8,73 +8,77 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <GL/glx.h>
-#include "GL/freeglut.h"
+#include <GL/glut.h>
+#include <stdlib.h>
 
 static GLfloat spin = 0.0;
 
+void init(void)
+{
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+   glShadeModel (GL_FLAT);
+}
+
 void display(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glPushMatrix();
-    glRotatef(spin, 0.0, 0.0, 1.0);
-    glRectf(-25.0, -25.0, 25.0, 25.0);
-    glPopMatrix();
-
-    glFlush();
-    glXSwapBuffers(glutXDisplay(), glutXWindow());
+   glClear(GL_COLOR_BUFFER_BIT);
+   glPushMatrix();
+   glRotatef(spin, 0.0, 0.0, 1.0);
+   glColor3f(1.0, 1.0, 1.0);
+   glRectf(-25.0, -25.0, 25.0, 25.0);
+   glPopMatrix();
+   glutSwapBuffers();
 }
 
 void spinDisplay(void)
 {
-    spin = spin + 2.0;
-    if (spin > 360.0)
-        spin = spin - 360.0;
-    display();
+   spin = spin + 2.0;
+   if (spin > 360.0)
+      spin = spin - 360.0;
+   glutPostRedisplay();
 }
 
-void startIdleFunc(AUX_EVENTREC *event)
+void reshape(int w, int h)
 {
-    glutIdleFunc(spinDisplay);
+   glViewport (0, 0, (GLsizei) w, (GLsizei) h);
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   glOrtho(-50.0, 50.0, -50.0, 50.0, -1.0, 1.0);
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
 }
 
-void stopIdleFunc(AUX_EVENTREC *event)
+void mouse(int button, int state, int x, int y)
 {
-    glutIdleFunc(0);
+   switch (button) {
+      case GLUT_LEFT_BUTTON:
+         if (state == GLUT_DOWN)
+            glutIdleFunc(spinDisplay);
+         break;
+      case GLUT_MIDDLE_BUTTON:
+         if (state == GLUT_DOWN)
+            glutIdleFunc(NULL);
+         break;
+      default:
+         break;
+   }
 }
 
-void myinit(void)
-{
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    glColor3f(1.0, 1.0, 1.0);
-    glShadeModel(GL_FLAT);
-}
-
-void myReshape(GLsizei w, GLsizei h)
-{
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    if (w <= h)
-        glOrtho (-50.0, 50.0, -50.0*(GLfloat)h/(GLfloat)w,
-            50.0*(GLfloat)h/(GLfloat)w, -1.0, 1.0);
-    else
-        glOrtho (-50.0*(GLfloat)w/(GLfloat)h,
-            50.0*(GLfloat)w/(GLfloat)h, -50.0, 50.0, -1.0, 1.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity ();
-}
-
-
+/*
+ *  Request double buffer display mode.
+ *  Register mouse input callback functions
+ */
 int main(int argc, char** argv)
 {
-    glutInitDisplayMode(AUX_DOUBLE | AUX_RGBA);
-    glutInitPosition(0, 0, 500, 500);
-    glutInitWindow(argv[0]);
-    myinit();
-    glutReshapeFunc(myReshape);
-    glutIdleFunc(spinDisplay);
-    glutMouseFunc(AUX_LEFTBUTTON, AUX_MOUSEDOWN, startIdleFunc);
-    glutMouseFunc(AUX_MIDDLEBUTTON, AUX_MOUSEDOWN, stopIdleFunc);
-    glutMainLoop(display);
+   glutInit(&argc, argv);
+   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
+   glutInitWindowSize (250, 250);
+   glutInitWindowPosition (100, 100);
+   glutCreateWindow (argv[0]);
+   init ();
+   glutDisplayFunc(display);
+   glutReshapeFunc(reshape);
+   glutMouseFunc(mouse);
+   glutMainLoop();
+   return 0;
 }
