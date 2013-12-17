@@ -20,6 +20,7 @@ SUBPATHS = \
     test_functor \
     test_lexyacc \
     test_llvm \
+    test_math \
     test_regex \
     test_tinyxml \
     test_tokenize \
@@ -28,7 +29,6 @@ SUBPATHS = \
     test_visitor #\
     test_backtrace \
     test_coroutine \
-    test_math \
     test_opengl \
     test_pthread \
     test_ticpp

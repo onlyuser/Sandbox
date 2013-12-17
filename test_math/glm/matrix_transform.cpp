@@ -35,7 +35,7 @@ int main(int argc, char** argv)
         std::cout << "[";
         for(int j = 0; j<4; j++)
         {
-            std::cout << MVP[i][j] << ",\t";
+            std::cout << MVP[i][j] << ", ";
         }
         std::cout << "]" << std::endl;
     }
