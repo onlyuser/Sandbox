@@ -1,11 +1,3 @@
-// REFERENCE:
-// "Setting up an OpenGL development environment in Ubuntu Linux"
-// http://www.codeproject.com/Articles/182109/Setting-up-an-OpenGL-development-environment-in-Ub
-
-// CONCEPTS:
-// * fixed-pipe opengl
-// * glut
-
 #include <glm/glm.hpp>
 #include <glm/gtc/type_precision.hpp>
 #include <iostream>
