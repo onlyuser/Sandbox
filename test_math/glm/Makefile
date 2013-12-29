@@ -8,7 +8,7 @@ LIB_PATH = $(EXTERN_LIB_PATH)
 SRC_PATH = .
 BUILD_PATH = build
 BIN_PATH = bin
-BIN_STEMS = matrix_transform triangle_normal vector_types
+BIN_STEMS = basic matrix_transform triangle_normal vector_types
 BINARIES = $(patsubst %, $(BIN_PATH)/%, $(BIN_STEMS))
 
 INCLUDE_PATHS = $(INCLUDE_PATH) $(COMMON_INCLUDE_PATH) $(EXTERN_INCLUDE_PATH)
@@ -55,9 +55,13 @@ clean_objects :
 # binaries
 #==================
 
-CPP_STEMS = matrix_transform triangle_normal vector_types
+CPP_STEMS = basic matrix_transform triangle_normal vector_types
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 ASM_OBJECTS = $(patsubst %, $(BUILD_PATH)/%.cpp.$(ASM_SUFFIX), $(CPP_STEMS))
+
+$(BIN_PATH)/basic : $(BUILD_PATH)/basic.o
+	mkdir -p $(BIN_PATH)
+	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(BIN_PATH)/matrix_transform : $(BUILD_PATH)/matrix_transform.o
 	mkdir -p $(BIN_PATH)
@@ -81,10 +85,14 @@ clean_binaries :
 
 TEST_PATH = test
 TEST_SH = $(SCRIPT_PATH)/test.sh
-TEST_FILE_STEMS = matrix_transform triangle_normal vector_types
+TEST_FILE_STEMS = basic matrix_transform triangle_normal vector_types
 TEST_FILES = $(patsubst %, $(BUILD_PATH)/%.test, $(TEST_FILE_STEMS))
 TEST_PASS_FILES = $(patsubst %, %.pass, $(TEST_FILES))
 TEST_FAIL_FILES = $(patsubst %, %.fail, $(TEST_FILES))
+
+$(BUILD_PATH)/basic.test.pass : $(BIN_PATH)/basic $(TEST_PATH)/basic.test
+	-$(TEST_SH) $(BIN_PATH)/basic arg $(TEST_PATH)/basic.test $(TEST_PATH)/basic.gold \
+			$(BUILD_PATH)/basic.test
 
 $(BUILD_PATH)/matrix_transform.test.pass : $(BIN_PATH)/matrix_transform $(TEST_PATH)/matrix_transform.test
 	-$(TEST_SH) $(BIN_PATH)/matrix_transform arg $(TEST_PATH)/matrix_transform.test $(TEST_PATH)/matrix_transform.gold \
