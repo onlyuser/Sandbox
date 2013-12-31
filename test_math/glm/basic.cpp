@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     std::cout << "===========" << std::endl << std::endl;
 
     {
-        std::cout << "default c-tor:\t";
+        std::cout << "default c-tor:\t\t";
         print_vec(glm::vec3());
         std::cout << std::endl;
 
@@ -215,6 +215,7 @@ int main(int argc, char** argv)
     {
         std::cout << "default c-tor:" << std::endl;
         print_mat(glm::mat4());
+        std::cout << std::endl;
 
         std::cout << "arg c-tor (explicit):" << std::endl;
         print_mat(glm::mat4(
@@ -222,9 +223,11 @@ int main(int argc, char** argv)
                 5,   6,  7,  8,
                 9,  10, 11, 12,
                 13, 14, 15, 16));
+        std::cout << std::endl;
 
         std::cout << "arg c-tor (1 float):" << std::endl;
         print_mat(glm::mat4(2));
+        std::cout << std::endl;
 
         std::cout << "arg c-tor (array):" << std::endl;
         float arr[] = {
@@ -251,6 +254,7 @@ int main(int argc, char** argv)
 
         std::cout << "m:" << std::endl;
         print_mat(m);
+        std::cout << std::endl;
 
         std::cout << "transpose(m):" << std::endl;
         print_mat(glm::transpose(m));
@@ -262,16 +266,13 @@ int main(int argc, char** argv)
     std::cout << "==============" << std::endl << std::endl;
 
     {
-        glm::vec3 v(10, 20, 30);
         glm::mat4 m = glm::translate(
                 glm::mat4(1),
-                v);
+                glm::vec3(10, 20, 30));
 
-        std::cout << "v:\t";
-        print_vec(v);
-        std::cout << std::endl;
-        std::cout << "m:" << std::endl;
+        std::cout << "m (translate by [10, 20, 30]):" << std::endl;
         print_mat(m);
+        std::cout << std::endl;
 
         std::cout << "inverse(m):" << std::endl;
         print_mat(glm::inverse(m));
@@ -287,8 +288,9 @@ int main(int argc, char** argv)
                 glm::mat4(2),
                 glm::vec3(10, 20, 30));
 
-        std::cout << "m:" << std::endl;
+        std::cout << "m (scale by 2, translate by [10, 20, 30]):" << std::endl;
         print_mat(m);
+        std::cout << std::endl;
 
         std::cout << "determinant(m):\t" << glm::determinant(m) << std::endl;
     }
@@ -308,9 +310,10 @@ int main(int argc, char** argv)
 
         std::cout << "v:\t";
         print_vec(v);
-        std::cout << std::endl;
-        std::cout << "m:" << std::endl;
+        std::cout << std::endl << std::endl;
+        std::cout << "m (translate by [10, 20, 30]):" << std::endl;
         print_mat(m);
+        std::cout << std::endl;
 
         std::cout << "m*v:\t";
         print_vec(m*vec3_to_vec4(v));
@@ -333,14 +336,17 @@ int main(int argc, char** argv)
 
         std::cout << "v:\t";
         print_vec(v);
-        std::cout << std::endl;
-        std::cout << "m1:" << std::endl;
+        std::cout << std::endl << std::endl;
+        std::cout << "m1 (translate by [10, 20, 30]):" << std::endl;
         print_mat(m1);
-        std::cout << "m2:" << std::endl;
+        std::cout << std::endl;
+        std::cout << "m2 (scale by 2):" << std::endl;
         print_mat(m2);
+        std::cout << std::endl;
 
         std::cout << "m1*m2:" << std::endl;
         print_mat(m1*m2);
+        std::cout << std::endl;
 
         std::cout << "m1*m2*v4:\t";
         print_vec(m1*m2*vec3_to_vec4(v));
@@ -377,13 +383,16 @@ int main(int argc, char** argv)
         std::cout << std::endl;
         std::cout << "v3:\t";
         print_vec(v3);
-        std::cout << std::endl;
+        std::cout << std::endl << std::endl;
         std::cout << "m1 (rotate +90 deg around y axis):" << std::endl;
         print_mat(m1);
+        std::cout << std::endl;
         std::cout << "m2 (rotate +90 deg around z axis):" << std::endl;
         print_mat(m2);
+        std::cout << std::endl;
         std::cout << "m3 (rotate +90 deg around x axis):" << std::endl;
         print_mat(m3);
+        std::cout << std::endl;
 
         std::cout << "m1*v1:\t";
         print_vec(m1*vec3_to_vec4(v1));
