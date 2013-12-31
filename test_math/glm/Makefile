@@ -29,8 +29,6 @@ LDFLAGS = -Wall $(DEBUG) $(LIB_PATH_FLAGS) $(LIB_FLAGS)
 SCRIPT_PATH = test
 TEST_PATH = test
 
-ASM_SUFFIX = asm
-
 #==================
 # all
 #==================
@@ -45,11 +43,10 @@ all : $(BINARIES)
 $(BUILD_PATH)/%.o : $(SRC_PATH)/%.cpp
 	mkdir -p $(BUILD_PATH)
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
-	$(CXX) -S -o $(BUILD_PATH)/$<.$(ASM_SUFFIX) $< $(CXXFLAGS)
 
 .PHONY : clean_objects
 clean_objects :
-	-rm $(OBJECTS) $(ASM_OBJECTS)
+	-rm $(OBJECTS)
 
 #==================
 # binaries
@@ -57,7 +54,6 @@ clean_objects :
 
 CPP_STEMS = basic matrix_transform triangle_normal vector_types
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
-ASM_OBJECTS = $(patsubst %, $(BUILD_PATH)/%.cpp.$(ASM_SUFFIX), $(CPP_STEMS))
 
 $(BIN_PATH)/basic : $(BUILD_PATH)/basic.o
 	mkdir -p $(BIN_PATH)
