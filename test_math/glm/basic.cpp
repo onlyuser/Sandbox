@@ -14,11 +14,6 @@ void print_vec(const glm::vec4 &v)
     std::cout << "[" << v.x << ",\t" << v.y << ",\t" << v.z << ",\t" << v.w << "]";
 }
 
-glm::vec4 vec3_to_vec4(glm::vec3 &v)
-{
-    return glm::vec4(v.x, v.y, v.z, 1);
-}
-
 void print_mat(const glm::mat4 &m)
 {
     for(int i = 0; i<4; i++)
@@ -316,7 +311,7 @@ int main(int argc, char** argv)
         std::cout << std::endl;
 
         std::cout << "m*v:\t";
-        print_vec(m*vec3_to_vec4(v));
+        print_vec(m*glm::vec4(v, 1));
         std::cout << std::endl;
     }
     std::cout << std::endl;
@@ -349,7 +344,7 @@ int main(int argc, char** argv)
         std::cout << std::endl;
 
         std::cout << "m1*m2*v4:\t";
-        print_vec(m1*m2*vec3_to_vec4(v));
+        print_vec(m1*m2*glm::vec4(v, 1));
         std::cout << std::endl;
     }
     std::cout << std::endl;
@@ -395,15 +390,15 @@ int main(int argc, char** argv)
         std::cout << std::endl;
 
         std::cout << "m1*v1:\t";
-        print_vec(m1*vec3_to_vec4(v1));
+        print_vec(m1*glm::vec4(v1, 1));
         std::cout << std::endl;
 
         std::cout << "m2*v2:\t";
-        print_vec(m2*vec3_to_vec4(v2));
+        print_vec(m2*glm::vec4(v2, 1));
         std::cout << std::endl;
 
         std::cout << "m3*v3:\t";
-        print_vec(m3*vec3_to_vec4(v3));
+        print_vec(m3*glm::vec4(v3, 1));
         std::cout << std::endl;
     }
 }
