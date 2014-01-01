@@ -79,7 +79,7 @@ clean_objects : clean_objects_common
 CPP_STEMS = cube
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 
-$(BIN_PATH)/cube : $(BUILD_PATH)/cube.o $(OBJECTS_COMMON)
+$(BIN_PATH)/cube : $(OBJECTS) $(OBJECTS_COMMON)
 	mkdir -p $(BIN_PATH)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 

@@ -79,7 +79,7 @@ clean_objects : clean_objects_common
 CPP_STEMS = triangle
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 
-$(BIN_PATH)/triangle : $(BUILD_PATH)/triangle.o $(OBJECTS_COMMON)
+$(BIN_PATH)/triangle : $(OBJECTS) $(OBJECTS_COMMON)
 	mkdir -p $(BIN_PATH)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 

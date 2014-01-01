@@ -68,6 +68,10 @@ $(BUILD_PATH)/%.o : $(SRC_PATH)/%.cpp
 	mkdir -p $(BUILD_PATH)
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
+$(BUILD_PATH)/%.o : $(SRC_PATH)/%.c
+	mkdir -p $(BUILD_PATH)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
 .PHONY : clean_objects
 clean_objects : clean_objects_common
 	-rm $(OBJECTS)
@@ -76,10 +80,10 @@ clean_objects : clean_objects_common
 # binaries
 #==================
 
-CPP_STEMS = cube res_textures
+CPP_STEMS = cube res_texture
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 
-$(BIN_PATH)/cube : $(BUILD_PATH)/cube.o $(OBJECTS_COMMON)
+$(BIN_PATH)/cube : $(OBJECTS) $(OBJECTS_COMMON)
 	mkdir -p $(BIN_PATH)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
