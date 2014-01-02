@@ -1,4 +1,5 @@
 #include <Program.h>
+#include <Attribute.h>
 #include <Shader.h>
 #include <GL/glew.h>
 
@@ -32,9 +33,9 @@ void Program::use() const
     glUseProgram(m_id);
 }
 
-GLint Program::get_attrib_location(const GLchar *name) const
+Attribute* Program::get_attrib_location(const GLchar *name) const
 {
-    return glGetAttribLocation(m_id, name);
+    return new Attribute(this, name);
 }
 
 GLint Program::get_uniform_location(const GLchar *name) const

@@ -19,6 +19,7 @@
 
 #include "res_texture.c"
 
+#include <Attribute.h>
 #include <Buffer.h>
 #include <Program.h>
 #include <Shader.h>
@@ -30,7 +31,7 @@ std::unique_ptr<vt::Buffer> vbo_cube_vertices, vbo_cube_texcoords;
 std::unique_ptr<vt::Buffer> ibo_cube_elements;
 std::unique_ptr<vt::Program> program;
 std::unique_ptr<vt::Texture> texture_id;
-GLint attribute_coord3d, attribute_texcoord;
+std::unique_ptr<vt::Attribute> attribute_coord3d, attribute_texcoord;
 GLint uniform_mvp, uniform_mytexture;
 
 int init_resources()
@@ -122,14 +123,14 @@ int init_resources()
 
   const char* attribute_name;
   attribute_name = "coord3d";
-  attribute_coord3d = program->get_attrib_location(attribute_name);
-  if (attribute_coord3d == -1) {
+  attribute_coord3d = std::unique_ptr<vt::Attribute>(program->get_attrib_location(attribute_name));
+  if (attribute_coord3d->id() == -1) {
     fprintf(stderr, "Could not bind attribute %s\n", attribute_name);
     return 0;
   }
   attribute_name = "texcoord";
-  attribute_texcoord = program->get_attrib_location(attribute_name);
-  if (attribute_texcoord == -1) {
+  attribute_texcoord = std::unique_ptr<vt::Attribute>(program->get_attrib_location(attribute_name));
+  if (attribute_texcoord->id() == -1) {
     fprintf(stderr, "Could not bind attribute %s\n", attribute_name);
     return 0;
   }
@@ -178,11 +179,10 @@ void onDisplay()
   texture_id->bind();
   glUniform1i(uniform_mytexture, /*GL_TEXTURE*/0);
 
-  glEnableVertexAttribArray(attribute_coord3d);
+  attribute_coord3d->enable_vertex_attrib_array();
   // Describe our vertices array to OpenGL (it can't guess its format automatically)
   vbo_cube_vertices->bind();
-  glVertexAttribPointer(
-    attribute_coord3d, // attribute
+  attribute_coord3d->vertex_attrib_pointer(
     3,                 // number of elements per vertex, here (x,y,z)
     GL_FLOAT,          // the type of each element
     GL_FALSE,          // take our values as-is
@@ -190,10 +190,9 @@ void onDisplay()
     0                  // offset of first element
   );
 
-  glEnableVertexAttribArray(attribute_texcoord);
+  attribute_texcoord->enable_vertex_attrib_array();
   vbo_cube_texcoords->bind();
-  glVertexAttribPointer(
-    attribute_texcoord, // attribute
+  attribute_texcoord->vertex_attrib_pointer(
     2,                  // number of elements per vertex, here (x,y)
     GL_FLOAT,           // the type of each element
     GL_FALSE,           // take our values as-is
@@ -206,8 +205,8 @@ void onDisplay()
   int size;  glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
   glDrawElements(GL_TRIANGLES, size/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
 
-  glDisableVertexAttribArray(attribute_coord3d);
-  glDisableVertexAttribArray(attribute_texcoord);
+  attribute_coord3d->disable_vertex_attrib_array();
+  attribute_texcoord->disable_vertex_attrib_array();
   glutSwapBuffers();
 }
 
