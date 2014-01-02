@@ -122,26 +122,26 @@ int init_resources()
 
   const char* attribute_name;
   attribute_name = "coord3d";
-  attribute_coord3d = glGetAttribLocation(program->id(), attribute_name);
+  attribute_coord3d = program->get_attrib_location(attribute_name);
   if (attribute_coord3d == -1) {
     fprintf(stderr, "Could not bind attribute %s\n", attribute_name);
     return 0;
   }
   attribute_name = "texcoord";
-  attribute_texcoord = glGetAttribLocation(program->id(), attribute_name);
+  attribute_texcoord = program->get_attrib_location(attribute_name);
   if (attribute_texcoord == -1) {
     fprintf(stderr, "Could not bind attribute %s\n", attribute_name);
     return 0;
   }
   const char* uniform_name;
   uniform_name = "mvp";
-  uniform_mvp = glGetUniformLocation(program->id(), uniform_name);
+  uniform_mvp = program->get_uniform_location(uniform_name);
   if (uniform_mvp == -1) {
     fprintf(stderr, "Could not bind uniform %s\n", uniform_name);
     return 0;
   }
   uniform_name = "mytexture";
-  uniform_mytexture = glGetUniformLocation(program->id(), uniform_name);
+  uniform_mytexture = program->get_uniform_location(uniform_name);
   if (uniform_mytexture == -1) {
     fprintf(stderr, "Could not bind uniform %s\n", uniform_name);
     return 0;

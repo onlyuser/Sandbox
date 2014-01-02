@@ -32,5 +32,15 @@ void Program::use() const
     glUseProgram(m_id);
 }
 
+GLint Program::get_attrib_location(const GLchar *name) const
+{
+    return glGetAttribLocation(m_id, name);
+}
+
+GLint Program::get_uniform_location(const GLchar *name) const
+{
+    return glGetUniformLocation(m_id, name);
+}
+
 }
 
