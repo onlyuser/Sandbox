@@ -16,7 +16,7 @@ public:
     void attach_shader(const Shader* shader) const;
     bool link() const;
     void use() const;
-    Attribute* get_attrib_location(const GLchar *name) const;
+    Attribute* get_attribute(const GLchar *name) const;
     GLint get_uniform_location(const GLchar *name) const;
     GLuint id() const
     {

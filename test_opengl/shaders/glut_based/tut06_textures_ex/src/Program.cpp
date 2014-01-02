@@ -33,7 +33,7 @@ void Program::use() const
     glUseProgram(m_id);
 }
 
-Attribute* Program::get_attrib_location(const GLchar *name) const
+Attribute* Program::get_attribute(const GLchar *name) const
 {
     return new Attribute(this, name);
 }

@@ -123,13 +123,13 @@ int init_resources()
 
   const char* attribute_name;
   attribute_name = "coord3d";
-  attribute_coord3d = std::unique_ptr<vt::Attribute>(program->get_attrib_location(attribute_name));
+  attribute_coord3d = std::unique_ptr<vt::Attribute>(program->get_attribute(attribute_name));
   if (attribute_coord3d->id() == -1) {
     fprintf(stderr, "Could not bind attribute %s\n", attribute_name);
     return 0;
   }
   attribute_name = "texcoord";
-  attribute_texcoord = std::unique_ptr<vt::Attribute>(program->get_attrib_location(attribute_name));
+  attribute_texcoord = std::unique_ptr<vt::Attribute>(program->get_attribute(attribute_name));
   if (attribute_texcoord->id() == -1) {
     fprintf(stderr, "Could not bind attribute %s\n", attribute_name);
     return 0;
