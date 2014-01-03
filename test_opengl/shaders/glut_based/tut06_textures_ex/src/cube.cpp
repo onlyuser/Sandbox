@@ -182,8 +182,8 @@ void onDisplay()
 
   attribute_coord3d->enable_vertex_attrib_array();
   // Describe our vertices array to OpenGL (it can't guess its format automatically)
-  vbo_cube_vertices->bind();
   attribute_coord3d->vertex_attrib_pointer(
+    vbo_cube_vertices.get(),
     3,                 // number of elements per vertex, here (x,y,z)
     GL_FLOAT,          // the type of each element
     GL_FALSE,          // take our values as-is
@@ -192,8 +192,8 @@ void onDisplay()
   );
 
   attribute_texcoord->enable_vertex_attrib_array();
-  vbo_cube_texcoords->bind();
   attribute_texcoord->vertex_attrib_pointer(
+    vbo_cube_texcoords.get(),
     2,                  // number of elements per vertex, here (x,y)
     GL_FLOAT,           // the type of each element
     GL_FALSE,           // take our values as-is

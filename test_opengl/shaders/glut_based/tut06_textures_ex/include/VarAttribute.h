@@ -5,6 +5,7 @@
 
 namespace vt {
 
+class Buffer;
 class Program;
 
 class VarAttribute
@@ -15,6 +16,7 @@ public:
     void enable_vertex_attrib_array() const;
     void disable_vertex_attrib_array() const;
     void vertex_attrib_pointer(
+            const Buffer* buffer,
             GLint size,
             GLenum type,
             GLboolean normalized,
