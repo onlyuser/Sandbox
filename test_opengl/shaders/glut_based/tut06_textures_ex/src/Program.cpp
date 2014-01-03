@@ -1,6 +1,7 @@
 #include <Program.h>
-#include <Attribute.h>
 #include <Shader.h>
+#include <VarAttribute.h>
+#include <VarUniform.h>
 #include <GL/glew.h>
 
 namespace vt {
@@ -24,7 +25,7 @@ bool Program::link() const
 {
     glLinkProgram(m_id);
     GLint link_ok = GL_FALSE;
-    glGetProgramiv(m_id, GL_LINK_STATUS, &link_ok);
+    get_program_iv(GL_LINK_STATUS, &link_ok);
     return (link_ok == GL_TRUE);
 }
 
@@ -33,14 +34,21 @@ void Program::use() const
     glUseProgram(m_id);
 }
 
-Attribute* Program::get_attribute(const GLchar *name) const
+VarAttribute* Program::get_var_attribute(const GLchar *name) const
 {
-    return new Attribute(this, name);
+    return new VarAttribute(this, name);
 }
 
-GLint Program::get_uniform_location(const GLchar *name) const
+VarUniform* Program::get_var_uniform(const GLchar *name) const
 {
-    return glGetUniformLocation(m_id, name);
+    return new VarUniform(this, name);
+}
+
+void Program::get_program_iv(
+        GLenum pname,
+        GLint *params) const
+{
+    glGetProgramiv(m_id, pname, params);
 }
 
 }

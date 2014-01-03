@@ -1,29 +1,29 @@
-#include <Attribute.h>
+#include <VarAttribute.h>
 #include <Program.h>
 #include <GL/glew.h>
 
 namespace vt {
 
-Attribute::Attribute(const Program* program, const GLchar *name)
+VarAttribute::VarAttribute(const Program* program, const GLchar *name)
 {
     m_id = glGetAttribLocation(program->id(), name);
 }
 
-Attribute::~Attribute()
+VarAttribute::~VarAttribute()
 {
 }
 
-void Attribute::enable_vertex_attrib_array() const
+void VarAttribute::enable_vertex_attrib_array() const
 {
     glEnableVertexAttribArray(m_id);
 }
 
-void Attribute::disable_vertex_attrib_array() const
+void VarAttribute::disable_vertex_attrib_array() const
 {
     glDisableVertexAttribArray(m_id);
 }
 
-void Attribute::vertex_attrib_pointer(
+void VarAttribute::vertex_attrib_pointer(
         GLint size,
         GLenum type,
         GLboolean normalized,

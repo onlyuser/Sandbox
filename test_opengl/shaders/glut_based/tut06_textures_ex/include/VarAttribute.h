@@ -1,5 +1,5 @@
-#ifndef VT_ATTRIBUTE_H_
-#define VT_ATTRIBUTE_H_
+#ifndef VT_VAR_ATTRIBUTE_H_
+#define VT_VAR_ATTRIBUTE_H_
 
 #include <GL/glew.h>
 
@@ -7,11 +7,11 @@ namespace vt {
 
 class Program;
 
-class Attribute
+class VarAttribute
 {
 public:
-    Attribute(const Program* program, const GLchar *name);
-    ~Attribute();
+    VarAttribute(const Program* program, const GLchar *name);
+    ~VarAttribute();
     void enable_vertex_attrib_array() const;
     void disable_vertex_attrib_array() const;
     void vertex_attrib_pointer(

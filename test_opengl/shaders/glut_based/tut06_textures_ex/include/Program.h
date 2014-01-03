@@ -5,8 +5,9 @@
 
 namespace vt {
 
-class Attribute;
 class Shader;
+class VarAttribute;
+class VarUniform;
 
 class Program
 {
@@ -16,8 +17,11 @@ public:
     void attach_shader(const Shader* shader) const;
     bool link() const;
     void use() const;
-    Attribute* get_attribute(const GLchar *name) const;
-    GLint get_uniform_location(const GLchar *name) const;
+    VarAttribute* get_var_attribute(const GLchar *name) const;
+    VarUniform* get_var_uniform(const GLchar *name) const;
+    void get_program_iv(
+            GLenum pname,
+            GLint *params) const;
     GLuint id() const
     {
         return m_id;

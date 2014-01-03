@@ -19,11 +19,12 @@
 
 #include "res_texture.c"
 
-#include <Attribute.h>
 #include <Buffer.h>
 #include <Program.h>
 #include <Shader.h>
 #include <Texture.h>
+#include <VarAttribute.h>
+#include <VarUniform.h>
 #include <memory> // std::unique_ptr
 
 int screen_width=800, screen_height=600;
@@ -31,8 +32,8 @@ std::unique_ptr<vt::Buffer> vbo_cube_vertices, vbo_cube_texcoords;
 std::unique_ptr<vt::Buffer> ibo_cube_elements;
 std::unique_ptr<vt::Program> program;
 std::unique_ptr<vt::Texture> texture_id;
-std::unique_ptr<vt::Attribute> attribute_coord3d, attribute_texcoord;
-GLint uniform_mvp, uniform_mytexture;
+std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
+std::unique_ptr<vt::VarUniform> uniform_mvp, uniform_mytexture;
 
 int init_resources()
 {
@@ -123,27 +124,27 @@ int init_resources()
 
   const char* attribute_name;
   attribute_name = "coord3d";
-  attribute_coord3d = std::unique_ptr<vt::Attribute>(program->get_attribute(attribute_name));
+  attribute_coord3d = std::unique_ptr<vt::VarAttribute>(program->get_var_attribute(attribute_name));
   if (attribute_coord3d->id() == -1) {
     fprintf(stderr, "Could not bind attribute %s\n", attribute_name);
     return 0;
   }
   attribute_name = "texcoord";
-  attribute_texcoord = std::unique_ptr<vt::Attribute>(program->get_attribute(attribute_name));
+  attribute_texcoord = std::unique_ptr<vt::VarAttribute>(program->get_var_attribute(attribute_name));
   if (attribute_texcoord->id() == -1) {
     fprintf(stderr, "Could not bind attribute %s\n", attribute_name);
     return 0;
   }
   const char* uniform_name;
   uniform_name = "mvp";
-  uniform_mvp = program->get_uniform_location(uniform_name);
-  if (uniform_mvp == -1) {
+  uniform_mvp = std::unique_ptr<vt::VarUniform>(program->get_var_uniform(uniform_name));
+  if (uniform_mvp->id() == -1) {
     fprintf(stderr, "Could not bind uniform %s\n", uniform_name);
     return 0;
   }
   uniform_name = "mytexture";
-  uniform_mytexture = program->get_uniform_location(uniform_name);
-  if (uniform_mytexture == -1) {
+  uniform_mytexture = std::unique_ptr<vt::VarUniform>(program->get_var_uniform(uniform_name));
+  if (uniform_mytexture->id() == -1) {
     fprintf(stderr, "Could not bind uniform %s\n", uniform_name);
     return 0;
   }
@@ -164,7 +165,7 @@ void onIdle() {
 
   glm::mat4 mvp = projection * view * model * anim;
   program->use();
-  glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
+  uniform_mvp->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(mvp));
   glutPostRedisplay();
 }
 
@@ -177,7 +178,7 @@ void onDisplay()
 
   glActiveTexture(GL_TEXTURE0);
   texture_id->bind();
-  glUniform1i(uniform_mytexture, /*GL_TEXTURE*/0);
+  uniform_mytexture->uniform_1i(/*GL_TEXTURE*/0);
 
   attribute_coord3d->enable_vertex_attrib_array();
   // Describe our vertices array to OpenGL (it can't guess its format automatically)
