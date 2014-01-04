@@ -2,6 +2,7 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate
 #include <glm/core/func_matrix.hpp> // glm::inverse
 #include <glm/gtc/type_ptr.hpp> // glm::make_mat4
+#include <glm/gtx/vector_angle.hpp> // glm::angle
 #include <iostream> // std::cout
 
 void print_vec(const glm::vec3 &v)
@@ -311,7 +312,7 @@ int main(int argc, char** argv)
         std::cout << std::endl;
 
         std::cout << "m*v:\t";
-        print_vec(m*glm::vec4(v, 1));
+        print_vec(glm::vec3(m*glm::vec4(v, 1)));
         std::cout << std::endl;
     }
     std::cout << std::endl;
@@ -344,7 +345,7 @@ int main(int argc, char** argv)
         std::cout << std::endl;
 
         std::cout << "m1*m2*v4:\t";
-        print_vec(m1*m2*glm::vec4(v, 1));
+        print_vec(glm::vec3(m1*m2*glm::vec4(v, 1)));
         std::cout << std::endl;
     }
     std::cout << std::endl;
@@ -390,15 +391,40 @@ int main(int argc, char** argv)
         std::cout << std::endl;
 
         std::cout << "m1*v1:\t";
-        print_vec(m1*glm::vec4(v1, 1));
+        print_vec(glm::vec3(m1*glm::vec4(v1, 1)));
         std::cout << std::endl;
 
         std::cout << "m2*v2:\t";
-        print_vec(m2*glm::vec4(v2, 1));
+        print_vec(glm::vec3(m2*glm::vec4(v2, 1)));
         std::cout << std::endl;
 
         std::cout << "m3*v3:\t";
-        print_vec(m3*glm::vec4(v3, 1));
+        print_vec(glm::vec3(m3*glm::vec4(v3, 1)));
         std::cout << std::endl;
+    }
+    std::cout << std::endl;
+
+    std::cout << "============" << std::endl;
+    std::cout << "vector angle" << std::endl;
+    std::cout << "============" << std::endl << std::endl;
+
+    {
+        glm::vec3 v1(1, 0, 0);
+        glm::vec3 v2(0, 1, 0);
+        glm::vec3 v3(-1, 0, 0);
+
+        std::cout << "v1:\t";
+        print_vec(v1);
+        std::cout << std::endl;
+        std::cout << "v2:\t";
+        print_vec(v2);
+        std::cout << std::endl;
+        std::cout << "v3:\t";
+        print_vec(v3);
+        std::cout << std::endl << std::endl;
+
+        std::cout << "angle(v1, v2):\t" << glm::angle(v1, v2) << std::endl;
+        std::cout << "angle(v2, v3):\t" << glm::angle(v2, v3) << std::endl;
+        std::cout << "angle(v3, v1):\t" << glm::angle(v3, v1) << std::endl;
     }
 }
