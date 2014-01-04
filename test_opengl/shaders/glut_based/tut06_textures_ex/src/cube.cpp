@@ -20,6 +20,7 @@
 #include "res_texture.c"
 
 #include <Buffer.h>
+#include <Camera.h>
 #include <Program.h>
 #include <Shader.h>
 #include <Texture.h>
@@ -34,6 +35,7 @@ std::unique_ptr<vt::Program> program;
 std::unique_ptr<vt::Texture> texture_id;
 std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
 std::unique_ptr<vt::VarUniform> uniform_mvp, uniform_mytexture;
+std::unique_ptr<vt::Camera> camera;
 
 int init_resources()
 {
@@ -149,6 +151,7 @@ int init_resources()
     return 0;
   }
 
+  camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0.0, 2.0, 0.0), glm::vec3(0.0, 0.0, -4.0)));
   return 1;
 }
 
@@ -160,10 +163,8 @@ void onIdle() {
     glm::rotate(glm::mat4(1.0f), angle*4.0f, glm::vec3(0, 0, 1));   // Z axis
 
   glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, -4.0));
-  glm::mat4 view = glm::lookAt(glm::vec3(0.0, 2.0, 0.0), glm::vec3(0.0, 0.0, -4.0), glm::vec3(0.0, 1.0, 0.0));
-  glm::mat4 projection = glm::perspective(45.0f, 1.0f*screen_width/screen_height, 0.1f, 10.0f);
 
-  glm::mat4 mvp = projection * view * model * anim;
+  glm::mat4 mvp = camera->get_view_projection() * model * anim;
   program->use();
   uniform_mvp->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(mvp));
   glutPostRedisplay();
