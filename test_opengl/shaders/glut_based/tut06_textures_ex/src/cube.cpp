@@ -26,7 +26,10 @@
 #include <Texture.h>
 #include <VarAttribute.h>
 #include <VarUniform.h>
+#include <iostream> // std::cout
 #include <memory> // std::unique_ptr
+#include <sstream> // std::stringstream
+#include <iomanip> // std::setprecision
 
 int screen_width=800, screen_height=600;
 std::unique_ptr<vt::Buffer> vbo_cube_vertices, vbo_cube_texcoords;
@@ -36,6 +39,16 @@ std::unique_ptr<vt::Texture> texture_id;
 std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
 std::unique_ptr<vt::VarUniform> uniform_mvp, uniform_mytexture;
 std::unique_ptr<vt::Camera> camera;
+
+int last_mx = 0, last_my = 0, cur_mx = 0, cur_my = 0;
+bool arcball_on = false;
+
+int rotY_direction = 0, rotX_direction = 0;
+float speed_factor = 1;
+int last_ticks = glutGet(GLUT_ELAPSED_TIME);
+
+unsigned int fps_start = glutGet(GLUT_ELAPSED_TIME);
+unsigned int fps_frames = 0;
 
 int init_resources()
 {
@@ -170,8 +183,29 @@ void onIdle() {
   glutPostRedisplay();
 }
 
-void onDisplay()
-{
+void onTick() {
+  {
+    fps_frames++;
+    unsigned int delta_t = glutGet(GLUT_ELAPSED_TIME) - fps_start;
+    if (delta_t > 1000) {
+      std::stringstream ss;
+      ss << std::setprecision(2) << std::fixed << (1000.0 * fps_frames / delta_t) << " FPS";
+      glutSetWindowTitle(ss.str().c_str());
+      fps_frames = 0;
+      fps_start = glutGet(GLUT_ELAPSED_TIME);
+    }
+  }
+
+  int delta_t = glutGet(GLUT_ELAPSED_TIME) - last_ticks;
+  last_ticks = glutGet(GLUT_ELAPSED_TIME);
+
+  float delta_rotY =  rotY_direction * delta_t / 1000.0 * 120 * speed_factor;  // 120° per second
+  float delta_rotX = -rotX_direction * delta_t / 1000.0 * 120 * speed_factor;  // 120° per second
+}
+
+void onDisplay() {
+  onTick();
+
   glClearColor(1, 1, 1, 1);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -212,6 +246,52 @@ void onDisplay()
   glutSwapBuffers();
 }
 
+void onKeyboard(unsigned char key, int x, int y) {
+  if(key == 27) {
+    exit(0);
+  }
+}
+
+void onSpecial(int key, int x, int y) {
+//  int modifiers = glutGetModifiers();
+//  if((modifiers & GLUT_ACTIVE_ALT) == GLUT_ACTIVE_ALT);
+//  if((modifiers & GLUT_ACTIVE_SHIFT) == GLUT_ACTIVE_SHIFT);
+  switch(key) {
+    case GLUT_KEY_LEFT:
+    case GLUT_KEY_RIGHT:
+    case GLUT_KEY_UP:
+    case GLUT_KEY_DOWN:
+      break;
+  }
+}
+
+void onSpecialUp(int key, int x, int y) {
+  switch(key) {
+    case GLUT_KEY_LEFT:
+    case GLUT_KEY_RIGHT:
+    case GLUT_KEY_UP:
+    case GLUT_KEY_DOWN:
+      break;
+  }
+}
+
+void onMouse(int button, int state, int x, int y) {
+  if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+    arcball_on = true;
+    last_mx = cur_mx = x;
+    last_my = cur_my = y;
+  } else {
+    arcball_on = false;
+  }
+}
+
+void onMotion(int x, int y) {
+  if(arcball_on) {
+    cur_mx = x;
+    cur_my = y;
+  }
+}
+
 void onReshape(int width, int height) {
   screen_width = width;
   screen_height = height;
@@ -237,6 +317,11 @@ int main(int argc, char* argv[]) {
 
   if (init_resources()) {
     glutDisplayFunc(onDisplay);
+    glutKeyboardFunc(onKeyboard);
+    glutSpecialFunc(onSpecial);
+    glutSpecialUpFunc(onSpecialUp);
+    glutMouseFunc(onMouse);
+    glutMotionFunc(onMotion);
     glutReshapeFunc(onReshape);
     glutIdleFunc(onIdle);
     glEnable(GL_BLEND);
