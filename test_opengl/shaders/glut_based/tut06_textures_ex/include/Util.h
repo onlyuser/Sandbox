@@ -5,7 +5,7 @@
 
 namespace vt {
 
-const glm::vec3 &rpy_to_xyz(glm::vec3 &rpy);
+glm::vec3 rpy_to_xyz(glm::vec3 &rpy);
 glm::vec3 xyz_to_rpy(glm::vec3 &xyz);
 
 }

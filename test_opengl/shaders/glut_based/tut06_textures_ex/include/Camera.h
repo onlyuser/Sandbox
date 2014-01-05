@@ -11,11 +11,11 @@ public:
     Camera(
             glm::vec3 origin,
             glm::vec3 target = glm::vec3(0),
-            float     fov    = 45.0f,
+            float     fov    = 45,
             float     width  = 800,
             float     height = 600,
-            float     near   = 0.1f,
-            float     far    = 10.0f);
+            float     near   = 0.1,
+            float     far    = 10);
     ~Camera();
 
     void move(glm::vec3 origin, glm::vec3 target = glm::vec3(0));

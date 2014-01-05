@@ -92,7 +92,7 @@ glm::mat4 Camera::get_view_projection() const
 
 void Camera::update_view()
 {
-    static glm::vec3 up_vec = glm::vec3(0.0, 1.0, 0.0);
+    static glm::vec3 up_vec = glm::vec3(0, 1, 0);
     m_view = glm::lookAt(m_origin, m_target, up_vec);
 }
 

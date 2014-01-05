@@ -41,44 +41,44 @@ int init_resources()
 {
   GLfloat cube_vertices[] = {
     // front
-    -1.0, -1.0,  1.0,
-     1.0, -1.0,  1.0,
-     1.0,  1.0,  1.0,
-    -1.0,  1.0,  1.0,
+    -1, -1,  1,
+     1, -1,  1,
+     1,  1,  1,
+    -1,  1,  1,
     // top
-    -1.0,  1.0,  1.0,
-     1.0,  1.0,  1.0,
-     1.0,  1.0, -1.0,
-    -1.0,  1.0, -1.0,
+    -1,  1,  1,
+     1,  1,  1,
+     1,  1, -1,
+    -1,  1, -1,
     // back
-     1.0, -1.0, -1.0,
-    -1.0, -1.0, -1.0,
-    -1.0,  1.0, -1.0,
-     1.0,  1.0, -1.0,
+     1, -1, -1,
+    -1, -1, -1,
+    -1,  1, -1,
+     1,  1, -1,
     // bottom
-    -1.0, -1.0, -1.0,
-     1.0, -1.0, -1.0,
-     1.0, -1.0,  1.0,
-    -1.0, -1.0,  1.0,
+    -1, -1, -1,
+     1, -1, -1,
+     1, -1,  1,
+    -1, -1,  1,
     // left
-    -1.0, -1.0, -1.0,
-    -1.0, -1.0,  1.0,
-    -1.0,  1.0,  1.0,
-    -1.0,  1.0, -1.0,
+    -1, -1, -1,
+    -1, -1,  1,
+    -1,  1,  1,
+    -1,  1, -1,
     // right
-     1.0, -1.0,  1.0,
-     1.0, -1.0, -1.0,
-     1.0,  1.0, -1.0,
-     1.0,  1.0,  1.0,
+     1, -1,  1,
+     1, -1, -1,
+     1,  1, -1,
+     1,  1,  1,
   };
   vbo_cube_vertices = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices));
 
   GLfloat cube_texcoords[2*4*6] = {
     // front
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
+    0, 0,
+    1, 0,
+    1, 1,
+    0, 1,
   };
   for (int i = 1; i < 6; i++)
     memcpy(&cube_texcoords[i*4*2], &cube_texcoords[0], 2*4*sizeof(GLfloat));
@@ -151,18 +151,18 @@ int init_resources()
     return 0;
   }
 
-  camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0.0, 2.0, 0.0), glm::vec3(0.0, 0.0, -4.0)));
+  camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0, 2, 0), glm::vec3(0, 0, -4)));
   return 1;
 }
 
 void onIdle() {
-  float angle = glutGet(GLUT_ELAPSED_TIME) / 1000.0 * 15;  // base 15° per second
+  float angle = 1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15;  // base 15° per second
   glm::mat4 anim = \
-    glm::rotate(glm::mat4(1.0f), angle*3.0f, glm::vec3(1, 0, 0)) *  // X axis
-    glm::rotate(glm::mat4(1.0f), angle*2.0f, glm::vec3(0, 1, 0)) *  // Y axis
-    glm::rotate(glm::mat4(1.0f), angle*4.0f, glm::vec3(0, 0, 1));   // Z axis
+    glm::rotate(glm::mat4(1), angle*3, glm::vec3(1, 0, 0)) *  // X axis
+    glm::rotate(glm::mat4(1), angle*2, glm::vec3(0, 1, 0)) *  // Y axis
+    glm::rotate(glm::mat4(1), angle*4, glm::vec3(0, 0, 1));   // Z axis
 
-  glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, -4.0));
+  glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(0, 0, -4));
 
   glm::mat4 mvp = camera->get_view_projection() * model * anim;
   program->use();
@@ -172,7 +172,7 @@ void onIdle() {
 
 void onDisplay()
 {
-  glClearColor(1.0, 1.0, 1.0, 1.0);
+  glClearColor(1, 1, 1, 1);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
   program->use();
