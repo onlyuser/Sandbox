@@ -31,6 +31,10 @@
 #include <sstream> // std::stringstream
 #include <iomanip> // std::setprecision
 
+#define RPY_ROLL(v)  v[0]
+#define RPY_PITCH(v) v[1]
+#define RPY_YAW(v)   v[2]
+
 int screen_width=800, screen_height=600;
 std::unique_ptr<vt::Buffer> vbo_cube_vertices, vbo_cube_texcoords;
 std::unique_ptr<vt::Buffer> ibo_cube_elements;
@@ -40,9 +44,9 @@ std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
 std::unique_ptr<vt::VarUniform> uniform_mvp, uniform_mytexture;
 std::unique_ptr<vt::Camera> camera;
 
-int last_mx=0, last_my=0, cur_mx=0, cur_my=0;
-bool mouse_down=false;
-int pitch=0, yaw = 0, last_yaw=0, last_pitch=0;
+bool mouse_down = false;
+glm::vec2 prev_mouse_coord, mouse_coord, mouse_drag;
+glm::vec3 prev_view_rpy, view_rpy, rpy_speed=glm::vec3(0, -0.5, -0.5);
 
 int init_resources()
 {
@@ -158,18 +162,18 @@ int init_resources()
     return 0;
   }
 
-  camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0, 2, 0), glm::vec3(0, 0, -4)));
+  camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, -4)));
   return 1;
 }
 
 void onIdle() {
-  float angle = 1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15;  // base 15° per second
+  float angle = 0;//1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15;  // base 15° per second
   glm::mat4 anim = \
     glm::rotate(glm::mat4(1), angle*3, glm::vec3(1, 0, 0)) *  // X axis
     glm::rotate(glm::mat4(1), angle*2, glm::vec3(0, 1, 0)) *  // Y axis
     glm::rotate(glm::mat4(1), angle*4, glm::vec3(0, 0, 1));   // Z axis
 
-  glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(0, 0, -4));
+  glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0));
 
   glm::mat4 mvp = camera->get_view_projection() * model * anim;
   program->use();
@@ -190,11 +194,9 @@ void onTick() {
   }
   if (delta_time > 100) {
       std::stringstream ss;
-      int drag_x = cur_mx - last_mx;
-      int drag_y = cur_my - last_my;
       ss << std::setprecision(2) << std::fixed << fps << " FPS, "
-              << "Mouse: {" << drag_x << ", " << drag_y << "}, "
-              << "Yaw=" << yaw << ", Pitch=" << pitch;
+              << "Mouse: {" << mouse_drag.x << ", " << mouse_drag.y << "}, "
+              << "Yaw=" << RPY_YAW(view_rpy) << ", Pitch=" << RPY_PITCH(view_rpy);
       glutSetWindowTitle(ss.str().c_str());
   }
   frames++;
@@ -275,8 +277,9 @@ void onSpecialUp(int key, int x, int y) {
 void onMouse(int button, int state, int x, int y) {
   if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
     mouse_down = true;
-    last_mx = cur_mx = x;
-    last_my = cur_my = y;
+    prev_mouse_coord.x = mouse_coord.x = x;
+    prev_mouse_coord.y = mouse_coord.y = y;
+    prev_view_rpy = view_rpy;
   } else {
     mouse_down = false;
   }
@@ -284,8 +287,16 @@ void onMouse(int button, int state, int x, int y) {
 
 void onMotion(int x, int y) {
   if(mouse_down) {
-    cur_mx = x;
-    cur_my = y;
+    mouse_coord.x = x;
+    mouse_coord.y = y;
+    mouse_drag = mouse_coord-prev_mouse_coord;
+    view_rpy = prev_view_rpy+glm::vec3(0, mouse_drag.y*RPY_PITCH(rpy_speed), mouse_drag.x*RPY_YAW(rpy_speed));
+    if(RPY_PITCH(view_rpy) > 90)  RPY_PITCH(view_rpy) = 90;
+    if(RPY_PITCH(view_rpy) < -90) RPY_PITCH(view_rpy) = -90;
+    if(RPY_YAW(view_rpy) > 360)   RPY_YAW(view_rpy) -= 360;
+    if(RPY_YAW(view_rpy) < 0)     RPY_YAW(view_rpy) += 360;
+    camera->set_target(glm::vec3(0, 0, 0));
+    camera->set_rpy(view_rpy, 4);
   }
 }
 

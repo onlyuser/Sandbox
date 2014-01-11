@@ -20,7 +20,7 @@ public:
 
     void move(glm::vec3 origin, glm::vec3 target = glm::vec3(0));
     glm::vec3 get_rpy() const;
-    void set_rpy(glm::vec3 rpy);
+    void set_rpy(glm::vec3 rpy, float radius = 0);
 
     glm::vec3 get_origin() const
     {

@@ -1,4 +1,5 @@
 #include <Camera.h>
+#include <Util.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -38,13 +39,12 @@ void Camera::move(glm::vec3 origin, glm::vec3 target)
 
 glm::vec3 Camera::get_rpy() const
 {
-    // TODO: fix-me!
-    return glm::vec3(0);
+    return xyz_to_rpy(m_origin-m_target);
 }
 
-void Camera::set_rpy(glm::vec3 rpy)
+void Camera::set_rpy(glm::vec3 rpy, float radius)
 {
-    // TODO: fix-me!
+    m_origin = m_target+rpy_to_xyz(rpy, radius);
     update_view();
 }
 
