@@ -40,15 +40,9 @@ std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
 std::unique_ptr<vt::VarUniform> uniform_mvp, uniform_mytexture;
 std::unique_ptr<vt::Camera> camera;
 
-int last_mx = 0, last_my = 0, cur_mx = 0, cur_my = 0;
-bool arcball_on = false;
-
-int rotY_direction = 0, rotX_direction = 0;
-float speed_factor = 1;
-int last_ticks = glutGet(GLUT_ELAPSED_TIME);
-
-unsigned int fps_start = glutGet(GLUT_ELAPSED_TIME);
-unsigned int fps_frames = 0;
+int last_mx=0, last_my=0, cur_mx=0, cur_my=0;
+bool mouse_down=false;
+int pitch=0, yaw = 0, last_yaw=0, last_pitch=0;
 
 int init_resources()
 {
@@ -184,23 +178,26 @@ void onIdle() {
 }
 
 void onTick() {
-  {
-    fps_frames++;
-    unsigned int delta_t = glutGet(GLUT_ELAPSED_TIME) - fps_start;
-    if (delta_t > 1000) {
-      std::stringstream ss;
-      ss << std::setprecision(2) << std::fixed << (1000.0 * fps_frames / delta_t) << " FPS";
-      glutSetWindowTitle(ss.str().c_str());
-      fps_frames = 0;
-      fps_start = glutGet(GLUT_ELAPSED_TIME);
-    }
+  static unsigned int prev_tick = 0;
+  static unsigned int frames = 0;
+  unsigned int now = glutGet(GLUT_ELAPSED_TIME);
+  unsigned int delta_time = now-prev_tick;
+  static float fps = 0;
+  if (delta_time > 1000) {
+    fps = 1000.0 * frames / delta_time;
+    frames = 0;
+    prev_tick = now;
   }
-
-  int delta_t = glutGet(GLUT_ELAPSED_TIME) - last_ticks;
-  last_ticks = glutGet(GLUT_ELAPSED_TIME);
-
-  float delta_rotY =  rotY_direction * delta_t / 1000.0 * 120 * speed_factor;  // 120° per second
-  float delta_rotX = -rotX_direction * delta_t / 1000.0 * 120 * speed_factor;  // 120° per second
+  if (delta_time > 100) {
+      std::stringstream ss;
+      int drag_x = cur_mx - last_mx;
+      int drag_y = cur_my - last_my;
+      ss << std::setprecision(2) << std::fixed << fps << " FPS, "
+              << "Mouse: {" << drag_x << ", " << drag_y << "}, "
+              << "Yaw=" << yaw << ", Pitch=" << pitch;
+      glutSetWindowTitle(ss.str().c_str());
+  }
+  frames++;
 }
 
 void onDisplay() {
@@ -277,16 +274,16 @@ void onSpecialUp(int key, int x, int y) {
 
 void onMouse(int button, int state, int x, int y) {
   if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-    arcball_on = true;
+    mouse_down = true;
     last_mx = cur_mx = x;
     last_my = cur_my = y;
   } else {
-    arcball_on = false;
+    mouse_down = false;
   }
 }
 
 void onMotion(int x, int y) {
-  if(arcball_on) {
+  if(mouse_down) {
     cur_mx = x;
     cur_my = y;
   }
