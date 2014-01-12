@@ -35,7 +35,7 @@
 #define RPY_PITCH(v) v[1]
 #define RPY_YAW(v)   v[2]
 
-char* DEFAULT_CAPTION = "My Textured Cube";
+const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int screen_width=800, screen_height=600;
 std::unique_ptr<vt::Buffer> vbo_cube_vertices, vbo_cube_texcoords;
