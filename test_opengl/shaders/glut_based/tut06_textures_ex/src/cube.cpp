@@ -31,6 +31,8 @@
 #include <sstream> // std::stringstream
 #include <iomanip> // std::setprecision
 
+//#define DEBUG
+
 #define RPY_ROLL(v)  v[0]
 #define RPY_PITCH(v) v[1]
 #define RPY_YAW(v)   v[2]
@@ -44,9 +46,12 @@ std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
 std::unique_ptr<vt::VarUniform> uniform_mvp, uniform_mytexture;
 std::unique_ptr<vt::Camera> camera;
 
-bool mouse_down = false;
+bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_coord, mouse_drag;
-glm::vec3 prev_view_rpy, view_rpy, rpy_speed=glm::vec3(0, -0.5, -0.5);
+glm::vec3 prev_view_rpy, view_rpy, orbit_speed=glm::vec3(0, -0.5, -0.5);
+float prev_radius = 0, radius = 8, dolly_speed=0.1;
+
+bool show_fps = false;
 
 int init_resources()
 {
@@ -162,20 +167,20 @@ int init_resources()
     return 0;
   }
 
-  camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, -4)));
+  camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0, 0, radius), glm::vec3(0, 0, 0)));
   return 1;
 }
 
 void onIdle() {
-  float angle = 0;//1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15;  // base 15° per second
+  float angle = 0;//1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15; // base 15° per second
   glm::mat4 anim = \
-    glm::rotate(glm::mat4(1), angle*3, glm::vec3(1, 0, 0)) *  // X axis
-    glm::rotate(glm::mat4(1), angle*2, glm::vec3(0, 1, 0)) *  // Y axis
-    glm::rotate(glm::mat4(1), angle*4, glm::vec3(0, 0, 1));   // Z axis
+    glm::rotate(glm::mat4(1), angle*3, glm::vec3(1, 0, 0)) * // X axis
+    glm::rotate(glm::mat4(1), angle*2, glm::vec3(0, 1, 0)) * // Y axis
+    glm::rotate(glm::mat4(1), angle*4, glm::vec3(0, 0, 1));  // Z axis
 
   glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0));
 
-  glm::mat4 mvp = camera->get_view_projection() * model * anim;
+  glm::mat4 mvp = camera->get_view_projection()*model*anim;
   program->use();
   uniform_mvp->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(mvp));
   glutPostRedisplay();
@@ -184,21 +189,23 @@ void onIdle() {
 void onTick() {
   static unsigned int prev_tick = 0;
   static unsigned int frames = 0;
-  unsigned int now = glutGet(GLUT_ELAPSED_TIME);
-  unsigned int delta_time = now-prev_tick;
+  unsigned int tick = glutGet(GLUT_ELAPSED_TIME);
+  unsigned int delta_time = tick-prev_tick;
   static float fps = 0;
-  if (delta_time > 1000) {
-    fps = 1000.0 * frames / delta_time;
+  if(delta_time>1000) {
+    fps = 1000.0*frames/delta_time;
     frames = 0;
-    prev_tick = now;
+    prev_tick = tick;
   }
-  if (delta_time > 100) {
+#ifdef DEBUG
+  if(delta_time>100) {
       std::stringstream ss;
       ss << std::setprecision(2) << std::fixed << fps << " FPS, "
               << "Mouse: {" << mouse_drag.x << ", " << mouse_drag.y << "}, "
-              << "Yaw=" << RPY_YAW(view_rpy) << ", Pitch=" << RPY_PITCH(view_rpy);
+              << "Yaw=" << RPY_YAW(view_rpy) << ", Pitch=" << RPY_PITCH(view_rpy) << ", Radius=" << radius;
       glutSetWindowTitle(ss.str().c_str());
   }
+#endif
   frames++;
 }
 
@@ -275,28 +282,41 @@ void onSpecialUp(int key, int x, int y) {
 }
 
 void onMouse(int button, int state, int x, int y) {
-  if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-    mouse_down = true;
+  if(state == GLUT_DOWN) {
     prev_mouse_coord.x = mouse_coord.x = x;
     prev_mouse_coord.y = mouse_coord.y = y;
-    prev_view_rpy = view_rpy;
+    if(button == GLUT_LEFT_BUTTON) {
+      left_mouse_down = true;
+      prev_view_rpy = view_rpy;
+    }
+    if(button == GLUT_RIGHT_BUTTON) {
+      right_mouse_down = true;
+      prev_radius = radius;
+    }
   } else {
-    mouse_down = false;
+    left_mouse_down = right_mouse_down = false;
   }
 }
 
 void onMotion(int x, int y) {
-  if(mouse_down) {
+  if(left_mouse_down) {
     mouse_coord.x = x;
     mouse_coord.y = y;
     mouse_drag = mouse_coord-prev_mouse_coord;
-    view_rpy = prev_view_rpy+glm::vec3(0, mouse_drag.y*RPY_PITCH(rpy_speed), mouse_drag.x*RPY_YAW(rpy_speed));
+    view_rpy = prev_view_rpy+glm::vec3(0, mouse_drag.y*RPY_PITCH(orbit_speed), mouse_drag.x*RPY_YAW(orbit_speed));
     if(RPY_PITCH(view_rpy) > 90)  RPY_PITCH(view_rpy) = 90;
     if(RPY_PITCH(view_rpy) < -90) RPY_PITCH(view_rpy) = -90;
     if(RPY_YAW(view_rpy) > 360)   RPY_YAW(view_rpy) -= 360;
     if(RPY_YAW(view_rpy) < 0)     RPY_YAW(view_rpy) += 360;
-    camera->set_target(glm::vec3(0, 0, 0));
-    camera->set_rpy(view_rpy, 4);
+    camera->set_rpy(view_rpy, radius);
+  }
+  if(right_mouse_down) {
+    mouse_coord.x = x;
+    mouse_coord.y = y;
+    mouse_drag = mouse_coord-prev_mouse_coord;
+    radius = prev_radius+mouse_drag.y*dolly_speed;
+    if(radius < 0) radius = 0;
+    camera->set_rpy(view_rpy, radius);
   }
 }
 

@@ -15,7 +15,7 @@ public:
             float     width  = 800,
             float     height = 600,
             float     near   = 0.1,
-            float     far    = 10);
+            float     far    = 100);
     ~Camera();
 
     void move(glm::vec3 origin, glm::vec3 target = glm::vec3(0));

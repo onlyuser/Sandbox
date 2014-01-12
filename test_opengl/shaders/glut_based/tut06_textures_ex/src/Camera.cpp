@@ -44,7 +44,7 @@ glm::vec3 Camera::get_rpy() const
 
 void Camera::set_rpy(glm::vec3 rpy, float radius)
 {
-    m_origin = m_target+rpy_to_xyz(rpy, radius);
+    m_origin = m_target+rpy_to_xyz(rpy)*radius;
     update_view();
 }
 

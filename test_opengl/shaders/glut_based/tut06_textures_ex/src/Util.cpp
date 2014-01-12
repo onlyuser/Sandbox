@@ -13,9 +13,9 @@
 
 namespace vt {
 
-glm::vec3 rpy_to_xyz(glm::vec3 rpy, float radius)
+glm::vec3 rpy_to_xyz(glm::vec3 rpy)
 {
-    static glm::vec3 forward = glm::vec3(0, 0, radius);
+    static glm::vec3 forward = glm::vec3(0, 0, 1);
     glm::mat4 pitch = glm::rotate(
             glm::mat4(1),
             PITCH(rpy), glm::vec3(1, 0, 0));
