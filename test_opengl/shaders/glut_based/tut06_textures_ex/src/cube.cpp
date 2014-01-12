@@ -95,7 +95,7 @@ int init_resources()
         1, 1,
         0, 1,
     };
-    for (int i = 1; i < 6; i++)
+    for(int i = 1; i < 6; i++)
         memcpy(&cube_texcoords[i*4*2], &cube_texcoords[0], 2*4*sizeof(GLfloat));
     vbo_cube_texcoords = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(cube_texcoords), cube_texcoords));
 
@@ -266,21 +266,14 @@ void onKeyboard(unsigned char key, int x, int y)
     {
         show_fps = !show_fps;
         if(!show_fps)
-        {
             glutSetWindowTitle(DEFAULT_CAPTION);
-        }
     }
     if(key == 27)
-    {
         exit(0);
-    }
 }
 
 void onSpecial(int key, int x, int y)
 {
-    //int modifiers = glutGetModifiers();
-    //if((modifiers & GLUT_ACTIVE_ALT) == GLUT_ACTIVE_ALT);
-    //if((modifiers & GLUT_ACTIVE_SHIFT) == GLUT_ACTIVE_SHIFT);
     switch(key)
     {
         case GLUT_KEY_LEFT:
@@ -319,9 +312,9 @@ void onMouse(int button, int state, int x, int y)
             right_mouse_down = true;
             prev_radius = radius;
         }
-    } else {
-        left_mouse_down = right_mouse_down = false;
     }
+    else
+        left_mouse_down = right_mouse_down = false;
 }
 
 void onMotion(int x, int y)
