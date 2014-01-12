@@ -48,8 +48,8 @@ std::unique_ptr<vt::Camera> camera;
 
 bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_coord, mouse_drag;
-glm::vec3 prev_view_rpy, view_rpy, orbit_speed=glm::vec3(0, -0.5, -0.5);
-float prev_radius = 0, radius = 8, dolly_speed=0.1;
+glm::vec3 prev_view_rpy, view_rpy, orbit_speed = glm::vec3(0, -0.5, -0.5);
+float prev_radius = 0, radius = 8, dolly_speed = 0.1;
 
 bool show_fps = false;
 
@@ -192,13 +192,13 @@ void onTick() {
   unsigned int tick = glutGet(GLUT_ELAPSED_TIME);
   unsigned int delta_time = tick-prev_tick;
   static float fps = 0;
-  if(delta_time>1000) {
+  if(delta_time > 1000) {
     fps = 1000.0*frames/delta_time;
     frames = 0;
     prev_tick = tick;
   }
 #ifdef DEBUG
-  if(delta_time>100) {
+  if(delta_time > 100) {
       std::stringstream ss;
       ss << std::setprecision(2) << std::fixed << fps << " FPS, "
               << "Mouse: {" << mouse_drag.x << ", " << mouse_drag.y << "}, "
@@ -244,7 +244,8 @@ void onDisplay() {
 
   /* Push each element in buffer_vertices to the vertex shader */
   ibo_cube_elements->bind();
-  int size;  glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+  int size = 0;
+  glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
   glDrawElements(GL_TRIANGLES, size/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
 
   attribute_coord3d->disable_vertex_attrib_array();
