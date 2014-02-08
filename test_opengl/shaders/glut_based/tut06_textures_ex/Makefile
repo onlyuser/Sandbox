@@ -80,7 +80,7 @@ clean_objects : clean_objects_common
 # binaries
 #==================
 
-CPP_STEMS = cube res_texture Buffer Camera Program Shader Texture Util VarAttribute VarUniform
+CPP_STEMS = Buffer Camera cube Mesh Program res_texture Shader Texture Util VarAttribute VarUniform
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 
 $(BIN_PATH)/cube : $(OBJECTS) $(OBJECTS_COMMON)
