@@ -9,7 +9,7 @@ LIB_PATH = $(EXTERN_LIB_PATH)
 SRC_PATH = src
 BUILD_PATH = build
 BIN_PATH = bin
-BIN_STEMS = cube
+BIN_STEMS = main
 BINARIES = $(patsubst %, $(BIN_PATH)/%, $(BIN_STEMS))
 
 COMMON = $(PARENT)/common
@@ -80,10 +80,10 @@ clean_objects : clean_objects_common
 # binaries
 #==================
 
-CPP_STEMS = Buffer Camera cube Mesh Program res_texture Shader Texture Util VarAttribute VarUniform
+CPP_STEMS = Buffer Camera main Mesh Program res_texture Shader Texture Util VarAttribute VarUniform
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 
-$(BIN_PATH)/cube : $(OBJECTS) $(OBJECTS_COMMON)
+$(BIN_PATH)/main : $(OBJECTS) $(OBJECTS_COMMON)
 	mkdir -p $(BIN_PATH)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
@@ -97,14 +97,14 @@ clean_binaries :
 
 TEST_PATH = test
 TEST_SH = $(SCRIPT_PATH)/test.sh
-TEST_FILE_STEMS = cube
+TEST_FILE_STEMS = main
 TEST_FILES = $(patsubst %, $(BUILD_PATH)/%.test, $(TEST_FILE_STEMS))
 TEST_PASS_FILES = $(patsubst %, %.pass, $(TEST_FILES))
 TEST_FAIL_FILES = $(patsubst %, %.fail, $(TEST_FILES))
 
-$(BUILD_PATH)/cube.test.pass : $(BIN_PATH)/cube $(TEST_PATH)/cube.test
-	-$(TEST_SH) $(BIN_PATH)/cube arg $(TEST_PATH)/cube.test $(TEST_PATH)/cube.gold \
-			$(BUILD_PATH)/cube.test
+$(BUILD_PATH)/main.test.pass : $(BIN_PATH)/main $(TEST_PATH)/main.test
+	-$(TEST_SH) $(BIN_PATH)/main arg $(TEST_PATH)/main.test $(TEST_PATH)/main.gold \
+			$(BUILD_PATH)/main.test
 
 .PHONY : test
 test : $(TEST_PASS_FILES)
