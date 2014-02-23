@@ -35,6 +35,9 @@
 #define RPY_PITCH(v) v[1]
 #define RPY_YAW(v)   v[2]
 
+#define MAX_PITCH 89
+#define MIN_PITCH -89
+
 const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int screen_width=800, screen_height=600;
@@ -55,69 +58,48 @@ bool show_fps = false;
 int init_resources()
 {
     GLfloat cube_vertices[] = {
-        // front
-        -1, -1,  1,
-         1, -1,  1,
-         1,  1,  1,
-        -1,  1,  1,
-        // top
-        -1,  1,  1,
-         1,  1,  1,
-         1,  1, -1,
-        -1,  1, -1,
-        // back
-         1, -1, -1,
-        -1, -1, -1,
-        -1,  1, -1,
-         1,  1, -1,
-        // bottom
-        -1, -1, -1,
-         1, -1, -1,
-         1, -1,  1,
-        -1, -1,  1,
-        // left
-        -1, -1, -1,
-        -1, -1,  1,
-        -1,  1,  1,
-        -1,  1, -1,
-        // right
-         1, -1,  1,
-         1, -1, -1,
-         1,  1, -1,
-         1,  1,  1,
+            0,0,0,
+            0,0,1,
+            0,1,0,
+            0,1,1,
+            1,0,0,
+            1,0,1,
+            1,1,0,
+            1,1,1,
     };
     vbo_cube_vertices = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices));
 
-    GLfloat cube_texcoords[2*4*6] = {
-        // front
-        0, 0,
-        1, 0,
-        1, 1,
-        0, 1,
+    GLfloat cube_texcoords[] = {
+            0,0,
+            0,0,
+            0,1,
+            0,1,
+            1,0,
+            1,0,
+            1,1,
+            1,1,
     };
-    for(int i = 1; i < 6; i++)
-        memcpy(&cube_texcoords[i*4*2], &cube_texcoords[0], 2*4*sizeof(GLfloat));
     vbo_cube_texcoords = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(cube_texcoords), cube_texcoords));
 
     GLushort cube_elements[] = {
-        // front
-         0,  1,  2,
-         2,  3,  0,
-        // top
-         4,  5,  6,
-         6,  7,  4,
-        // back
-         8,  9, 10,
-        10, 11,  8,
-        // bottom
-        12, 13, 14,
-        14, 15, 12,
-        // left
-        16, 17, 18,
-        18, 19, 16,
-        // right
-        20, 21, 22,
-        22, 23, 20,
+            // right
+            3,2,0,
+            0,1,3,
+            // front
+            7,3,1,
+            1,5,7,
+            // left
+            6,7,5,
+            5,4,6,
+            // back
+            2,6,4,
+            4,0,2,
+            // top
+            3,7,6,
+            6,2,3,
+            // bottom
+            5,1,0,
+            0,4,5,
     };
     ibo_cube_elements = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_elements), cube_elements));
 
@@ -171,7 +153,7 @@ int init_resources()
         return 0;
     }
 
-    camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0, 0, radius), glm::vec3(0, 0, 0)));
+    camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0.5, 0.5, 0.5+radius), glm::vec3(0.5, 0.5, 0.5)));
     return 1;
 }
 
@@ -328,10 +310,10 @@ void onMotion(int x, int y)
     if(left_mouse_down)
     {
         view_rpy = prev_view_rpy+glm::vec3(0, mouse_drag.y*RPY_PITCH(orbit_speed), mouse_drag.x*RPY_YAW(orbit_speed));
-        if(RPY_PITCH(view_rpy) > 90)  RPY_PITCH(view_rpy) = 90;
-        if(RPY_PITCH(view_rpy) < -90) RPY_PITCH(view_rpy) = -90;
-        if(RPY_YAW(view_rpy) > 360)   RPY_YAW(view_rpy) -= 360;
-        if(RPY_YAW(view_rpy) < 0)     RPY_YAW(view_rpy) += 360;
+        if(RPY_PITCH(view_rpy) > MAX_PITCH) RPY_PITCH(view_rpy) = MAX_PITCH;
+        if(RPY_PITCH(view_rpy) < MIN_PITCH) RPY_PITCH(view_rpy) = MIN_PITCH;
+        if(RPY_YAW(view_rpy) > 360)         RPY_YAW(view_rpy) -= 360;
+        if(RPY_YAW(view_rpy) < 0)           RPY_YAW(view_rpy) += 360;
         camera->set_rpy(view_rpy, radius);
     }
     if(right_mouse_down)
@@ -383,6 +365,7 @@ int main(int argc, char* argv[])
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glutMainLoop();
     }
 
