@@ -58,48 +58,74 @@ bool show_fps = false;
 int init_resources()
 {
     GLfloat cube_vertices[] = {
-            0,0,0,
-            0,0,1,
-            0,1,0,
-            0,1,1,
-            1,0,0,
-            1,0,1,
-            1,1,0,
-            1,1,1,
+            // right
+            /*  [0] */ 0,0,0,//0
+            /*  [1] */ 0,0,1,//1
+            /*  [2] */ 0,1,1,//3
+            /*  [3] */ 0,1,0,//2
+
+            // front
+            /*  [4] */ 0,0,1,//1
+            /*  [5] */ 1,0,1,//5
+            /*  [6] */ 1,1,1,//7
+            /*  [7] */ 0,1,1,//3
+
+            // left
+            /*  [8] */ 1,0,1,//5
+            /*  [9] */ 1,0,0,//4
+            /* [10] */ 1,1,0,//6
+            /* [11] */ 1,1,1,//7
+
+            // back
+            /* [12] */ 1,0,0,//4
+            /* [13] */ 0,0,0,//0
+            /* [14] */ 0,1,0,//2
+            /* [15] */ 1,1,0,//6
+
+            // top
+            /* [16] */ 1,1,0,//6
+            /* [17] */ 0,1,0,//2
+            /* [18] */ 0,1,1,//3
+            /* [19] */ 1,1,1,//7
+
+            // bottom
+            /* [20] */ 0,0,0,//0
+            /* [21] */ 1,0,0,//4
+            /* [22] */ 1,0,1,//5
+            /* [23] */ 0,0,1,//1
     };
     vbo_cube_vertices = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices));
 
-    GLfloat cube_texcoords[] = {
+    GLfloat cube_texcoords[2*4*6] = {
+            // right
             0,0,
-            0,0,
-            0,1,
-            0,1,
-            1,0,
             1,0,
             1,1,
-            1,1,
+            0,1,
     };
+    for(int i=1; i<6; i++)
+        memcpy(&(cube_texcoords[2*4*i]), &(cube_texcoords[0]), sizeof(GLfloat)*2*4);
     vbo_cube_texcoords = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(cube_texcoords), cube_texcoords));
 
     GLushort cube_elements[] = {
             // right
-            3,2,0,
-            0,1,3,
+            0,1,2,
+            2,3,0,
             // front
-            7,3,1,
-            1,5,7,
+            4,5,6,
+            6,7,4,
             // left
-            6,7,5,
-            5,4,6,
+            8,9,10,
+            10,11,8,
             // back
-            2,6,4,
-            4,0,2,
+            12,13,14,
+            14,15,12,
             // top
-            3,7,6,
-            6,2,3,
+            16,17,18,
+            18,19,16,
             // bottom
-            5,1,0,
-            0,4,5,
+            20,21,22,
+            22,23,20,
     };
     ibo_cube_elements = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_elements), cube_elements));
 
