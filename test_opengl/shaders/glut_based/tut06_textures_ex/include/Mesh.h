@@ -1,10 +1,10 @@
 #ifndef VT_MESH_H_
 #define VT_MESH_H_
 
+#include <Buffer.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <stddef.h>
-#include <Buffer.h>
 #include <memory> // std::unique_ptr
 
 namespace vt {
@@ -31,26 +31,28 @@ public:
     void set_tex_coord(int index, glm::vec2 coord);
     glm::uvec3 get_tri_indices(int index);
     void set_tri_indices(int index, glm::uvec3 indices);
-    std::unique_ptr<vt::Buffer> get_vbo_vert_coord() const;
-    std::unique_ptr<vt::Buffer> get_vbo_tex_coord() const;
-    std::unique_ptr<vt::Buffer> get_ibo_tri_indices() const;
+    void upload_to_gpu();
+    vt::Buffer* get_vbo_vert_coord();
+    vt::Buffer* get_vbo_tex_coord();
+    vt::Buffer* get_ibo_tri_indices();
     glm::mat4 get_model_xform() const
     {
         return m_model_xform;
     }
 
 private:
-    glm::vec3   m_origin;
-    glm::vec3   m_orient;
-    size_t      m_num_vertex;
-    size_t      m_num_tri;
-    GLfloat*    m_vert_coords;
-    GLfloat*    m_tex_coords;
-    GLushort*   m_tri_indices;
-    vt::Buffer* m_vbo_vert_coords;
-    vt::Buffer* m_vbo_tex_coord;
-    vt::Buffer* m_ibo_tri_indices;
-    glm::mat4   m_model_xform;
+    glm::vec3                   m_origin;
+    glm::vec3                   m_orient;
+    size_t                      m_num_vertex;
+    size_t                      m_num_tri;
+    GLfloat*                    m_vert_coords;
+    GLfloat*                    m_tex_coords;
+    GLushort*                   m_tri_indices;
+    std::unique_ptr<vt::Buffer> m_vbo_vert_coords;
+    std::unique_ptr<vt::Buffer> m_vbo_tex_coord;
+    std::unique_ptr<vt::Buffer> m_ibo_tri_indices;
+    bool                        m_uploaded;
+    glm::mat4                   m_model_xform;
 
     void update_model_xform();
 };

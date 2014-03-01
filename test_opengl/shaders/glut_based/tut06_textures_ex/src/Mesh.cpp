@@ -1,18 +1,20 @@
 #include <Mesh.h>
+#include <Buffer.h>
 #include <Util.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <memory> // std::unique_ptr
 
 namespace vt {
 
 Mesh::Mesh(size_t num_vertex, size_t num_tri)
     : m_num_vertex(num_vertex), m_num_tri(num_tri),
-      m_vbo_vert_coords(NULL), m_vbo_tex_coord(NULL), m_ibo_tri_indices(NULL)
+      m_uploaded(false)
 {
-    m_vert_coords    = new GLfloat[num_vertex*3];
-    m_tex_coords = new GLfloat[num_vertex*2];
-    m_tri_indices    = new GLushort[num_tri*3];
+    m_vert_coords = new GLfloat[num_vertex*3];
+    m_tex_coords  = new GLfloat[num_vertex*2];
+    m_tri_indices = new GLushort[num_tri*3];
 }
 
 Mesh::~Mesh()
@@ -89,19 +91,33 @@ void Mesh::set_tri_indices(int index, glm::uvec3 indices)
     m_tri_indices[offset+2] = indices[2];
 }
 
-std::unique_ptr<vt::Buffer> Mesh::get_vbo_vert_coord() const
+void Mesh::upload_to_gpu()
 {
-    return std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_coords));
+    m_vbo_vert_coords = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_coords));
+    m_vbo_tex_coord   = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_tex_coords));
+    m_ibo_tri_indices = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*m_num_tri*3, m_tri_indices));
+    m_uploaded = true;
 }
 
-std::unique_ptr<vt::Buffer> Mesh::get_vbo_tex_coord() const
+vt::Buffer* Mesh::get_vbo_vert_coord()
 {
-    return std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_tex_coords));
+    if(!m_uploaded)
+        upload_to_gpu();
+    return m_vbo_vert_coords.get();
 }
 
-std::unique_ptr<vt::Buffer> Mesh::get_ibo_tri_indices() const
+vt::Buffer* Mesh::get_vbo_tex_coord()
 {
-    return std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*m_num_tri*3, m_tri_indices));
+    if(!m_uploaded)
+        upload_to_gpu();
+    return m_vbo_tex_coord.get();
+}
+
+vt::Buffer* Mesh::get_ibo_tri_indices()
+{
+    if(!m_uploaded)
+        upload_to_gpu();
+    return m_ibo_tri_indices.get();
 }
 
 void Mesh::update_model_xform()

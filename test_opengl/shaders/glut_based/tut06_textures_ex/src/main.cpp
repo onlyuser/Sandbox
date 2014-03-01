@@ -39,8 +39,6 @@
 const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int screen_width=800, screen_height=600;
-std::unique_ptr<vt::Buffer> vbo_vert_coord, vbo_tex_coord;
-std::unique_ptr<vt::Buffer> ibo_tri_indices;
 std::unique_ptr<vt::Program> program;
 std::unique_ptr<vt::Texture> texture_id;
 std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
@@ -98,8 +96,6 @@ int init_resources()
     mesh->set_vert_coord(22, glm::vec3(1,0,1));
     mesh->set_vert_coord(23, glm::vec3(0,0,1));
 
-    vbo_vert_coord = mesh->get_vbo_vert_coord();
-
     // ========================
     // init mesh texture coords
     // ========================
@@ -122,8 +118,6 @@ int init_resources()
     // init mesh triangle indices
     // ==========================
 
-    vbo_tex_coord = mesh->get_vbo_tex_coord();
-
     // right
     mesh->set_tri_indices(0, glm::uvec3(0,1,2));
     mesh->set_tri_indices(1, glm::uvec3(2,3,0));
@@ -143,11 +137,11 @@ int init_resources()
     mesh->set_tri_indices(10, glm::uvec3(20,21,22));
     mesh->set_tri_indices(11, glm::uvec3(22,23,20));
 
-    ibo_tri_indices = mesh->get_ibo_tri_indices();
-
     // ===================
     // other shader config
     // ===================
+
+    mesh->upload_to_gpu();
 
     texture_id = std::unique_ptr<vt::Texture>(new vt::Texture(
             res_texture.width,
@@ -252,7 +246,7 @@ void onDisplay()
     attribute_coord3d->enable_vertex_attrib_array();
     // Describe our vertices array to OpenGL (it can't guess its format automatically)
     attribute_coord3d->vertex_attrib_pointer(
-            vbo_vert_coord.get(),
+            mesh->get_vbo_vert_coord(),
             3,        // number of elements per vertex, here (x,y,z)
             GL_FLOAT, // the type of each element
             GL_FALSE, // take our values as-is
@@ -262,7 +256,7 @@ void onDisplay()
 
     attribute_texcoord->enable_vertex_attrib_array();
     attribute_texcoord->vertex_attrib_pointer(
-            vbo_tex_coord.get(),
+            mesh->get_vbo_tex_coord(),
             2,        // number of elements per vertex, here (x,y)
             GL_FLOAT, // the type of each element
             GL_FALSE, // take our values as-is
@@ -271,7 +265,7 @@ void onDisplay()
             );
 
     /* Push each element in buffer_vertices to the vertex shader */
-    ibo_tri_indices->bind();
+    mesh->get_ibo_tri_indices()->bind();
     int size = 0;
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
     glDrawElements(GL_TRIANGLES, size/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
