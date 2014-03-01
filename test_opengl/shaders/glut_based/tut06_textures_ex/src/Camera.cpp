@@ -12,18 +12,18 @@ Camera::Camera(
         float     fov,
         float     width,
         float     height,
-        float     near,
-        float     far)
+        float     near_plane,
+        float     far_plane)
     : m_origin(origin),
       m_target(target),
       m_fov(fov),
       m_width(width),
       m_height(height),
-      m_near(near),
-      m_far(far)
+      m_near_plane(near_plane),
+      m_far_plane(far_plane)
 {
-    update_view();
-    update_projection();
+    update_view_xform();
+    update_projection_xform();
 }
 
 Camera::~Camera()
@@ -34,71 +34,77 @@ void Camera::move(glm::vec3 origin, glm::vec3 target)
 {
     m_origin = origin;
     m_target = target;
-    update_view();
+    update_view_xform();
 }
 
-glm::vec3 Camera::get_rpy() const
+glm::vec3 Camera::get_orient() const
 {
-    return xyz_to_rpy(m_origin-m_target);
+    return offset_to_orient(m_origin-m_target);
 }
 
-void Camera::set_rpy(glm::vec3 rpy, float radius)
+void Camera::set_orient(glm::vec3 orient)
 {
-    m_origin = m_target+rpy_to_xyz(rpy)*radius;
-    update_view();
+    m_target = m_origin+orient_to_offset(orient);
+    update_view_xform();
+}
+
+void Camera::orbit(glm::vec3 orient, float radius)
+{
+    m_origin = m_target+orient_to_offset(orient)*radius;
+    update_view_xform();
 }
 
 void Camera::set_origin(glm::vec3 origin)
 {
     m_origin = origin;
-    update_view();
+    update_view_xform();
 }
 
 void Camera::set_target(glm::vec3 target)
 {
     m_target = target;
-    update_view();
+    update_view_xform();
 }
 
 void Camera::set_fov(float fov)
 {
     m_fov = fov;
-    update_projection();
+    update_projection_xform();
 }
 
 void Camera::resize_viewport(float width, float height)
 {
     m_width  = width;
     m_height = height;
-    update_projection();
+    update_projection_xform();
 }
 
-void Camera::set_near(float near)
+void Camera::set_near_plane(float near_plane)
 {
-    m_near = near;
-    update_projection();
+    m_near_plane = near_plane;
+    update_projection_xform();
 }
 
-void Camera::set_far(float far)
+void Camera::set_far_plane(float far_plane)
 {
-    m_far = far;
-    update_projection();
+    m_far_plane = far_plane;
+    update_projection_xform();
 }
 
-glm::mat4 Camera::get_view_projection() const
+glm::mat4 Camera::get_view_projection_xform() const
 {
-    return m_projection*m_view;
+    return m_projection_xform*m_view_xform;
 }
 
-void Camera::update_view()
+void Camera::update_view_xform()
 {
     static glm::vec3 up_vec = glm::vec3(0, 1, 0);
-    m_view = glm::lookAt(m_origin, m_target, up_vec);
+    m_view_xform = glm::lookAt(m_origin, m_target, up_vec);
 }
 
-void Camera::update_projection()
+void Camera::update_projection_xform()
 {
-    m_projection = glm::perspective(m_fov, 1.0f*m_width/m_height, m_near, m_far);
+    m_projection_xform = glm::perspective(m_fov, 1.0f*m_width/m_height, m_near_plane, m_far_plane);
 }
 
 }

@@ -21,19 +21,17 @@
 
 #include <Buffer.h>
 #include <Camera.h>
+#include <Mesh.h>
 #include <Program.h>
 #include <Shader.h>
 #include <Texture.h>
+#include <Util.h>
 #include <VarAttribute.h>
 #include <VarUniform.h>
 #include <iostream> // std::cout
 #include <memory> // std::unique_ptr
 #include <sstream> // std::stringstream
 #include <iomanip> // std::setprecision
-
-#define RPY_ROLL(v)  v[0]
-#define RPY_PITCH(v) v[1]
-#define RPY_YAW(v)   v[2]
 
 #define MAX_PITCH 89
 #define MIN_PITCH -89
@@ -48,86 +46,108 @@ std::unique_ptr<vt::Texture> texture_id;
 std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
 std::unique_ptr<vt::VarUniform> uniform_mvp, uniform_mytexture;
 std::unique_ptr<vt::Camera> camera;
+std::unique_ptr<vt::Mesh> mesh;
 
 bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_coord, mouse_drag;
-glm::vec3 prev_view_rpy, view_rpy, orbit_speed = glm::vec3(0, -0.5, -0.5);
+glm::vec3 prev_orient, orient, orbit_speed = glm::vec3(0, -0.5, -0.5);
 float prev_radius = 0, radius = 8, dolly_speed = 0.1;
 bool show_fps = false;
 
 int init_resources()
 {
-    GLfloat cube_vertices[] = {
-            // right
-            /*  [0] */ 0,0,0,//0
-            /*  [1] */ 0,0,1,//1
-            /*  [2] */ 0,1,1,//3
-            /*  [3] */ 0,1,0,//2
+    mesh = std::unique_ptr<vt::Mesh>(new vt::Mesh(24, 12));
 
-            // front
-            /*  [4] */ 0,0,1,//1
-            /*  [5] */ 1,0,1,//5
-            /*  [6] */ 1,1,1,//7
-            /*  [7] */ 0,1,1,//3
+    // =======================
+    // init mesh vertex coords
+    // =======================
 
-            // left
-            /*  [8] */ 1,0,1,//5
-            /*  [9] */ 1,0,0,//4
-            /* [10] */ 1,1,0,//6
-            /* [11] */ 1,1,1,//7
+    // right
+    mesh->set_vert_coord( 0, glm::vec3(0,0,0));
+    mesh->set_vert_coord( 1, glm::vec3(0,0,1));
+    mesh->set_vert_coord( 2, glm::vec3(0,1,1));
+    mesh->set_vert_coord( 3, glm::vec3(0,1,0));
 
-            // back
-            /* [12] */ 1,0,0,//4
-            /* [13] */ 0,0,0,//0
-            /* [14] */ 0,1,0,//2
-            /* [15] */ 1,1,0,//6
+    // front
+    mesh->set_vert_coord( 4, glm::vec3(0,0,1));
+    mesh->set_vert_coord( 5, glm::vec3(1,0,1));
+    mesh->set_vert_coord( 6, glm::vec3(1,1,1));
+    mesh->set_vert_coord( 7, glm::vec3(0,1,1));
 
-            // top
-            /* [16] */ 1,1,0,//6
-            /* [17] */ 0,1,0,//2
-            /* [18] */ 0,1,1,//3
-            /* [19] */ 1,1,1,//7
+    // left
+    mesh->set_vert_coord( 8, glm::vec3(1,0,1));
+    mesh->set_vert_coord( 9, glm::vec3(1,0,0));
+    mesh->set_vert_coord(10, glm::vec3(1,1,0));
+    mesh->set_vert_coord(11, glm::vec3(1,1,1));
 
-            // bottom
-            /* [20] */ 0,0,0,//0
-            /* [21] */ 1,0,0,//4
-            /* [22] */ 1,0,1,//5
-            /* [23] */ 0,0,1,//1
-    };
-    vbo_cube_vertices = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices));
+    // back
+    mesh->set_vert_coord(12, glm::vec3(1,0,0));
+    mesh->set_vert_coord(13, glm::vec3(0,0,0));
+    mesh->set_vert_coord(14, glm::vec3(0,1,0));
+    mesh->set_vert_coord(15, glm::vec3(1,1,0));
 
-    GLfloat cube_texcoords[2*4*6] = {
-            // right
-            0,0,
-            1,0,
-            1,1,
-            0,1,
-    };
+    // top
+    mesh->set_vert_coord(16, glm::vec3(1,1,0));
+    mesh->set_vert_coord(17, glm::vec3(0,1,0));
+    mesh->set_vert_coord(18, glm::vec3(0,1,1));
+    mesh->set_vert_coord(19, glm::vec3(1,1,1));
+
+    // bottom
+    mesh->set_vert_coord(20, glm::vec3(0,0,0));
+    mesh->set_vert_coord(21, glm::vec3(1,0,0));
+    mesh->set_vert_coord(22, glm::vec3(1,0,1));
+    mesh->set_vert_coord(23, glm::vec3(0,0,1));
+
+    vbo_cube_vertices = mesh->get_vbo_vertices();
+
+    // ========================
+    // init mesh texture coords
+    // ========================
+
+    // right
+    mesh->set_texture_coord(0, glm::vec2(0,0));
+    mesh->set_texture_coord(1, glm::vec2(1,0));
+    mesh->set_texture_coord(2, glm::vec2(1,1));
+    mesh->set_texture_coord(3, glm::vec2(0,1));
+
     for(int i=1; i<6; i++)
-        memcpy(&(cube_texcoords[2*4*i]), &(cube_texcoords[0]), sizeof(GLfloat)*2*4);
-    vbo_cube_texcoords = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(cube_texcoords), cube_texcoords));
+    {
+        mesh->set_texture_coord(i*4+0, mesh->get_texture_coord(0));
+        mesh->set_texture_coord(i*4+1, mesh->get_texture_coord(1));
+        mesh->set_texture_coord(i*4+2, mesh->get_texture_coord(2));
+        mesh->set_texture_coord(i*4+3, mesh->get_texture_coord(3));
+    }
 
-    GLushort cube_elements[] = {
-            // right
-            0,1,2,
-            2,3,0,
-            // front
-            4,5,6,
-            6,7,4,
-            // left
-            8,9,10,
-            10,11,8,
-            // back
-            12,13,14,
-            14,15,12,
-            // top
-            16,17,18,
-            18,19,16,
-            // bottom
-            20,21,22,
-            22,23,20,
-    };
-    ibo_cube_elements = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_elements), cube_elements));
+    // ==========================
+    // init mesh triangle indices
+    // ==========================
+
+    vbo_cube_texcoords = mesh->get_vbo_texcoords();
+
+    // right
+    mesh->set_tri_indices(0, glm::uvec3(0,1,2));
+    mesh->set_tri_indices(1, glm::uvec3(2,3,0));
+    // front
+    mesh->set_tri_indices(2, glm::uvec3(4,5,6));
+    mesh->set_tri_indices(3, glm::uvec3(6,7,4));
+    // left
+    mesh->set_tri_indices(4, glm::uvec3(8,9,10));
+    mesh->set_tri_indices(5, glm::uvec3(10,11,8));
+    // back
+    mesh->set_tri_indices(6, glm::uvec3(12,13,14));
+    mesh->set_tri_indices(7, glm::uvec3(14,15,12));
+    // top
+    mesh->set_tri_indices(8, glm::uvec3(16,17,18));
+    mesh->set_tri_indices(9, glm::uvec3(18,19,16));
+    // bottom
+    mesh->set_tri_indices(10, glm::uvec3(20,21,22));
+    mesh->set_tri_indices(11, glm::uvec3(22,23,20));
+
+    ibo_cube_elements = mesh->get_ibo_elements();
+
+    // ===================
+    // other shader config
+    // ===================
 
     texture_id = std::unique_ptr<vt::Texture>(new vt::Texture(
             res_texture.width,
@@ -186,15 +206,8 @@ int init_resources()
 void onIdle()
 {
     float angle = 0;//1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15; // base 15° per second
-    glm::mat4 anim =
-            glm::rotate(glm::mat4(1), angle*3, glm::vec3(1, 0, 0)) * // X axis
-            glm::rotate(glm::mat4(1), angle*2, glm::vec3(0, 1, 0)) * // Y axis
-            glm::rotate(glm::mat4(1), angle*4, glm::vec3(0, 0, 1));  // Z axis
-
-    glm::mat4 model = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0));
-
-    glm::mat4 mvp = camera->get_view_projection()*model*anim;
-    program->use();
+    mesh->set_orient(glm::vec3(angle*3, angle*2, angle*4));
+    glm::mat4 mvp = camera->get_view_projection_xform()*mesh->get_model_xform();
     uniform_mvp->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(mvp));
     glutPostRedisplay();
 }
@@ -217,7 +230,7 @@ void onTick()
         std::stringstream ss;
         ss << std::setprecision(2) << std::fixed << fps << " FPS, "
             << "Mouse: {" << mouse_drag.x << ", " << mouse_drag.y << "}, "
-            << "Yaw=" << RPY_YAW(view_rpy) << ", Pitch=" << RPY_PITCH(view_rpy) << ", Radius=" << radius;
+            << "Yaw=" << ORIENT_YAW(orient) << ", Pitch=" << ORIENT_PITCH(orient) << ", Radius=" << radius;
         glutSetWindowTitle(ss.str().c_str());
     }
     frames++;
@@ -313,7 +326,7 @@ void onMouse(int button, int state, int x, int y)
         if(button == GLUT_LEFT_BUTTON)
         {
             left_mouse_down = true;
-            prev_view_rpy = view_rpy;
+            prev_orient = orient;
         }
         if(button == GLUT_RIGHT_BUTTON)
         {
@@ -335,18 +348,18 @@ void onMotion(int x, int y)
     }
     if(left_mouse_down)
     {
-        view_rpy = prev_view_rpy+glm::vec3(0, mouse_drag.y*RPY_PITCH(orbit_speed), mouse_drag.x*RPY_YAW(orbit_speed));
-        if(RPY_PITCH(view_rpy) > MAX_PITCH) RPY_PITCH(view_rpy) = MAX_PITCH;
-        if(RPY_PITCH(view_rpy) < MIN_PITCH) RPY_PITCH(view_rpy) = MIN_PITCH;
-        if(RPY_YAW(view_rpy) > 360)         RPY_YAW(view_rpy) -= 360;
-        if(RPY_YAW(view_rpy) < 0)           RPY_YAW(view_rpy) += 360;
-        camera->set_rpy(view_rpy, radius);
+        orient = prev_orient+glm::vec3(0, mouse_drag.y*ORIENT_PITCH(orbit_speed), mouse_drag.x*ORIENT_YAW(orbit_speed));
+        if(ORIENT_PITCH(orient) > MAX_PITCH) ORIENT_PITCH(orient) = MAX_PITCH;
+        if(ORIENT_PITCH(orient) < MIN_PITCH) ORIENT_PITCH(orient) = MIN_PITCH;
+        if(ORIENT_YAW(orient) > 360)         ORIENT_YAW(orient) -= 360;
+        if(ORIENT_YAW(orient) < 0)           ORIENT_YAW(orient) += 360;
+        camera->orbit(orient, radius);
     }
     if(right_mouse_down)
     {
         radius = prev_radius+mouse_drag.y*dolly_speed;
         if(radius < 0) radius = 0;
-        camera->set_rpy(view_rpy, radius);
+        camera->orbit(orient, radius);
     }
 }
 

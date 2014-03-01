@@ -1,50 +1,60 @@
 #include <Mesh.h>
+#include <Util.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace vt {
 
-Mesh::Mesh(size_t num_vertex, size_t num_face)
-    : m_num_vertex(), m_num_face(num_face)
+Mesh::Mesh(size_t num_vertex, size_t num_tri)
+    : m_num_vertex(num_vertex), m_num_tri(num_tri),
+      m_vbo_vert_coords(NULL), m_vbo_tex_coords(NULL), m_ibo_tri_indices(NULL)
 {
-    m_vertex_coords  = new GLfloat[num_vertex*3];
+    m_vert_coords    = new GLfloat[num_vertex*3];
     m_texture_coords = new GLfloat[num_vertex*2];
-    m_face_indices   = new GLushort[num_face*3];
+    m_tri_indices    = new GLushort[num_tri*3];
 }
 
 Mesh::~Mesh()
 {
-    if(m_vertex_coords) {
-        delete []m_vertex_coords;
+    if(m_vert_coords) {
+        delete []m_vert_coords;
     }
     if(m_texture_coords) {
         delete []m_texture_coords;
     }
-    if(m_face_indices) {
-        delete []m_face_indices;
+    if(m_tri_indices) {
+        delete []m_tri_indices;
     }
 }
 
 void Mesh::set_origin(glm::vec3 origin)
 {
     m_origin = origin;
+    update_model_xform();
 }
 
-glm::vec3 Mesh::get_vertex_coord(int index)
+void Mesh::set_orient(glm::vec3 orient)
+{
+    m_orient = orient;
+    update_model_xform();
+}
+
+glm::vec3 Mesh::get_vert_coord(int index)
 {
     int offset = index*3;
     return glm::vec3(
-            m_vertex_coords[offset+0],
-            m_vertex_coords[offset+1],
-            m_vertex_coords[offset+2]);
+            m_vert_coords[offset+0],
+            m_vert_coords[offset+1],
+            m_vert_coords[offset+2]);
 }
 
-void Mesh::set_vertex_coord(int index, glm::vec3 coord)
+void Mesh::set_vert_coord(int index, glm::vec3 coord)
 {
     int offset = index*3;
-    m_vertex_coords[offset+0] = coord.x;
-    m_vertex_coords[offset+1] = coord.y;
-    m_vertex_coords[offset+2] = coord.z;
+    m_vert_coords[offset+0] = coord.x;
+    m_vert_coords[offset+1] = coord.y;
+    m_vert_coords[offset+2] = coord.z;
 }
 
 glm::vec2 Mesh::get_texture_coord(int index)
@@ -62,21 +72,46 @@ void Mesh::set_texture_coord(int index, glm::vec2 coord)
     m_texture_coords[offset+1] = coord.y;
 }
 
-glm::uvec3 Mesh::get_face_indices(int index)
+glm::uvec3 Mesh::get_tri_indices(int index)
 {
     int offset = index*3;
     return glm::uvec3(
-            m_face_indices[offset+0],
-            m_face_indices[offset+1],
-            m_face_indices[offset+2]);
+            m_tri_indices[offset+0],
+            m_tri_indices[offset+1],
+            m_tri_indices[offset+2]);
 }
 
-void Mesh::set_face_indices(int index, glm::uvec3 indices)
+void Mesh::set_tri_indices(int index, glm::uvec3 indices)
 {
     int offset = index*3;
-    m_face_indices[offset+0] = indices[0];
-    m_face_indices[offset+1] = indices[1];
-    m_face_indices[offset+2] = indices[2];
+    m_tri_indices[offset+0] = indices[0];
+    m_tri_indices[offset+1] = indices[1];
+    m_tri_indices[offset+2] = indices[2];
+}
+
+std::unique_ptr<vt::Buffer> Mesh::get_vbo_vertices() const
+{
+    return std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_coords));
+}
+
+std::unique_ptr<vt::Buffer> Mesh::get_vbo_texcoords() const
+{
+    return std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_texture_coords));
+}
+
+std::unique_ptr<vt::Buffer> Mesh::get_ibo_elements() const
+{
+    return std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*m_num_tri*3, m_tri_indices));
+}
+
+void Mesh::update_model_xform()
+{
+    glm::mat4 model_rotate =
+            glm::rotate(glm::mat4(1), static_cast<float>(ORIENT_PITCH(m_orient)*3), glm::vec3(1, 0, 0)) * // X axis
+            glm::rotate(glm::mat4(1), static_cast<float>(ORIENT_YAW(m_orient)*2),   glm::vec3(0, 1, 0)) * // Y axis
+            glm::rotate(glm::mat4(1), static_cast<float>(ORIENT_ROLL(m_orient)*4),  glm::vec3(0, 0, 1));  // Z axis
+    glm::mat4 model_translate = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0));
+    m_model_xform = model_translate*model_rotate;
 }
 
 }

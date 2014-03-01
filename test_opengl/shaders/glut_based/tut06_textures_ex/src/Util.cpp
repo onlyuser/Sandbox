@@ -13,35 +13,35 @@
 
 namespace vt {
 
-glm::vec3 rpy_to_xyz(glm::vec3 rpy)
+glm::vec3 orient_to_offset(glm::vec3 orient)
 {
     static glm::vec3 forward = glm::vec3(0, 0, 1);
     glm::mat4 pitch = glm::rotate(
             glm::mat4(1),
-            PITCH(rpy), glm::vec3(1, 0, 0));
+            PITCH(orient), glm::vec3(1, 0, 0));
     glm::mat4 yaw = glm::rotate(
             glm::mat4(1),
-            YAW(rpy), glm::vec3(0, 1, 0));
+            YAW(orient), glm::vec3(0, 1, 0));
     return glm::vec3(yaw*pitch*glm::vec4(forward, 1));
 }
 
-glm::vec3 xyz_to_rpy(glm::vec3 xyz)
+glm::vec3 offset_to_orient(glm::vec3 offset)
 {
     static glm::vec3 forward = glm::vec3(0, 0, 1);
-    glm::vec3 t(xyz.x, 0, xyz.z); // flattened xyz
+    glm::vec3 t(offset.x, 0, offset.z); // flattened offset
     glm::vec3 r(
         0,
-        glm::angle(t, xyz),
+        glm::angle(t, offset),
         glm::angle(t, forward)
         );
-    if(static_cast<float>(fabs(xyz.x))<EPSILON && static_cast<float>(fabs(xyz.z))<EPSILON)
+    if(static_cast<float>(fabs(offset.x))<EPSILON && static_cast<float>(fabs(offset.z))<EPSILON)
     {
-        PITCH(r) = -SIGN(xyz.y)*glm::radians(90.0f);
+        PITCH(r) = -SIGN(offset.y)*glm::radians(90.0f);
         YAW(r) = 0; // undefined
         return r;
     }
-    if(xyz.x < 0) YAW(r) *= -1;
-    if(xyz.y > 0) PITCH(r) *= -1;
+    if(offset.x < 0) YAW(r) *= -1;
+    if(offset.y > 0) PITCH(r) *= -1;
     return r;
 }
 

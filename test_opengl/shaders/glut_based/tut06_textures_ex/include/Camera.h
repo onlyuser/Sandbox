@@ -10,17 +10,18 @@ class Camera
 public:
     Camera(
             glm::vec3 origin,
-            glm::vec3 target = glm::vec3(0),
-            float     fov    = 45,
-            float     width  = 800,
-            float     height = 600,
-            float     near   = 0.1,
-            float     far    = 100);
+            glm::vec3 target     = glm::vec3(0),
+            float     fov        = 45,
+            float     width      = 800,
+            float     height     = 600,
+            float     near_plane = 0.1,
+            float     far_plane  = 100);
     ~Camera();
 
     void move(glm::vec3 origin, glm::vec3 target = glm::vec3(0));
-    glm::vec3 get_rpy() const;
-    void set_rpy(glm::vec3 rpy, float radius = 0);
+    glm::vec3 get_orient() const;
+    void set_orient(glm::vec3 orient);
+    void orbit(glm::vec3 orient, float radius = 0);
 
     glm::vec3 get_origin() const
     {
@@ -50,27 +51,27 @@ public:
     }
     void resize_viewport(float width, float height);
 
-    float get_near() const
+    float get_near_plane() const
     {
-        return m_near;
+        return m_near_plane;
     }
-    void set_near(float near);
+    void set_near_plane(float near_plane);
 
-    float get_far() const
+    float get_far_plane() const
     {
-        return m_far;
+        return m_far_plane;
     }
-    void set_far(float far);
+    void set_far_plane(float far_plane);
 
-    glm::mat4 get_view() const
+    glm::mat4 get_view_xform() const
     {
-        return m_view;
+        return m_view_xform;
     }
-    glm::mat4 get_projection() const
+    glm::mat4 get_projection_xform() const
     {
-        return m_projection;
+        return m_projection_xform;
     }
-    glm::mat4 get_view_projection() const;
+    glm::mat4 get_view_projection_xform() const;
 
 private:
     glm::vec3 m_origin;
@@ -78,14 +79,14 @@ private:
     float     m_fov;
     size_t    m_width;
     size_t    m_height;
-    float     m_near;
-    float     m_far;
-    glm::mat4 m_view;
-    glm::mat4 m_projection;
-    glm::mat4 m_view_projection;
+    float     m_near_plane;
+    float     m_far_plane;
+    glm::mat4 m_view_xform;
+    glm::mat4 m_projection_xform;
+    glm::mat4 m_view_projection_xform;
 
-    void update_view();
-    void update_projection();
+    void update_view_xform();
+    void update_projection_xform();
 };
 
 }
