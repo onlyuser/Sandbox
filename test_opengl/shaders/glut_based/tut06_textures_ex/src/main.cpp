@@ -39,8 +39,8 @@
 const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int screen_width=800, screen_height=600;
-std::unique_ptr<vt::Buffer> vbo_cube_vertices, vbo_cube_texcoords;
-std::unique_ptr<vt::Buffer> ibo_cube_elements;
+std::unique_ptr<vt::Buffer> vbo_vert_coord, vbo_tex_coord;
+std::unique_ptr<vt::Buffer> ibo_tri_indices;
 std::unique_ptr<vt::Program> program;
 std::unique_ptr<vt::Texture> texture_id;
 std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
@@ -98,31 +98,31 @@ int init_resources()
     mesh->set_vert_coord(22, glm::vec3(1,0,1));
     mesh->set_vert_coord(23, glm::vec3(0,0,1));
 
-    vbo_cube_vertices = mesh->get_vbo_vertices();
+    vbo_vert_coord = mesh->get_vbo_vert_coord();
 
     // ========================
     // init mesh texture coords
     // ========================
 
     // right
-    mesh->set_texture_coord(0, glm::vec2(0,0));
-    mesh->set_texture_coord(1, glm::vec2(1,0));
-    mesh->set_texture_coord(2, glm::vec2(1,1));
-    mesh->set_texture_coord(3, glm::vec2(0,1));
+    mesh->set_tex_coord(0, glm::vec2(0,0));
+    mesh->set_tex_coord(1, glm::vec2(1,0));
+    mesh->set_tex_coord(2, glm::vec2(1,1));
+    mesh->set_tex_coord(3, glm::vec2(0,1));
 
     for(int i=1; i<6; i++)
     {
-        mesh->set_texture_coord(i*4+0, mesh->get_texture_coord(0));
-        mesh->set_texture_coord(i*4+1, mesh->get_texture_coord(1));
-        mesh->set_texture_coord(i*4+2, mesh->get_texture_coord(2));
-        mesh->set_texture_coord(i*4+3, mesh->get_texture_coord(3));
+        mesh->set_tex_coord(i*4+0, mesh->get_tex_coord(0));
+        mesh->set_tex_coord(i*4+1, mesh->get_tex_coord(1));
+        mesh->set_tex_coord(i*4+2, mesh->get_tex_coord(2));
+        mesh->set_tex_coord(i*4+3, mesh->get_tex_coord(3));
     }
 
     // ==========================
     // init mesh triangle indices
     // ==========================
 
-    vbo_cube_texcoords = mesh->get_vbo_texcoords();
+    vbo_tex_coord = mesh->get_vbo_tex_coord();
 
     // right
     mesh->set_tri_indices(0, glm::uvec3(0,1,2));
@@ -143,7 +143,7 @@ int init_resources()
     mesh->set_tri_indices(10, glm::uvec3(20,21,22));
     mesh->set_tri_indices(11, glm::uvec3(22,23,20));
 
-    ibo_cube_elements = mesh->get_ibo_elements();
+    ibo_tri_indices = mesh->get_ibo_tri_indices();
 
     // ===================
     // other shader config
@@ -252,7 +252,7 @@ void onDisplay()
     attribute_coord3d->enable_vertex_attrib_array();
     // Describe our vertices array to OpenGL (it can't guess its format automatically)
     attribute_coord3d->vertex_attrib_pointer(
-            vbo_cube_vertices.get(),
+            vbo_vert_coord.get(),
             3,        // number of elements per vertex, here (x,y,z)
             GL_FLOAT, // the type of each element
             GL_FALSE, // take our values as-is
@@ -262,7 +262,7 @@ void onDisplay()
 
     attribute_texcoord->enable_vertex_attrib_array();
     attribute_texcoord->vertex_attrib_pointer(
-            vbo_cube_texcoords.get(),
+            vbo_tex_coord.get(),
             2,        // number of elements per vertex, here (x,y)
             GL_FLOAT, // the type of each element
             GL_FALSE, // take our values as-is
@@ -271,7 +271,7 @@ void onDisplay()
             );
 
     /* Push each element in buffer_vertices to the vertex shader */
-    ibo_cube_elements->bind();
+    ibo_tri_indices->bind();
     int size = 0;
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
     glDrawElements(GL_TRIANGLES, size/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);

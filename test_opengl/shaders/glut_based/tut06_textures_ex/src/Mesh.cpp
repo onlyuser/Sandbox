@@ -8,10 +8,10 @@ namespace vt {
 
 Mesh::Mesh(size_t num_vertex, size_t num_tri)
     : m_num_vertex(num_vertex), m_num_tri(num_tri),
-      m_vbo_vert_coords(NULL), m_vbo_tex_coords(NULL), m_ibo_tri_indices(NULL)
+      m_vbo_vert_coords(NULL), m_vbo_tex_coord(NULL), m_ibo_tri_indices(NULL)
 {
     m_vert_coords    = new GLfloat[num_vertex*3];
-    m_texture_coords = new GLfloat[num_vertex*2];
+    m_tex_coords = new GLfloat[num_vertex*2];
     m_tri_indices    = new GLushort[num_tri*3];
 }
 
@@ -20,8 +20,8 @@ Mesh::~Mesh()
     if(m_vert_coords) {
         delete []m_vert_coords;
     }
-    if(m_texture_coords) {
-        delete []m_texture_coords;
+    if(m_tex_coords) {
+        delete []m_tex_coords;
     }
     if(m_tri_indices) {
         delete []m_tri_indices;
@@ -57,19 +57,19 @@ void Mesh::set_vert_coord(int index, glm::vec3 coord)
     m_vert_coords[offset+2] = coord.z;
 }
 
-glm::vec2 Mesh::get_texture_coord(int index)
+glm::vec2 Mesh::get_tex_coord(int index)
 {
     int offset = index*2;
     return glm::vec2(
-            m_texture_coords[offset+0],
-            m_texture_coords[offset+1]);
+            m_tex_coords[offset+0],
+            m_tex_coords[offset+1]);
 }
 
-void Mesh::set_texture_coord(int index, glm::vec2 coord)
+void Mesh::set_tex_coord(int index, glm::vec2 coord)
 {
     int offset = index*2;
-    m_texture_coords[offset+0] = coord.x;
-    m_texture_coords[offset+1] = coord.y;
+    m_tex_coords[offset+0] = coord.x;
+    m_tex_coords[offset+1] = coord.y;
 }
 
 glm::uvec3 Mesh::get_tri_indices(int index)
@@ -89,17 +89,17 @@ void Mesh::set_tri_indices(int index, glm::uvec3 indices)
     m_tri_indices[offset+2] = indices[2];
 }
 
-std::unique_ptr<vt::Buffer> Mesh::get_vbo_vertices() const
+std::unique_ptr<vt::Buffer> Mesh::get_vbo_vert_coord() const
 {
     return std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_coords));
 }
 
-std::unique_ptr<vt::Buffer> Mesh::get_vbo_texcoords() const
+std::unique_ptr<vt::Buffer> Mesh::get_vbo_tex_coord() const
 {
-    return std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_texture_coords));
+    return std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_tex_coords));
 }
 
-std::unique_ptr<vt::Buffer> Mesh::get_ibo_elements() const
+std::unique_ptr<vt::Buffer> Mesh::get_ibo_tri_indices() const
 {
     return std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*m_num_tri*3, m_tri_indices));
 }
