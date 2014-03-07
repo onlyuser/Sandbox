@@ -1,11 +1,12 @@
 #ifndef VT_CAMERA_H_
 #define VT_CAMERA_H_
 
+#include <Object.h>
 #include <glm/glm.hpp>
 
 namespace vt {
 
-class Camera
+class Camera : public Object
 {
 public:
     Camera(
@@ -18,22 +19,17 @@ public:
             float     far_plane  = 100);
     ~Camera();
 
-    void move(glm::vec3 origin, glm::vec3 target = glm::vec3(0));
-    glm::vec3 get_orient() const;
-    void set_orient(glm::vec3 orient);
-    void orbit(glm::vec3 orient, float radius = 0);
-
-    glm::vec3 get_origin() const
-    {
-        return m_origin;
-    }
     void set_origin(glm::vec3 origin);
+    void set_orient(glm::vec3 orient);
 
-    glm::vec3 get_target() const
+    const glm::vec3 get_target() const
     {
         return m_target;
     }
     void set_target(glm::vec3 target);
+
+    void move(glm::vec3 origin, glm::vec3 target = glm::vec3(0));
+    void orbit(glm::vec3 orient, float radius = 0);
 
     float get_fov() const
     {
@@ -63,29 +59,21 @@ public:
     }
     void set_far_plane(float far_plane);
 
-    glm::mat4 get_view_xform() const
-    {
-        return m_view_xform;
-    }
-    glm::mat4 get_projection_xform() const
+    const glm::mat4 &get_projection_xform() const
     {
         return m_projection_xform;
     }
-    glm::mat4 get_view_projection_xform() const;
 
 private:
-    glm::vec3 m_origin;
     glm::vec3 m_target;
     float     m_fov;
     size_t    m_width;
     size_t    m_height;
     float     m_near_plane;
     float     m_far_plane;
-    glm::mat4 m_view_xform;
     glm::mat4 m_projection_xform;
-    glm::mat4 m_view_projection_xform;
 
-    void update_view_xform();
+    void update_xform();
     void update_projection_xform();
 };
 

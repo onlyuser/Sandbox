@@ -33,13 +33,13 @@ Mesh::~Mesh()
 void Mesh::set_origin(glm::vec3 origin)
 {
     m_origin = origin;
-    update_model_xform();
+    update_xform();
 }
 
 void Mesh::set_orient(glm::vec3 orient)
 {
     m_orient = orient;
-    update_model_xform();
+    update_xform();
 }
 
 glm::vec3 Mesh::get_vert_coord(int index)
@@ -91,6 +91,30 @@ void Mesh::set_tri_indices(int index, glm::uvec3 indices)
     m_tri_indices[offset+2] = indices[2];
 }
 
+vt::Buffer* Mesh::get_vbo_vert_coord()
+{
+    if(!m_uploaded) {
+        upload_to_gpu();
+    }
+    return m_vbo_vert_coords.get();
+}
+
+vt::Buffer* Mesh::get_vbo_tex_coord()
+{
+    if(!m_uploaded) {
+        upload_to_gpu();
+    }
+    return m_vbo_tex_coord.get();
+}
+
+vt::Buffer* Mesh::get_ibo_tri_indices()
+{
+    if(!m_uploaded) {
+        upload_to_gpu();
+    }
+    return m_ibo_tri_indices.get();
+}
+
 void Mesh::upload_to_gpu()
 {
     m_vbo_vert_coords = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_coords));
@@ -99,35 +123,14 @@ void Mesh::upload_to_gpu()
     m_uploaded = true;
 }
 
-vt::Buffer* Mesh::get_vbo_vert_coord()
+void Mesh::update_xform()
 {
-    if(!m_uploaded)
-        upload_to_gpu();
-    return m_vbo_vert_coords.get();
-}
-
-vt::Buffer* Mesh::get_vbo_tex_coord()
-{
-    if(!m_uploaded)
-        upload_to_gpu();
-    return m_vbo_tex_coord.get();
-}
-
-vt::Buffer* Mesh::get_ibo_tri_indices()
-{
-    if(!m_uploaded)
-        upload_to_gpu();
-    return m_ibo_tri_indices.get();
-}
-
-void Mesh::update_model_xform()
-{
+    glm::mat4 model_translate = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0));
     glm::mat4 model_rotate =
             glm::rotate(glm::mat4(1), static_cast<float>(ORIENT_PITCH(m_orient)*3), glm::vec3(1, 0, 0)) * // X axis
             glm::rotate(glm::mat4(1), static_cast<float>(ORIENT_YAW(m_orient)*2),   glm::vec3(0, 1, 0)) * // Y axis
             glm::rotate(glm::mat4(1), static_cast<float>(ORIENT_ROLL(m_orient)*4),  glm::vec3(0, 0, 1));  // Z axis
-    glm::mat4 model_translate = glm::translate(glm::mat4(1), glm::vec3(0, 0, 0));
-    m_model_xform = model_translate*model_rotate;
+    m_xform = model_translate*model_rotate;
 }
 
 }

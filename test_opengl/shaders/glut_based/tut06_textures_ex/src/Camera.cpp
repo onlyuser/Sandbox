@@ -14,7 +14,7 @@ Camera::Camera(
         float     height,
         float     near_plane,
         float     far_plane)
-    : m_origin(origin),
+    : Object(origin),
       m_target(target),
       m_fov(fov),
       m_width(width),
@@ -22,7 +22,7 @@ Camera::Camera(
       m_near_plane(near_plane),
       m_far_plane(far_plane)
 {
-    update_view_xform();
+    update_xform();
     update_projection_xform();
 }
 
@@ -30,40 +30,36 @@ Camera::~Camera()
 {
 }
 
-void Camera::move(glm::vec3 origin, glm::vec3 target)
+void Camera::set_origin(glm::vec3 origin)
 {
     m_origin = origin;
-    m_target = target;
-    update_view_xform();
-}
-
-glm::vec3 Camera::get_orient() const
-{
-    return offset_to_orient(m_origin-m_target);
+    update_xform();
 }
 
 void Camera::set_orient(glm::vec3 orient)
 {
+    m_orient = orient;
     m_target = m_origin+orient_to_offset(orient);
-    update_view_xform();
-}
-
-void Camera::orbit(glm::vec3 orient, float radius)
-{
-    m_origin = m_target+orient_to_offset(orient)*radius;
-    update_view_xform();
-}
-
-void Camera::set_origin(glm::vec3 origin)
-{
-    m_origin = origin;
-    update_view_xform();
+    update_xform();
 }
 
 void Camera::set_target(glm::vec3 target)
 {
     m_target = target;
-    update_view_xform();
+    update_xform();
+}
+
+void Camera::move(glm::vec3 origin, glm::vec3 target)
+{
+    m_origin = origin;
+    m_target = target;
+    update_xform();
+}
+
+void Camera::orbit(glm::vec3 orient, float radius)
+{
+    m_origin = m_target+orient_to_offset(orient)*radius;
+    update_xform();
 }
 
 void Camera::set_fov(float fov)
@@ -91,15 +87,11 @@ void Camera::set_far_plane(float far_plane)
     update_projection_xform();
 }
 
-glm::mat4 Camera::get_view_projection_xform() const
-{
-    return m_projection_xform*m_view_xform;
-}
-
-void Camera::update_view_xform()
+void Camera::update_xform()
 {
     static glm::vec3 up_vec = glm::vec3(0, 1, 0);
-    m_view_xform = glm::lookAt(m_origin, m_target, up_vec);
+    m_xform = glm::lookAt(m_origin, m_target, up_vec);
+    m_orient = offset_to_orient(m_target-m_origin);
 }
 
 void Camera::update_projection_xform()

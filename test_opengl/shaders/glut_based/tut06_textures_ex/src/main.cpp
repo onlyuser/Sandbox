@@ -201,7 +201,7 @@ void onIdle()
 {
     float angle = 0;//1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15; // base 15° per second
     mesh->set_orient(glm::vec3(angle*3, angle*2, angle*4));
-    glm::mat4 mvp = camera->get_view_projection_xform()*mesh->get_model_xform();
+    glm::mat4 mvp = camera->get_projection_xform()*camera->get_xform()*mesh->get_xform();
     uniform_mvp->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(mvp));
     glutPostRedisplay();
 }
