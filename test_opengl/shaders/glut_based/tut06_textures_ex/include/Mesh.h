@@ -41,7 +41,7 @@ private:
     std::unique_ptr<vt::Buffer> m_vbo_vert_coords;
     std::unique_ptr<vt::Buffer> m_vbo_tex_coord;
     std::unique_ptr<vt::Buffer> m_ibo_tri_indices;
-    bool                        m_uploaded;
+    bool                        m_uploaded_to_gpu;
 
     void update_xform();
 };

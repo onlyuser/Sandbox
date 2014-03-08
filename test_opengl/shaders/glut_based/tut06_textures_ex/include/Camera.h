@@ -59,11 +59,6 @@ public:
     }
     void set_far_plane(float far_plane);
 
-    const glm::mat4 &get_projection_xform() const
-    {
-        return m_projection_xform;
-    }
-
 private:
     glm::vec3 m_target;
     float     m_fov;
@@ -72,6 +67,7 @@ private:
     float     m_near_plane;
     float     m_far_plane;
     glm::mat4 m_projection_xform;
+    bool      m_projection_xform_need_update;
 
     void update_xform();
     void update_projection_xform();

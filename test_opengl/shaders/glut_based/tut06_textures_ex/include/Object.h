@@ -29,17 +29,20 @@ public:
         m_orient = orient;
     }
 
-    const glm::mat4 &get_xform() const
-    {
-        return m_xform;
-    }
+    const glm::mat4 &get_xform();
 
 protected:
     glm::vec3 m_origin;
     glm::vec3 m_orient;
     glm::mat4 m_xform;
 
+    void set_need_update_xform() {
+        m_need_update_xform = true;
+    }
     virtual void update_xform() = 0;
+
+private:
+    bool m_need_update_xform;
 };
 
 }
