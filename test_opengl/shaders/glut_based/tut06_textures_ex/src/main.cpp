@@ -50,6 +50,7 @@ bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_coord, mouse_drag;
 glm::vec3 prev_orient, orient, orbit_speed = glm::vec3(0, -0.5, -0.5);
 float prev_radius = 0, radius = 8, dolly_speed = 0.1;
+bool render_wire_frame = false;
 bool show_fps = false;
 
 int init_resources()
@@ -277,14 +278,26 @@ void onDisplay()
 
 void onKeyboard(unsigned char key, int x, int y)
 {
-    if(key == 'f')
+    switch(key)
     {
-        show_fps = !show_fps;
-        if(!show_fps)
-            glutSetWindowTitle(DEFAULT_CAPTION);
+        case 'w':
+            render_wire_frame = !render_wire_frame;
+            if(render_wire_frame) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            } else {
+                glPolygonMode(GL_FRONT, GL_FILL);
+            }
+            break;
+        case 'f':
+            show_fps = !show_fps;
+            if(!show_fps) {
+                glutSetWindowTitle(DEFAULT_CAPTION);
+            }
+            break;
+        case 27:
+            exit(0);
+            break;
     }
-    if(key == 27)
-        exit(0);
 }
 
 void onSpecial(int key, int x, int y)
