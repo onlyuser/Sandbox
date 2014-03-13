@@ -53,9 +53,9 @@ float prev_radius = 0, radius = 8, dolly_speed = 0.1;
 bool render_wire_frame = false;
 bool show_fps = false;
 
-int init_resources()
+std::unique_ptr<vt::Mesh> create_box()
 {
-    mesh = std::unique_ptr<vt::Mesh>(new vt::Mesh(24, 12));
+    std::unique_ptr<vt::Mesh> mesh = std::unique_ptr<vt::Mesh>(new vt::Mesh(24, 12));
 
     // =======================
     // init mesh vertex coords
@@ -137,6 +137,13 @@ int init_resources()
     // bottom
     mesh->set_tri_indices(10, glm::uvec3(20,21,22));
     mesh->set_tri_indices(11, glm::uvec3(22,23,20));
+
+    return mesh;
+}
+
+int init_resources()
+{
+    mesh = std::unique_ptr<vt::Mesh>(create_box());
 
     // ===================
     // other shader config
