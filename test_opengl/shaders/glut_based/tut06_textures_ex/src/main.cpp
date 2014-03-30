@@ -170,22 +170,35 @@ int init_resources()
         return 0;
     }
 
-    const char* attribute_name;
-    attribute_name = "coord3d";
-    attribute_coord3d = std::unique_ptr<vt::VarAttribute>(program->get_var_attribute(attribute_name));
-    if(attribute_coord3d->id() == -1)
-    {
-        fprintf(stderr, "Could not bind attribute %s\n", attribute_name);
+    attribute_coord3d = std::unique_ptr<vt::VarAttribute>(program->get_var_attribute("coord3d"));
+    if(!attribute_coord3d.get()) {
         return 0;
     }
-    attribute_name = "texcoord";
-    attribute_texcoord = std::unique_ptr<vt::VarAttribute>(program->get_var_attribute(attribute_name));
-    if(attribute_texcoord->id() == -1)
-    {
-        fprintf(stderr, "Could not bind attribute %s\n", attribute_name);
+    // Describe our vertices array to OpenGL (it can't guess its format automatically)
+    attribute_coord3d->vertex_attrib_pointer(
+            mesh->get_vbo_vert_coord(),
+            3,        // number of elements per vertex, here (x,y,z)
+            GL_FLOAT, // the type of each element
+            GL_FALSE, // take our values as-is
+            0,        // no extra data between each position
+            0         // offset of first element
+            );
+
+    attribute_texcoord = std::unique_ptr<vt::VarAttribute>(program->get_var_attribute("texcoord"));
+    if(!attribute_texcoord.get()) {
         return 0;
     }
+    attribute_texcoord->vertex_attrib_pointer(
+            mesh->get_vbo_tex_coord(),
+            2,        // number of elements per vertex, here (x,y)
+            GL_FLOAT, // the type of each element
+            GL_FALSE, // take our values as-is
+            0,        // no extra data between each position
+            0         // offset of first element
+            );
+
     const char* uniform_name;
+
     uniform_name = "mvp";
     uniform_mvp = std::unique_ptr<vt::VarUniform>(program->get_var_uniform(uniform_name));
     if(uniform_mvp->id() == -1)
@@ -193,6 +206,7 @@ int init_resources()
         fprintf(stderr, "Could not bind uniform %s\n", uniform_name);
         return 0;
     }
+
     uniform_name = "mytexture";
     uniform_mytexture = std::unique_ptr<vt::VarUniform>(program->get_var_uniform(uniform_name));
     if(uniform_mytexture->id() == -1)
@@ -200,6 +214,7 @@ int init_resources()
         fprintf(stderr, "Could not bind uniform %s\n", uniform_name);
         return 0;
     }
+    uniform_mytexture->uniform_1i(/*GL_TEXTURE*/0);
 
     camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0.5, 0.5, 0.5+radius), glm::vec3(0.5, 0.5, 0.5)));
     return 1;
@@ -249,28 +264,9 @@ void onDisplay()
 
     glActiveTexture(GL_TEXTURE0);
     texture_id->bind();
-    uniform_mytexture->uniform_1i(/*GL_TEXTURE*/0);
 
     attribute_coord3d->enable_vertex_attrib_array();
-    // Describe our vertices array to OpenGL (it can't guess its format automatically)
-    attribute_coord3d->vertex_attrib_pointer(
-            mesh->get_vbo_vert_coord(),
-            3,        // number of elements per vertex, here (x,y,z)
-            GL_FLOAT, // the type of each element
-            GL_FALSE, // take our values as-is
-            0,        // no extra data between each position
-            0         // offset of first element
-            );
-
     attribute_texcoord->enable_vertex_attrib_array();
-    attribute_texcoord->vertex_attrib_pointer(
-            mesh->get_vbo_tex_coord(),
-            2,        // number of elements per vertex, here (x,y)
-            GL_FLOAT, // the type of each element
-            GL_FALSE, // take our values as-is
-            0,        // no extra data between each position
-            0         // offset of first element
-            );
 
     /* Push each element in buffer_vertices to the vertex shader */
     mesh->get_ibo_tri_indices()->bind();
@@ -280,6 +276,7 @@ void onDisplay()
 
     attribute_coord3d->disable_vertex_attrib_array();
     attribute_texcoord->disable_vertex_attrib_array();
+
     glutSwapBuffers();
 }
 

@@ -36,12 +36,26 @@ void Program::use() const
 
 VarAttribute* Program::get_var_attribute(const GLchar *name) const
 {
-    return new VarAttribute(this, name);
+    VarAttribute* var_attrribute = new VarAttribute(this, name);
+    if(var_attrribute && var_attrribute->id() == -1)
+    {
+        fprintf(stderr, "Could not bind attribute %s\n", name);
+        delete var_attrribute;
+        return NULL;
+    }
+    return var_attrribute;
 }
 
 VarUniform* Program::get_var_uniform(const GLchar *name) const
 {
-    return new VarUniform(this, name);
+    VarUniform* var_uniform = new VarUniform(this, name);
+    if(var_uniform && var_uniform->id() == -1)
+    {
+        fprintf(stderr, "Could not bind attribute %s\n", name);
+        delete var_uniform;
+        return NULL;
+    }
+    return var_uniform;
 }
 
 void Program::get_program_iv(
