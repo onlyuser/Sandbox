@@ -51,7 +51,7 @@ VarUniform* Program::get_var_uniform(const GLchar *name) const
     VarUniform* var_uniform = new VarUniform(this, name);
     if(var_uniform && var_uniform->id() == -1)
     {
-        fprintf(stderr, "Could not bind attribute %s\n", name);
+        fprintf(stderr, "Could not bind uniform %s\n", name);
         delete var_uniform;
         return NULL;
     }

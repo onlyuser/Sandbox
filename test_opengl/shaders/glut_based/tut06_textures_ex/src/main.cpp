@@ -181,8 +181,7 @@ int init_resources()
             GL_FLOAT, // the type of each element
             GL_FALSE, // take our values as-is
             0,        // no extra data between each position
-            0         // offset of first element
-            );
+            0);       // offset of first element
 
     attribute_texcoord = std::unique_ptr<vt::VarAttribute>(program->get_var_attribute("texcoord"));
     if(!attribute_texcoord.get()) {
@@ -194,24 +193,15 @@ int init_resources()
             GL_FLOAT, // the type of each element
             GL_FALSE, // take our values as-is
             0,        // no extra data between each position
-            0         // offset of first element
-            );
+            0);       // offset of first element
 
-    const char* uniform_name;
-
-    uniform_name = "mvp";
-    uniform_mvp = std::unique_ptr<vt::VarUniform>(program->get_var_uniform(uniform_name));
-    if(uniform_mvp->id() == -1)
-    {
-        fprintf(stderr, "Could not bind uniform %s\n", uniform_name);
+    uniform_mvp = std::unique_ptr<vt::VarUniform>(program->get_var_uniform("mvp"));
+    if(!uniform_mvp.get()) {
         return 0;
     }
 
-    uniform_name = "mytexture";
-    uniform_mytexture = std::unique_ptr<vt::VarUniform>(program->get_var_uniform(uniform_name));
-    if(uniform_mytexture->id() == -1)
-    {
-        fprintf(stderr, "Could not bind uniform %s\n", uniform_name);
+    uniform_mytexture = std::unique_ptr<vt::VarUniform>(program->get_var_uniform("mytexture"));
+    if(!uniform_mytexture.get()) {
         return 0;
     }
     uniform_mytexture->uniform_1i(/*GL_TEXTURE*/0);
