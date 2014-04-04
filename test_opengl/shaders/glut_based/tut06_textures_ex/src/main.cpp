@@ -18,6 +18,7 @@
 #include "../../common/include/shader_utils.h"
 
 #include "res_texture.c"
+#include "res_texture2.c"
 
 #include <Buffer.h>
 #include <Camera.h>
@@ -40,7 +41,7 @@ const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int screen_width=800, screen_height=600;
 std::unique_ptr<vt::Program> program;
-std::unique_ptr<vt::Texture> texture_id;
+std::unique_ptr<vt::Texture> texture, texture2;
 std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
 std::unique_ptr<vt::VarUniform> uniform_mvp, uniform_mytexture;
 std::unique_ptr<vt::Camera> camera;
@@ -52,6 +53,8 @@ glm::vec3 prev_orient, orient, orbit_speed = glm::vec3(0, -0.5, -0.5);
 float prev_radius = 0, radius = 8, dolly_speed = 0.1;
 bool render_wire_frame = false;
 bool show_fps = false;
+
+int texture_index = 0;
 
 std::unique_ptr<vt::Mesh> create_box()
 {
@@ -151,10 +154,14 @@ int init_resources()
 
     mesh->upload_to_gpu();
 
-    texture_id = std::unique_ptr<vt::Texture>(new vt::Texture(
+    texture = std::unique_ptr<vt::Texture>(new vt::Texture(
             res_texture.width,
             res_texture.height,
             res_texture.pixel_data));
+    texture2 = std::unique_ptr<vt::Texture>(new vt::Texture(
+            res_texture2.width,
+            res_texture2.height,
+            res_texture2.pixel_data));
 
     std::unique_ptr<vt::Shader> vs, fs;
     vs = std::unique_ptr<vt::Shader>(new vt::Shader("src/cube.v.glsl", GL_VERTEX_SHADER));
@@ -174,7 +181,6 @@ int init_resources()
     if(!attribute_coord3d.get()) {
         return 0;
     }
-    // Describe our vertices array to OpenGL (it can't guess its format automatically)
     attribute_coord3d->vertex_attrib_pointer(
             mesh->get_vbo_vert_coord(),
             3,        // number of elements per vertex, here (x,y,z)
@@ -204,7 +210,6 @@ int init_resources()
     if(!uniform_mytexture.get()) {
         return 0;
     }
-    uniform_mytexture->uniform_1i(/*GL_TEXTURE*/0);
 
     camera = std::unique_ptr<vt::Camera>(new vt::Camera(glm::vec3(0.5, 0.5, 0.5+radius), glm::vec3(0.5, 0.5, 0.5)));
     return 1;
@@ -253,7 +258,10 @@ void onDisplay()
     program->use();
 
     glActiveTexture(GL_TEXTURE0);
-    texture_id->bind();
+    texture->bind();
+
+    glActiveTexture(GL_TEXTURE1);
+    texture2->bind();
 
     attribute_coord3d->enable_vertex_attrib_array();
     attribute_texcoord->enable_vertex_attrib_array();
@@ -287,6 +295,14 @@ void onKeyboard(unsigned char key, int x, int y)
             if(!show_fps) {
                 glutSetWindowTitle(DEFAULT_CAPTION);
             }
+            break;
+        case 't':
+            if(texture_index == 0) {
+                texture_index = 1; // GL_TEXTURE1
+            } else {
+                texture_index = 0; // GL_TEXTURE0
+            }
+            uniform_mytexture->uniform_1i(/*GL_TEXTURE*/texture_index);
             break;
         case 27:
             exit(0);
