@@ -259,7 +259,6 @@ void onDisplay()
 
     glActiveTexture(GL_TEXTURE0);
     texture->bind();
-
     glActiveTexture(GL_TEXTURE1);
     texture2->bind();
 
@@ -302,7 +301,14 @@ void onKeyboard(unsigned char key, int x, int y)
             } else {
                 texture_index = 0; // GL_TEXTURE0
             }
-            uniform_mytexture->uniform_1i(/*GL_TEXTURE*/texture_index);
+            uniform_mytexture->uniform_1i(texture_index);
+            break;
+        case 'p':
+            if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {
+                camera->set_projection_mode(vt::Camera::PROJECTION_MODE_ORTHO);
+            } else if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_ORTHO) {
+                camera->set_projection_mode(vt::Camera::PROJECTION_MODE_PERSPECTIVE);
+            }
             break;
         case 27:
             exit(0);
@@ -385,6 +391,7 @@ void onReshape(int width, int height)
     screen_width = width;
     screen_height = height;
     glViewport(0, 0, screen_width, screen_height);
+    camera->resize_viewport(width, height);
 }
 
 int main(int argc, char* argv[])
