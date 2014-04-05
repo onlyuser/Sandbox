@@ -34,12 +34,9 @@
 #include <sstream> // std::stringstream
 #include <iomanip> // std::setprecision
 
-#define MAX_PITCH 89
-#define MIN_PITCH -89
-
 const char* DEFAULT_CAPTION = "My Textured Cube";
 
-int screen_width=800, screen_height=600;
+int init_screen_width = 800, init_screen_height = 600;
 std::unique_ptr<vt::Program> program;
 std::unique_ptr<vt::Texture> texture, texture2;
 std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
@@ -48,13 +45,14 @@ std::unique_ptr<vt::Camera> camera;
 std::unique_ptr<vt::Mesh> mesh;
 
 bool left_mouse_down = false, right_mouse_down = false;
-glm::vec2 prev_mouse_coord, mouse_coord, mouse_drag;
+glm::vec2 prev_mouse_coord, mouse_drag;
 glm::vec3 prev_orient, orient, orbit_speed = glm::vec3(0, -0.5, -0.5);
 float prev_radius = 0, radius = 8, dolly_speed = 0.1;
 bool render_wire_frame = false;
 bool show_fps = false;
 
 int texture_index = 0;
+float prev_zoom = 0, zoom = 1, ortho_dolly_speed = 0.1;
 
 std::unique_ptr<vt::Mesh> create_box()
 {
@@ -110,8 +108,7 @@ std::unique_ptr<vt::Mesh> create_box()
     mesh->set_tex_coord(2, glm::vec2(1,1));
     mesh->set_tex_coord(3, glm::vec2(0,1));
 
-    for(int i=1; i<6; i++)
-    {
+    for(int i=1; i<6; i++) {
         mesh->set_tex_coord(i*4+0, mesh->get_tex_coord(0));
         mesh->set_tex_coord(i*4+1, mesh->get_tex_coord(1));
         mesh->set_tex_coord(i*4+2, mesh->get_tex_coord(2));
@@ -170,8 +167,7 @@ int init_resources()
     program = std::unique_ptr<vt::Program>(new vt::Program);
     program->attach_shader(vs.get());
     program->attach_shader(fs.get());
-    if(!program->link())
-    {
+    if(!program->link()) {
         fprintf(stderr, "glLinkProgram:");
         print_log(program->id());
         return 0;
@@ -231,18 +227,17 @@ void onTick()
     unsigned int tick = glutGet(GLUT_ELAPSED_TIME);
     unsigned int delta_time = tick-prev_tick;
     static float fps = 0;
-    if(delta_time > 1000)
-    {
+    if(delta_time > 1000) {
         fps = 1000.0*frames/delta_time;
         frames = 0;
         prev_tick = tick;
     }
-    if(show_fps && delta_time > 100)
-    {
+    if(show_fps && delta_time > 100) {
         std::stringstream ss;
         ss << std::setprecision(2) << std::fixed << fps << " FPS, "
             << "Mouse: {" << mouse_drag.x << ", " << mouse_drag.y << "}, "
-            << "Yaw=" << ORIENT_YAW(orient) << ", Pitch=" << ORIENT_PITCH(orient) << ", Radius=" << radius;
+            << "Yaw=" << ORIENT_YAW(orient) << ", Pitch=" << ORIENT_PITCH(orient) << ", Radius=" << radius << ", "
+            << "Zoom=" << zoom;
         glutSetWindowTitle(ss.str().c_str());
     }
     frames++;
@@ -279,8 +274,7 @@ void onDisplay()
 
 void onKeyboard(unsigned char key, int x, int y)
 {
-    switch(key)
-    {
+    switch(key) {
         case 'w':
             render_wire_frame = !render_wire_frame;
             if(render_wire_frame) {
@@ -318,8 +312,7 @@ void onKeyboard(unsigned char key, int x, int y)
 
 void onSpecial(int key, int x, int y)
 {
-    switch(key)
-    {
+    switch(key) {
         case GLUT_KEY_LEFT:
         case GLUT_KEY_RIGHT:
         case GLUT_KEY_UP:
@@ -330,8 +323,7 @@ void onSpecial(int key, int x, int y)
 
 void onSpecialUp(int key, int x, int y)
 {
-    switch(key)
-    {
+    switch(key) {
         case GLUT_KEY_LEFT:
         case GLUT_KEY_RIGHT:
         case GLUT_KEY_UP:
@@ -342,55 +334,50 @@ void onSpecialUp(int key, int x, int y)
 
 void onMouse(int button, int state, int x, int y)
 {
-    if(state == GLUT_DOWN)
-    {
-        prev_mouse_coord.x = mouse_coord.x = x;
-        prev_mouse_coord.y = mouse_coord.y = y;
-        if(button == GLUT_LEFT_BUTTON)
-        {
+    if(state == GLUT_DOWN) {
+        prev_mouse_coord.x = x;
+        prev_mouse_coord.y = y;
+        if(button == GLUT_LEFT_BUTTON) {
             left_mouse_down = true;
             prev_orient = orient;
         }
-        if(button == GLUT_RIGHT_BUTTON)
-        {
+        if(button == GLUT_RIGHT_BUTTON) {
             right_mouse_down = true;
-            prev_radius = radius;
+            if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {
+                prev_radius = radius;
+            } else if (camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_ORTHO) {
+                prev_zoom = zoom;
+            }
         }
     }
-    else
+    else {
         left_mouse_down = right_mouse_down = false;
+    }
 }
 
 void onMotion(int x, int y)
 {
-    if(left_mouse_down || right_mouse_down)
-    {
-        mouse_coord.x = x;
-        mouse_coord.y = y;
-        mouse_drag = mouse_coord-prev_mouse_coord;
+    if(left_mouse_down || right_mouse_down) {
+        mouse_drag = glm::vec2(x, y)-prev_mouse_coord;
     }
-    if(left_mouse_down)
-    {
+    if(left_mouse_down) {
         orient = prev_orient+glm::vec3(0, mouse_drag.y*ORIENT_PITCH(orbit_speed), mouse_drag.x*ORIENT_YAW(orbit_speed));
-        if(ORIENT_PITCH(orient) > MAX_PITCH) ORIENT_PITCH(orient) = MAX_PITCH;
-        if(ORIENT_PITCH(orient) < MIN_PITCH) ORIENT_PITCH(orient) = MIN_PITCH;
-        if(ORIENT_YAW(orient) > 360)         ORIENT_YAW(orient) -= 360;
-        if(ORIENT_YAW(orient) < 0)           ORIENT_YAW(orient) += 360;
         camera->orbit(orient, radius);
     }
-    if(right_mouse_down)
-    {
-        radius = prev_radius+mouse_drag.y*dolly_speed;
-        if(radius < 0) radius = 0;
-        camera->orbit(orient, radius);
+    if(right_mouse_down) {
+        if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {
+            radius = prev_radius+mouse_drag.y*dolly_speed;
+            camera->orbit(orient, radius);
+        } else if (camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_ORTHO) {
+            zoom = prev_zoom+mouse_drag.y*ortho_dolly_speed;
+            camera->set_zoom(zoom);
+        }
     }
 }
 
 void onReshape(int width, int height)
 {
-    screen_width = width;
-    screen_height = height;
-    glViewport(0, 0, screen_width, screen_height);
+    glViewport(0, 0, width, height);
     camera->resize_viewport(width, height);
 }
 
@@ -398,24 +385,21 @@ int main(int argc, char* argv[])
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA|GLUT_ALPHA|GLUT_DOUBLE|GLUT_DEPTH);
-    glutInitWindowSize(screen_width, screen_height);
+    glutInitWindowSize(init_screen_width, init_screen_height);
     glutCreateWindow(DEFAULT_CAPTION);
 
     GLenum glew_status = glewInit();
-    if(glew_status != GLEW_OK)
-    {
+    if(glew_status != GLEW_OK) {
         fprintf(stderr, "Error: %s\n", glewGetErrorString(glew_status));
         return 1;
     }
 
-    if(!GLEW_VERSION_2_0)
-    {
+    if(!GLEW_VERSION_2_0) {
         fprintf(stderr, "Error: your graphic card does not support OpenGL 2.0\n");
         return 1;
     }
 
-    if(init_resources())
-    {
+    if(init_resources()) {
         glutDisplayFunc(onDisplay);
         glutKeyboardFunc(onKeyboard);
         glutSpecialFunc(onSpecial);

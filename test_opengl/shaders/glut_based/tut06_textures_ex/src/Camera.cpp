@@ -5,6 +5,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 
+#define MAX_PITCH 89.999
+#define MIN_PITCH -89.999
+
+#define MIN_ORTHO_SCALE 1
+
 namespace vt {
 
 Camera::Camera(
@@ -15,6 +20,9 @@ Camera::Camera(
         float             height,
         float             near_plane,
         float             far_plane,
+        float             ortho_width,
+        float             ortho_height,
+        float             zoom,
         projection_mode_t projection_mode)
     : Object(origin),
       m_target(target),
@@ -24,6 +32,9 @@ Camera::Camera(
       m_near_plane(near_plane),
       m_far_plane(far_plane),
       m_projection_xform_need_update(true),
+      m_ortho_width(ortho_width),
+      m_ortho_height(ortho_height),
+      m_zoom(zoom),
       m_projection_mode(projection_mode)
 {
     set_need_update_xform();
@@ -59,8 +70,15 @@ void Camera::move(glm::vec3 origin, glm::vec3 target)
     set_need_update_xform();
 }
 
-void Camera::orbit(glm::vec3 orient, float radius)
+void Camera::orbit(glm::vec3 &orient, float &radius)
 {
+    if(ORIENT_PITCH(orient) > MAX_PITCH) ORIENT_PITCH(orient) = MAX_PITCH;
+    if(ORIENT_PITCH(orient) < MIN_PITCH) ORIENT_PITCH(orient) = MIN_PITCH;
+    if(ORIENT_YAW(orient) > 360)         ORIENT_YAW(orient) -= 360;
+    if(ORIENT_YAW(orient) < 0)           ORIENT_YAW(orient) += 360;
+    if(radius < 0) {
+        radius = 0;
+    }
     m_origin = m_target+orient_to_offset(orient)*radius;
     set_need_update_xform();
 }
@@ -118,10 +136,8 @@ void Camera::update_projection_xform()
         m_projection_xform = glm::perspective(m_fov, 1.0f*m_width/m_height, m_near_plane, m_far_plane);
     } else if(m_projection_mode == PROJECTION_MODE_ORTHO) {
         float aspect_ratio = static_cast<float>(m_width)/m_height;
-        float width  = 2;
-        float height = 2;
-        float half_width  = width*0.5f;
-        float half_height = height*0.5f;
+        float half_width  = m_ortho_width*0.5f*m_zoom;
+        float half_height = m_ortho_width*0.5f*m_zoom;
         if(m_height < m_width) {
             half_height *= 1;
             half_width  *= aspect_ratio;
@@ -137,6 +153,24 @@ void Camera::update_projection_xform()
         m_projection_xform = glm::ortho(left, right, bottom, top, m_near_plane, m_far_plane);
     }
     m_projection_xform_need_update = false;
+}
+
+void Camera::resize_ortho_viewport(float width, float height)
+{
+    m_ortho_width  = width;
+    m_ortho_height = height;
+    m_projection_xform_need_update = true;
+    set_need_update_xform();
+}
+
+void Camera::set_zoom(float &zoom)
+{
+    if(zoom < MIN_ORTHO_SCALE) {
+        zoom = MIN_ORTHO_SCALE;
+    }
+    m_zoom = zoom;
+    m_projection_xform_need_update = true;
+    set_need_update_xform();
 }
 
 }

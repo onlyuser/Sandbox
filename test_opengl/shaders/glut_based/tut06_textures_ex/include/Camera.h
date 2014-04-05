@@ -22,6 +22,9 @@ public:
             float             height          = 600,
             float             near_plane      = 0.1,
             float             far_plane       = 100,
+            float             ortho_width     = 1,
+            float             ortho_height    = 1,
+            float             zoom            = 1,
             projection_mode_t projection_mode = PROJECTION_MODE_PERSPECTIVE);
     ~Camera();
 
@@ -35,7 +38,7 @@ public:
     void set_target(glm::vec3 target);
 
     void move(glm::vec3 origin, glm::vec3 target = glm::vec3(0));
-    void orbit(glm::vec3 orient, float radius = 0);
+    void orbit(glm::vec3 &orient, float &radius);
 
     float get_fov() const
     {
@@ -71,6 +74,22 @@ public:
     }
     void set_projection_mode(projection_mode_t projection_mode);
 
+    float get_ortho_width() const
+    {
+        return m_ortho_width;
+    }
+    float get_ortho_height() const
+    {
+        return m_ortho_height;
+    }
+    void resize_ortho_viewport(float width, float height);
+
+    float get_zoom() const
+    {
+        return m_zoom;
+    }
+    void set_zoom(float &zoom);
+
 private:
     glm::vec3         m_target;
     float             m_fov;
@@ -80,6 +99,9 @@ private:
     float             m_far_plane;
     glm::mat4         m_projection_xform;
     bool              m_projection_xform_need_update;
+    float             m_ortho_width;
+    float             m_ortho_height;
+    float             m_zoom;
     projection_mode_t m_projection_mode;
 
     void update_xform();
