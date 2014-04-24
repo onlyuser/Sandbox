@@ -22,6 +22,7 @@
 
 #include <Buffer.h>
 #include <Camera.h>
+#include <Material.h>
 #include <Mesh.h>
 #include <Primitive.h>
 #include <Program.h>
@@ -38,10 +39,8 @@
 const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int init_screen_width = 800, init_screen_height = 600;
-std::unique_ptr<vt::Program> program;
+std::unique_ptr<vt::Material> material;
 std::unique_ptr<vt::Texture> texture, texture2;
-std::unique_ptr<vt::VarAttribute> attribute_coord3d, attribute_texcoord;
-std::unique_ptr<vt::VarUniform> uniform_mvp, uniform_mytexture;
 std::unique_ptr<vt::Camera> camera;
 std::unique_ptr<vt::Mesh> mesh;
 
@@ -49,7 +48,7 @@ bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_drag;
 glm::vec3 prev_orient, orient, orbit_speed = glm::vec3(0, -0.5, -0.5);
 float prev_radius = 0, radius = 8, dolly_speed = 0.1;
-bool render_wire_frame = false;
+bool wire_frame_mode = false;
 bool show_fps = false;
 
 int texture_index = 0;
@@ -74,40 +73,9 @@ int init_resources()
             res_texture2.height,
             res_texture2.pixel_data));
 
-    std::unique_ptr<vt::Shader> vs, fs;
-    vs = std::unique_ptr<vt::Shader>(new vt::Shader("src/cube.v.glsl", GL_VERTEX_SHADER));
-    fs = std::unique_ptr<vt::Shader>(new vt::Shader("src/cube.f.glsl", GL_FRAGMENT_SHADER));
-
-    program = std::unique_ptr<vt::Program>(new vt::Program);
-    program->attach_shader(vs.get());
-    program->attach_shader(fs.get());
-    if(!program->link()) {
-        fprintf(stderr, "glLinkProgram:");
-        print_log(program->id());
-        return 0;
-    }
-
-    attribute_coord3d = std::unique_ptr<vt::VarAttribute>(program->get_var_attribute("coord3d"));
-    attribute_coord3d->vertex_attrib_pointer(
+    material = std::unique_ptr<vt::Material>(new vt::Material(
             mesh->get_vbo_vert_coord(),
-            3,        // number of elements per vertex, here (x,y,z)
-            GL_FLOAT, // the type of each element
-            GL_FALSE, // take our values as-is
-            0,        // no extra data between each position
-            0);       // offset of first element
-
-    attribute_texcoord = std::unique_ptr<vt::VarAttribute>(program->get_var_attribute("texcoord"));
-    attribute_texcoord->vertex_attrib_pointer(
-            mesh->get_vbo_tex_coord(),
-            2,        // number of elements per vertex, here (x,y)
-            GL_FLOAT, // the type of each element
-            GL_FALSE, // take our values as-is
-            0,        // no extra data between each position
-            0);       // offset of first element
-
-    uniform_mvp = std::unique_ptr<vt::VarUniform>(program->get_var_uniform("mvp"));
-
-    uniform_mytexture = std::unique_ptr<vt::VarUniform>(program->get_var_uniform("mytexture"));
+            mesh->get_vbo_tex_coord()));
 
     glm::vec3 origin = glm::vec3(0.5, 0.5, 0.5);
     camera = std::unique_ptr<vt::Camera>(new vt::Camera(origin+glm::vec3(0, 0, radius), origin));
@@ -119,7 +87,7 @@ void onIdle()
     //float angle = 0;//1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15; // base 15° per second
     //mesh->set_orient(glm::vec3(angle*3, angle*2, angle*4));
     glm::mat4 mvp = camera->get_xform()*mesh->get_xform();
-    uniform_mvp->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(mvp));
+    material->set_xform(mvp);
     glutPostRedisplay();
 }
 
@@ -153,15 +121,14 @@ void onDisplay()
     glClearColor(1, 1, 1, 1);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    program->use();
+    material->use_program();
 
     glActiveTexture(GL_TEXTURE0);
     texture->bind();
     glActiveTexture(GL_TEXTURE1);
     texture2->bind();
 
-    attribute_coord3d->enable_vertex_attrib_array();
-    attribute_texcoord->enable_vertex_attrib_array();
+    material->enable();
 
     /* Push each element in buffer_vertices to the vertex shader */
     mesh->get_ibo_tri_indices()->bind();
@@ -169,8 +136,7 @@ void onDisplay()
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
     glDrawElements(GL_TRIANGLES, size/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
 
-    attribute_coord3d->disable_vertex_attrib_array();
-    attribute_texcoord->disable_vertex_attrib_array();
+    material->disable();
 
     glutSwapBuffers();
 }
@@ -179,8 +145,8 @@ void onKeyboard(unsigned char key, int x, int y)
 {
     switch(key) {
         case 'w':
-            render_wire_frame = !render_wire_frame;
-            if(render_wire_frame) {
+            wire_frame_mode = !wire_frame_mode;
+            if(wire_frame_mode) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             } else {
                 glPolygonMode(GL_FRONT, GL_FILL);
@@ -198,7 +164,7 @@ void onKeyboard(unsigned char key, int x, int y)
             } else {
                 texture_index = 0; // GL_TEXTURE0
             }
-            uniform_mytexture->uniform_1i(texture_index);
+            material->set_texture_index(texture_index);
             break;
         case 'p':
             if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {
