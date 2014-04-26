@@ -22,7 +22,7 @@
 
 #include <Buffer.h>
 #include <Camera.h>
-#include <Material.h>
+#include <Brush.h>
 #include <Mesh.h>
 #include <Primitive.h>
 #include <Program.h>
@@ -39,7 +39,7 @@
 const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int init_screen_width = 800, init_screen_height = 600;
-std::unique_ptr<vt::Material> material;
+std::unique_ptr<vt::Brush> brush;
 std::unique_ptr<vt::Texture> texture, texture2;
 std::unique_ptr<vt::Camera> camera;
 std::unique_ptr<vt::Mesh> mesh;
@@ -73,7 +73,7 @@ int init_resources()
             res_texture2.height,
             res_texture2.pixel_data));
 
-    material = std::unique_ptr<vt::Material>(new vt::Material(
+    brush = std::unique_ptr<vt::Brush>(new vt::Brush(
             mesh->get_vbo_vert_coord(),
             mesh->get_vbo_tex_coord()));
 
@@ -87,7 +87,7 @@ void onIdle()
     //float angle = 0;//1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15; // base 15° per second
     //mesh->set_orient(glm::vec3(angle*3, angle*2, angle*4));
     glm::mat4 mvp = camera->get_xform()*mesh->get_xform();
-    material->set_xform(mvp);
+    brush->set_xform(mvp);
     glutPostRedisplay();
 }
 
@@ -121,14 +121,14 @@ void onDisplay()
     glClearColor(1, 1, 1, 1);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    material->use_program();
+    brush->use_program();
 
     glActiveTexture(GL_TEXTURE0);
     texture->bind();
     glActiveTexture(GL_TEXTURE1);
     texture2->bind();
 
-    material->enable();
+    brush->enable();
 
     /* Push each element in buffer_vertices to the vertex shader */
     mesh->get_ibo_tri_indices()->bind();
@@ -136,7 +136,7 @@ void onDisplay()
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
     glDrawElements(GL_TRIANGLES, size/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
 
-    material->disable();
+    brush->disable();
 
     glutSwapBuffers();
 }
@@ -164,7 +164,7 @@ void onKeyboard(unsigned char key, int x, int y)
             } else {
                 texture_index = 0; // GL_TEXTURE0
             }
-            material->set_texture_index(texture_index);
+            brush->set_texture_index(texture_index);
             break;
         case 'p':
             if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {

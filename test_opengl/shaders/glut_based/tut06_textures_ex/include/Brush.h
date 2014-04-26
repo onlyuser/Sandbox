@@ -1,5 +1,5 @@
-#ifndef VT_MATERIAL_H_
-#define VT_MATERIAL_H_
+#ifndef VT_BRUSH_H_
+#define VT_BRUSH_H_
 
 #include <Program.h>
 #include <VarAttribute.h>
@@ -9,10 +9,10 @@
 
 namespace vt {
 
-class Material
+class Brush
 {
 public:
-    Material(vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord);
+    Brush(vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord);
     void use_program();
     void enable();
     void disable();

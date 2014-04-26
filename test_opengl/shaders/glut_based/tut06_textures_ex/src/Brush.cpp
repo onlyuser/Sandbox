@@ -1,4 +1,4 @@
-#include <Material.h>
+#include <Brush.h>
 #include <Program.h>
 #include <Shader.h>
 #include <VarAttribute.h>
@@ -9,7 +9,7 @@
 
 namespace vt {
 
-Material::Material(vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord)
+Brush::Brush(vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord)
 {
     std::unique_ptr<vt::Shader> vs, fs;
     vs = std::unique_ptr<vt::Shader>(new vt::Shader("src/cube.v.glsl", GL_VERTEX_SHADER));
@@ -47,29 +47,29 @@ Material::Material(vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord)
     m_uniform_mytexture = std::unique_ptr<vt::VarUniform>(m_program->get_var_uniform("mytexture"));
 }
 
-void Material::use_program()
+void Brush::use_program()
 {
     m_program->use();
 }
 
-void Material::enable()
+void Brush::enable()
 {
     m_attribute_coord3d->enable_vertex_attrib_array();
     m_attribute_texcoord->enable_vertex_attrib_array();
 }
 
-void Material::disable()
+void Brush::disable()
 {
     m_attribute_coord3d->disable_vertex_attrib_array();
     m_attribute_texcoord->disable_vertex_attrib_array();
 }
 
-void Material::set_xform(glm::mat4 mvp)
+void Brush::set_xform(glm::mat4 mvp)
 {
     m_uniform_mvp->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(mvp));
 }
 
-void Material::set_texture_index(int texture_id)
+void Brush::set_texture_index(int texture_id)
 {
     m_uniform_mytexture->uniform_1i(texture_id);
 }
