@@ -9,22 +9,10 @@
 
 namespace vt {
 
-Brush::Brush(vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord)
+Brush::Brush(vt::Material* material, vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord)
+    : m_material(material)
 {
-    std::unique_ptr<vt::Shader> vs, fs;
-    vs = std::unique_ptr<vt::Shader>(new vt::Shader("src/cube.v.glsl", GL_VERTEX_SHADER));
-    fs = std::unique_ptr<vt::Shader>(new vt::Shader("src/cube.f.glsl", GL_FRAGMENT_SHADER));
-
-    m_program = std::unique_ptr<vt::Program>(new vt::Program);
-    m_program->attach_shader(vs.get());
-    m_program->attach_shader(fs.get());
-    if(!m_program->link()) {
-        fprintf(stderr, "glLinkProgram:");
-//        print_log(m_program->id());
-        return;
-    }
-
-    m_attribute_coord3d = std::unique_ptr<vt::VarAttribute>(m_program->get_var_attribute("coord3d"));
+    m_attribute_coord3d = std::unique_ptr<vt::VarAttribute>(m_material->get_program()->get_var_attribute("coord3d"));
     m_attribute_coord3d->vertex_attrib_pointer(
             vbo_vert_coord,
             3,        // number of elements per vertex, here (x,y,z)
@@ -33,7 +21,7 @@ Brush::Brush(vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord)
             0,        // no extra data between each position
             0);       // offset of first element
 
-    m_attribute_texcoord = std::unique_ptr<vt::VarAttribute>(m_program->get_var_attribute("texcoord"));
+    m_attribute_texcoord = std::unique_ptr<vt::VarAttribute>(m_material->get_program()->get_var_attribute("texcoord"));
     m_attribute_texcoord->vertex_attrib_pointer(
             vbo_tex_coord,
             2,        // number of elements per vertex, here (x,y)
@@ -42,14 +30,14 @@ Brush::Brush(vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord)
             0,        // no extra data between each position
             0);       // offset of first element
 
-    m_uniform_mvp = std::unique_ptr<vt::VarUniform>(m_program->get_var_uniform("mvp"));
+    m_uniform_mvp = std::unique_ptr<vt::VarUniform>(m_material->get_program()->get_var_uniform("mvp"));
 
-    m_uniform_mytexture = std::unique_ptr<vt::VarUniform>(m_program->get_var_uniform("mytexture"));
+    m_uniform_mytexture = std::unique_ptr<vt::VarUniform>(m_material->get_program()->get_var_uniform("mytexture"));
 }
 
 void Brush::use_program()
 {
-    m_program->use();
+    m_material->get_program()->use();
 }
 
 void Brush::enable()

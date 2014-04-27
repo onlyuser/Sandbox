@@ -39,6 +39,7 @@
 const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int init_screen_width = 800, init_screen_height = 600;
+std::unique_ptr<vt::Material> material;
 std::unique_ptr<vt::Brush> brush;
 std::unique_ptr<vt::Texture> texture, texture2;
 std::unique_ptr<vt::Camera> camera;
@@ -73,7 +74,12 @@ int init_resources()
             res_texture2.height,
             res_texture2.pixel_data));
 
+    material = std::unique_ptr<vt::Material>(new vt::Material(
+            "src/cube.v.glsl",
+            "src/cube.f.glsl"));
+
     brush = std::unique_ptr<vt::Brush>(new vt::Brush(
+            material.get(),
             mesh->get_vbo_vert_coord(),
             mesh->get_vbo_tex_coord()));
 

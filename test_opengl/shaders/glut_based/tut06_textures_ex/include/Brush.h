@@ -2,6 +2,7 @@
 #define VT_BRUSH_H_
 
 #include <Program.h>
+#include <Material.h>
 #include <VarAttribute.h>
 #include <VarUniform.h>
 #include <glm/glm.hpp>
@@ -12,7 +13,7 @@ namespace vt {
 class Brush
 {
 public:
-    Brush(vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord);
+    Brush(vt::Material* material, vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord);
     void use_program();
     void enable();
     void disable();
@@ -20,7 +21,7 @@ public:
     void set_texture_index(int texture_id);
 
 private:
-    std::unique_ptr<vt::Program> m_program;
+    vt::Material* m_material;
     std::unique_ptr<vt::VarAttribute> m_attribute_coord3d, m_attribute_texcoord;
     std::unique_ptr<vt::VarUniform> m_uniform_mvp, m_uniform_mytexture;
 };
