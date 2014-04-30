@@ -19,6 +19,15 @@ public:
         return m_program.get();
     }
 
+    void add_texture(Texture* texture)
+    {
+        m_textures.push_back(texture);
+    }
+    void clear_textures()
+    {
+        m_textures.clear();
+    }
+
 private:
     std::unique_ptr<Program> m_program;
     std::vector<Texture*>    m_textures; // TODO: a Material can have multiple Textures

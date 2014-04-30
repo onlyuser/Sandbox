@@ -5,12 +5,13 @@
 
 namespace vt {
 
-std::unique_ptr<Mesh> PrimitiveFactory::create(PrimitiveFactory::type _type)
+std::unique_ptr<Mesh> PrimitiveFactory::create(PrimitiveFactory::primitive_type_t _type)
 {
     switch(_type)
     {
-        case UNIT_BOX: return create_unit_box();
-        default:       return std::unique_ptr<Mesh>(new Mesh());
+        case PRIMITIVE_TYPE_UNIT_BOX: return create_unit_box();
+        default:
+            return std::unique_ptr<Mesh>(new Mesh());
     }
 }
 

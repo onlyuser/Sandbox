@@ -58,7 +58,7 @@ float prev_zoom = 0, zoom = 1, ortho_dolly_speed = 0.1;
 
 int init_resources()
 {
-    mesh = std::unique_ptr<vt::Mesh>(vt::PrimitiveFactory::create(vt::PrimitiveFactory::UNIT_BOX));
+    mesh = std::unique_ptr<vt::Mesh>(vt::PrimitiveFactory::create(vt::PrimitiveFactory::PRIMITIVE_TYPE_UNIT_BOX));
 
     // ===================
     // other shader config
@@ -68,18 +68,21 @@ int init_resources()
             "src/cube.v.glsl",
             "src/cube.f.glsl"));
 
-    mesh->set_material(material.get());
-
-    mesh->upload_to_gpu();
-
     texture = std::unique_ptr<vt::Texture>(new vt::Texture(
             res_texture.width,
             res_texture.height,
             res_texture.pixel_data));
+    material->add_texture(texture.get());
+
     texture2 = std::unique_ptr<vt::Texture>(new vt::Texture(
             res_texture2.width,
             res_texture2.height,
             res_texture2.pixel_data));
+    material->add_texture(texture2.get());
+
+    mesh->set_material(material.get());
+
+    mesh->upload_to_gpu();
 
     brush = std::unique_ptr<vt::Brush>(new vt::Brush(
             mesh->get_material()->get_program(),

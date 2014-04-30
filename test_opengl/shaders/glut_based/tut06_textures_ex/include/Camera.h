@@ -9,10 +9,10 @@ namespace vt {
 class Camera : public Object
 {
 public:
-    typedef enum {
+    enum projection_mode_t {
         PROJECTION_MODE_PERSPECTIVE,
         PROJECTION_MODE_ORTHO
-    } projection_mode_t;
+    };
 
     Camera(
             glm::vec3         origin,

@@ -11,12 +11,12 @@ class Mesh;
 class PrimitiveFactory
 {
 public:
-    enum type
+    enum primitive_type_t
     {
-        UNIT_BOX
+        PRIMITIVE_TYPE_UNIT_BOX
     };
 
-    static std::unique_ptr<Mesh> create(PrimitiveFactory::type _type);
+    static std::unique_ptr<Mesh> create(PrimitiveFactory::primitive_type_t _type);
 
 private:
     static std::unique_ptr<Mesh> create_unit_box();
