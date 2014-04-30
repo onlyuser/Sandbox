@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory> // std::unique_ptr
+#include <iostream>
 
 namespace vt {
 

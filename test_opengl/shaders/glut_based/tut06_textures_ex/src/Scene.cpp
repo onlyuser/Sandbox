@@ -15,4 +15,8 @@ void Scene::reset()
     m_textures.clear();
 }
 
+void Scene::render()
+{
+}
+
 }

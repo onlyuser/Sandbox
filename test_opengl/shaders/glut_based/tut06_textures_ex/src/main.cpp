@@ -85,9 +85,10 @@ int init_resources()
     mesh->upload_to_gpu();
 
     brush = std::unique_ptr<vt::Brush>(new vt::Brush(
-            mesh->get_material()->get_program(),
+            mesh->get_material(),
             mesh->get_vbo_vert_coord(),
-            mesh->get_vbo_tex_coord()));
+            mesh->get_vbo_tex_coord(),
+            mesh->get_ibo_tri_indices()));
 
     glm::vec3 origin = glm::vec3(0.5, 0.5, 0.5);
     camera = std::unique_ptr<vt::Camera>(new vt::Camera(origin+glm::vec3(0, 0, radius), origin));
@@ -133,22 +134,7 @@ void onDisplay()
     glClearColor(1, 1, 1, 1);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    brush->use_program();
-
-    glActiveTexture(GL_TEXTURE0);
-    texture->bind();
-    glActiveTexture(GL_TEXTURE1);
-    texture2->bind();
-
-    brush->enable();
-
-    /* Push each element in buffer_vertices to the vertex shader */
-    mesh->get_ibo_tri_indices()->bind();
-    int size = 0;
-    glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
-    glDrawElements(GL_TRIANGLES, size/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
-
-    brush->disable();
+    brush->render();
 
     glutSwapBuffers();
 }

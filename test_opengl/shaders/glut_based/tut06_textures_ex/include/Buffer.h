@@ -15,10 +15,15 @@ public:
     {
         return m_id;
     }
+    size_t size() const
+    {
+        return m_size;
+    }
 
 private:
     GLuint m_id;
     GLenum m_target;
+    size_t m_size;
 };
 
 }

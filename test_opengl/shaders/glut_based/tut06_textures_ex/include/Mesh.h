@@ -53,7 +53,7 @@ private:
     std::unique_ptr<Buffer> m_vbo_tex_coord;
     std::unique_ptr<Buffer> m_ibo_tri_indices;
     bool                    m_uploaded_to_gpu;
-    Material*               m_material; // TODO: a Mesh has one Material
+    Material*               m_material; // TODO: Mesh has one Material
 
     void update_xform();
 };

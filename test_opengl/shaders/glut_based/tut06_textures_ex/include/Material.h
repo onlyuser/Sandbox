@@ -13,6 +13,8 @@ class Texture;
 class Material
 {
 public:
+    typedef std::vector<Texture*> textures_t;
+
     Material(std::string vertex_shader_file, std::string fragment_shader_file);
     Program* get_program() const
     {
@@ -27,10 +29,14 @@ public:
     {
         m_textures.clear();
     }
+    const textures_t &get_textures() const
+    {
+        return m_textures;
+    }
 
 private:
     std::unique_ptr<Program> m_program;
-    std::vector<Texture*>    m_textures; // TODO: a Material can have multiple Textures
+    textures_t               m_textures; // TODO: Material has multiple Textures
 };
 
 }

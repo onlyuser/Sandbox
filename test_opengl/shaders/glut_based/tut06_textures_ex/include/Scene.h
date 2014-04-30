@@ -38,6 +38,7 @@ public:
     }
 
     void reset();
+    void render();
 
 private:
     Camera*                m_camera;

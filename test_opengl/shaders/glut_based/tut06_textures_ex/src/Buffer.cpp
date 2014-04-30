@@ -4,7 +4,7 @@
 namespace vt {
 
 Buffer::Buffer(GLenum target, size_t size, void* data)
-    : m_target(target)
+    : m_target(target), m_size(size)
 {
     glGenBuffers(1, &m_id);
     bind();
