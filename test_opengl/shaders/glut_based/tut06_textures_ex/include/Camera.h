@@ -26,7 +26,7 @@ public:
             float             ortho_height    = 1,
             float             zoom            = 1,
             projection_mode_t projection_mode = PROJECTION_MODE_PERSPECTIVE);
-    ~Camera();
+    virtual ~Camera();
 
     void set_origin(glm::vec3 origin);
     void set_orient(glm::vec3 orient);

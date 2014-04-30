@@ -17,7 +17,7 @@ public:
     {
         m_camera = camera;
     }
-    Camera* get_camera()
+    Camera* get_camera() const
     {
         return m_camera;
     }
@@ -40,7 +40,7 @@ public:
     void reset();
 
 private:
-    Camera*                    m_camera;
+    Camera*                m_camera;
     std::vector<Mesh*>     m_meshes;
     std::vector<Material*> m_materials;
     std::vector<Texture*>  m_textures;

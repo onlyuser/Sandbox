@@ -21,7 +21,7 @@ public:
 
 private:
     std::unique_ptr<Program> m_program;
-    std::vector<Texture*> m_textures; // TODO: a Material can have multiple Textures
+    std::vector<Texture*>    m_textures; // TODO: a Material can have multiple Textures
 };
 
 }

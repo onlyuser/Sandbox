@@ -16,17 +16,17 @@ class Mesh : public Object
 {
 public:
     Mesh(size_t num_vertex = 0, size_t num_tri = 0);
-    ~Mesh();
+    virtual ~Mesh();
 
     void set_origin(glm::vec3 origin);
     void set_orient(glm::vec3 orient);
 
-    glm::vec3 get_vert_coord(int index);
-    void set_vert_coord(int index, glm::vec3 coord);
-    glm::vec2 get_tex_coord(int index);
-    void set_tex_coord(int index, glm::vec2 coord);
+    glm::vec3  get_vert_coord(int index);
+    void       set_vert_coord(int index, glm::vec3 coord);
+    glm::vec2  get_tex_coord(int index);
+    void       set_tex_coord(int index, glm::vec2 coord);
     glm::uvec3 get_tri_indices(int index);
-    void set_tri_indices(int index, glm::uvec3 indices);
+    void       set_tri_indices(int index, glm::uvec3 indices);
 
     Buffer* get_vbo_vert_coord();
     Buffer* get_vbo_tex_coord();
