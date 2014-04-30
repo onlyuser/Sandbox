@@ -1,6 +1,8 @@
 #ifndef VT_BRUSH_H_
 #define VT_BRUSH_H_
 
+#include <VarAttribute.h>
+#include <VarUniform.h>
 #include <glm/glm.hpp>
 #include <vector>
 #include <memory> // std::unique_ptr
@@ -11,8 +13,6 @@ class Buffer;
 class Material;
 class Program;
 class Texture;
-class VarAttribute;
-class VarUniform;
 
 class Brush
 {

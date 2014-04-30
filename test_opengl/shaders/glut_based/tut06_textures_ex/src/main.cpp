@@ -28,23 +28,21 @@
 #include <PrimitiveFactory.h>
 #include <Program.h>
 #include <Shader.h>
+#include <Scene.h>
 #include <Texture.h>
 #include <Util.h>
 #include <VarAttribute.h>
 #include <VarUniform.h>
 #include <iostream> // std::cout
-#include <memory> // std::unique_ptr
 #include <sstream> // std::stringstream
 #include <iomanip> // std::setprecision
 
 const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int init_screen_width = 800, init_screen_height = 600;
-std::unique_ptr<vt::Material> material;
-std::unique_ptr<vt::Brush> brush;
-std::unique_ptr<vt::Texture> texture, texture2;
-std::unique_ptr<vt::Camera> camera;
-std::unique_ptr<vt::Mesh> mesh;
+vt::Brush* brush;
+vt::Camera* camera;
+vt::Mesh* mesh;
 
 bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_drag;
@@ -58,40 +56,45 @@ float prev_zoom = 0, zoom = 1, ortho_dolly_speed = 0.1;
 
 int init_resources()
 {
-    mesh = std::unique_ptr<vt::Mesh>(vt::PrimitiveFactory::create(vt::PrimitiveFactory::PRIMITIVE_TYPE_UNIT_BOX));
+    mesh = vt::PrimitiveFactory::create(vt::PrimitiveFactory::PRIMITIVE_TYPE_UNIT_BOX);
+    vt::Scene::instance()->add_mesh(mesh);
 
     // ===================
     // other shader config
     // ===================
 
-    material = std::unique_ptr<vt::Material>(new vt::Material(
+    vt::Material* material = new vt::Material(
             "src/cube.v.glsl",
-            "src/cube.f.glsl"));
+            "src/cube.f.glsl");
+    vt::Scene::instance()->add_material(material);
+    mesh->set_material(material);
 
-    texture = std::unique_ptr<vt::Texture>(new vt::Texture(
+    vt::Texture* texture = new vt::Texture(
             res_texture.width,
             res_texture.height,
-            res_texture.pixel_data));
-    material->add_texture(texture.get());
+            res_texture.pixel_data);
+    vt::Scene::instance()->add_texture(texture);
+    material->add_texture(texture);
 
-    texture2 = std::unique_ptr<vt::Texture>(new vt::Texture(
+    vt::Texture* texture2 = new vt::Texture(
             res_texture2.width,
             res_texture2.height,
-            res_texture2.pixel_data));
-    material->add_texture(texture2.get());
-
-    mesh->set_material(material.get());
+            res_texture2.pixel_data);
+    vt::Scene::instance()->add_texture(texture2);
+    material->add_texture(texture2);
 
     mesh->upload_to_gpu();
 
-    brush = std::unique_ptr<vt::Brush>(new vt::Brush(
+    brush = new vt::Brush(
             mesh->get_material(),
             mesh->get_vbo_vert_coord(),
             mesh->get_vbo_tex_coord(),
-            mesh->get_ibo_tri_indices()));
+            mesh->get_ibo_tri_indices());
+    vt::Scene::instance()->add_brush(brush);
 
     glm::vec3 origin = glm::vec3(0.5, 0.5, 0.5);
-    camera = std::unique_ptr<vt::Camera>(new vt::Camera(origin+glm::vec3(0, 0, radius), origin));
+    camera = new vt::Camera(origin+glm::vec3(0, 0, radius), origin);
+    vt::Scene::instance()->set_camera(camera);
     return 1;
 }
 

@@ -1,13 +1,13 @@
 #ifndef VT_MATERIAL_H_
 #define VT_MATERIAL_H_
 
+#include <Program.h>
 #include <vector>
 #include <string>
 #include <memory> // std::unique_ptr
 
 namespace vt {
 
-class Program;
 class Texture;
 
 class Material

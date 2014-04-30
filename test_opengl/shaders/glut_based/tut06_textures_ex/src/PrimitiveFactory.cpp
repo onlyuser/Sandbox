@@ -1,23 +1,22 @@
 #include <PrimitiveFactory.h>
 #include <Mesh.h>
 #include <glm/glm.hpp>
-#include <memory> // std::unique_ptr
 
 namespace vt {
 
-std::unique_ptr<Mesh> PrimitiveFactory::create(PrimitiveFactory::primitive_type_t _type)
+Mesh* PrimitiveFactory::create(PrimitiveFactory::primitive_type_t _type)
 {
     switch(_type)
     {
         case PRIMITIVE_TYPE_UNIT_BOX: return create_unit_box();
         default:
-            return std::unique_ptr<Mesh>(new Mesh());
+            return new Mesh();
     }
 }
 
-std::unique_ptr<Mesh> PrimitiveFactory::create_unit_box()
+Mesh* PrimitiveFactory::create_unit_box()
 {
-    std::unique_ptr<Mesh> mesh = std::unique_ptr<Mesh>(new Mesh(24, 12));
+    Mesh* mesh = new Mesh(24, 12);
 
     // =======================
     // init mesh vertex coords

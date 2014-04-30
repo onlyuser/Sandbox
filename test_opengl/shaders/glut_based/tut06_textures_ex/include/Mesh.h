@@ -1,6 +1,7 @@
 #ifndef VT_MESH_H_
 #define VT_MESH_H_
 
+#include <Buffer.h>
 #include <Object.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -9,7 +10,6 @@
 
 namespace vt {
 
-class Buffer;
 class Material;
 
 class Mesh : public Object

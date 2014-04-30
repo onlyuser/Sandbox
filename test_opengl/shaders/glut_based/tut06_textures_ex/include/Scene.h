@@ -5,6 +5,7 @@
 
 namespace vt {
 
+class Brush;
 class Camera;
 class Material;
 class Mesh;
@@ -13,6 +14,17 @@ class Texture;
 class Scene
 {
 public:
+    typedef std::vector<Mesh*>     meshes_t;
+    typedef std::vector<Material*> materials_t;
+    typedef std::vector<Texture*>  textures_t;
+    typedef std::vector<Brush*>    brushes_t;
+
+    static Scene* instance()
+    {
+        static Scene scene;
+        return &scene;
+    }
+
     void set_camera(Camera* camera)
     {
         m_camera = camera;
@@ -37,16 +49,23 @@ public:
         m_textures.push_back(texture);
     }
 
+    void add_brush(Brush* brush)
+    {
+        m_brushes.push_back(brush);
+    }
+
     void reset();
     void render();
 
 private:
-    Camera*                m_camera;
-    std::vector<Mesh*>     m_meshes;
-    std::vector<Material*> m_materials;
-    std::vector<Texture*>  m_textures;
+    Camera*     m_camera;
+    meshes_t    m_meshes;
+    materials_t m_materials;
+    textures_t  m_textures;
+    brushes_t   m_brushes;
 
     Scene();
+    ~Scene();
 };
 
 }

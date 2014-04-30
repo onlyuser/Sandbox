@@ -1,12 +1,10 @@
 #ifndef VT_PRIMITIVE_FACTORY_H_
 #define VT_PRIMITIVE_FACTORY_H_
 
+#include <Mesh.h>
 #include <glm/glm.hpp>
-#include <memory> // std::unique_ptr
 
 namespace vt {
-
-class Mesh;
 
 class PrimitiveFactory
 {
@@ -16,10 +14,10 @@ public:
         PRIMITIVE_TYPE_UNIT_BOX
     };
 
-    static std::unique_ptr<Mesh> create(PrimitiveFactory::primitive_type_t _type);
+    static Mesh* create(PrimitiveFactory::primitive_type_t _type);
 
 private:
-    static std::unique_ptr<Mesh> create_unit_box();
+    static Mesh* create_unit_box();
 };
 
 }
