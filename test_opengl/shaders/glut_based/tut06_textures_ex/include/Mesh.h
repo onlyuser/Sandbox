@@ -3,6 +3,7 @@
 
 #include <Object.h>
 #include <Buffer.h>
+#include <Material.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <stddef.h>
@@ -42,6 +43,7 @@ private:
     std::unique_ptr<vt::Buffer> m_vbo_tex_coord;
     std::unique_ptr<vt::Buffer> m_ibo_tri_indices;
     bool                        m_uploaded_to_gpu;
+    Material*                   m_material; // TODO: a Mesh has one Material
 
     void update_xform();
 };

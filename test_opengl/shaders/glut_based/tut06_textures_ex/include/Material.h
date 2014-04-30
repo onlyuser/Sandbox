@@ -2,6 +2,8 @@
 #define VT_MATERIAL_H_
 
 #include <Program.h>
+#include <Texture.h>
+#include <vector>
 #include <string>
 #include <memory> // std::unique_ptr
 
@@ -18,6 +20,7 @@ public:
 
 private:
     std::unique_ptr<vt::Program> m_program;
+    std::vector<vt::Texture> m_textures; // TODO: a Material can have multiple Textures
 };
 
 }

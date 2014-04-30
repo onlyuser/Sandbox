@@ -23,6 +23,7 @@
 #include <Buffer.h>
 #include <Camera.h>
 #include <Brush.h>
+#include <Material.h>
 #include <Mesh.h>
 #include <Primitive.h>
 #include <Program.h>
@@ -79,7 +80,7 @@ int init_resources()
             "src/cube.f.glsl"));
 
     brush = std::unique_ptr<vt::Brush>(new vt::Brush(
-            material.get(),
+            material->get_program(),
             mesh->get_vbo_vert_coord(),
             mesh->get_vbo_tex_coord()));
 
