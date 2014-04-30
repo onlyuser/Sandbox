@@ -25,7 +25,7 @@
 #include <Brush.h>
 #include <Material.h>
 #include <Mesh.h>
-#include <Primitive.h>
+#include <PrimitiveFactory.h>
 #include <Program.h>
 #include <Shader.h>
 #include <Texture.h>
@@ -58,7 +58,7 @@ float prev_zoom = 0, zoom = 1, ortho_dolly_speed = 0.1;
 
 int init_resources()
 {
-    mesh = std::unique_ptr<vt::Mesh>(vt::PrimitiveFactory::create_box());
+    mesh = std::unique_ptr<vt::Mesh>(vt::PrimitiveFactory::create(vt::PrimitiveFactory::UNIT_BOX));
 
     // ===================
     // other shader config

@@ -7,11 +7,11 @@ namespace vt {
 
 Material::Material(std::string vertex_shader_file, std::string fragment_shader_file)
 {
-    std::unique_ptr<vt::Shader> vs, fs;
-    vs = std::unique_ptr<vt::Shader>(new vt::Shader(vertex_shader_file, GL_VERTEX_SHADER));
-    fs = std::unique_ptr<vt::Shader>(new vt::Shader(fragment_shader_file, GL_FRAGMENT_SHADER));
+    std::unique_ptr<Shader> vs, fs;
+    vs = std::unique_ptr<Shader>(new Shader(vertex_shader_file, GL_VERTEX_SHADER));
+    fs = std::unique_ptr<Shader>(new Shader(fragment_shader_file, GL_FRAGMENT_SHADER));
 
-    m_program = std::unique_ptr<vt::Program>(new vt::Program);
+    m_program = std::unique_ptr<Program>(new Program);
     m_program->attach_shader(vs.get());
     m_program->attach_shader(fs.get());
     if(!m_program->link()) {

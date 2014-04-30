@@ -36,7 +36,8 @@ protected:
     glm::vec3 m_orient;
     glm::mat4 m_xform;
 
-    void set_need_update_xform() {
+    void set_need_update_xform()
+    {
         m_need_update_xform = true;
     }
     virtual void update_xform() = 0;

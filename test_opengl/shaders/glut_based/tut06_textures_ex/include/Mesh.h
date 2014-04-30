@@ -2,8 +2,6 @@
 #define VT_MESH_H_
 
 #include <Object.h>
-#include <Buffer.h>
-#include <Material.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <stddef.h>
@@ -11,10 +9,13 @@
 
 namespace vt {
 
+class Buffer;
+class Material;
+
 class Mesh : public Object
 {
 public:
-    Mesh(size_t num_vertex, size_t num_tri);
+    Mesh(size_t num_vertex = 0, size_t num_tri = 0);
     ~Mesh();
 
     void set_origin(glm::vec3 origin);
@@ -27,32 +28,32 @@ public:
     glm::uvec3 get_tri_indices(int index);
     void set_tri_indices(int index, glm::uvec3 indices);
 
-    vt::Buffer* get_vbo_vert_coord();
-    vt::Buffer* get_vbo_tex_coord();
-    vt::Buffer* get_ibo_tri_indices();
+    Buffer* get_vbo_vert_coord();
+    Buffer* get_vbo_tex_coord();
+    Buffer* get_ibo_tri_indices();
 
     void upload_to_gpu();
 
-    void set_material(vt::Material* material)
+    void set_material(Material* material)
     {
         m_material = material;
     }
-    vt::Material* get_material() const
+    Material* get_material() const
     {
         return m_material;
     }
 
 private:
-    size_t                      m_num_vertex;
-    size_t                      m_num_tri;
-    GLfloat*                    m_vert_coords;
-    GLfloat*                    m_tex_coords;
-    GLushort*                   m_tri_indices;
-    std::unique_ptr<vt::Buffer> m_vbo_vert_coords;
-    std::unique_ptr<vt::Buffer> m_vbo_tex_coord;
-    std::unique_ptr<vt::Buffer> m_ibo_tri_indices;
-    bool                        m_uploaded_to_gpu;
-    Material*                   m_material; // TODO: a Mesh has one Material
+    size_t                  m_num_vertex;
+    size_t                  m_num_tri;
+    GLfloat*                m_vert_coords;
+    GLfloat*                m_tex_coords;
+    GLushort*               m_tri_indices;
+    std::unique_ptr<Buffer> m_vbo_vert_coords;
+    std::unique_ptr<Buffer> m_vbo_tex_coord;
+    std::unique_ptr<Buffer> m_ibo_tri_indices;
+    bool                    m_uploaded_to_gpu;
+    Material*               m_material; // TODO: a Mesh has one Material
 
     void update_xform();
 };

@@ -92,19 +92,19 @@ void Mesh::set_tri_indices(int index, glm::uvec3 indices)
     m_tri_indices[offset+2] = indices[2];
 }
 
-vt::Buffer* Mesh::get_vbo_vert_coord()
+Buffer* Mesh::get_vbo_vert_coord()
 {
     upload_to_gpu();
     return m_vbo_vert_coords.get();
 }
 
-vt::Buffer* Mesh::get_vbo_tex_coord()
+Buffer* Mesh::get_vbo_tex_coord()
 {
     upload_to_gpu();
     return m_vbo_tex_coord.get();
 }
 
-vt::Buffer* Mesh::get_ibo_tri_indices()
+Buffer* Mesh::get_ibo_tri_indices()
 {
     upload_to_gpu();
     return m_ibo_tri_indices.get();
@@ -115,9 +115,9 @@ void Mesh::upload_to_gpu()
     if(m_uploaded_to_gpu) {
         return;
     }
-    m_vbo_vert_coords = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_coords));
-    m_vbo_tex_coord   = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_tex_coords));
-    m_ibo_tri_indices = std::unique_ptr<vt::Buffer>(new vt::Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*m_num_tri*3, m_tri_indices));
+    m_vbo_vert_coords = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_coords));
+    m_vbo_tex_coord   = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_tex_coords));
+    m_ibo_tri_indices = std::unique_ptr<Buffer>(new Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*m_num_tri*3, m_tri_indices));
     m_uploaded_to_gpu = true;
 }
 

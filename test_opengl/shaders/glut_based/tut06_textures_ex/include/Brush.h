@@ -1,18 +1,20 @@
 #ifndef VT_BRUSH_H_
 #define VT_BRUSH_H_
 
-#include <Program.h>
-#include <VarAttribute.h>
-#include <VarUniform.h>
 #include <glm/glm.hpp>
 #include <memory> // std::unique_ptr
 
 namespace vt {
 
+class Buffer;
+class Program;
+class VarAttribute;
+class VarUniform;
+
 class Brush
 {
 public:
-    Brush(vt::Program* program, vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord);
+    Brush(Program* program, Buffer* vbo_vert_coord, Buffer* vbo_tex_coord);
     void use_program();
     void enable();
     void disable();
@@ -20,9 +22,9 @@ public:
     void set_texture_index(int texture_id);
 
 private:
-    vt::Program* m_program;
-    std::unique_ptr<vt::VarAttribute> m_attribute_coord3d, m_attribute_texcoord;
-    std::unique_ptr<vt::VarUniform> m_uniform_mvp, m_uniform_mytexture;
+    Program* m_program;
+    std::unique_ptr<VarAttribute> m_attribute_coord3d, m_attribute_texcoord;
+    std::unique_ptr<VarUniform> m_uniform_mvp, m_uniform_mytexture;
 };
 
 }

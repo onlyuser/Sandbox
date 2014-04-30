@@ -1,6 +1,5 @@
 #include <Brush.h>
 #include <Program.h>
-#include <Shader.h>
 #include <VarAttribute.h>
 #include <VarUniform.h>
 #include <glm/glm.hpp>
@@ -9,10 +8,10 @@
 
 namespace vt {
 
-Brush::Brush(vt::Program* program, vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_tex_coord)
+Brush::Brush(Program* program, Buffer* vbo_vert_coord, Buffer* vbo_tex_coord)
     : m_program(program)
 {
-    m_attribute_coord3d = std::unique_ptr<vt::VarAttribute>(m_program->get_var_attribute("coord3d"));
+    m_attribute_coord3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("coord3d"));
     m_attribute_coord3d->vertex_attrib_pointer(
             vbo_vert_coord,
             3,        // number of elements per vertex, here (x,y,z)
@@ -21,7 +20,7 @@ Brush::Brush(vt::Program* program, vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_t
             0,        // no extra data between each position
             0);       // offset of first element
 
-    m_attribute_texcoord = std::unique_ptr<vt::VarAttribute>(m_program->get_var_attribute("texcoord"));
+    m_attribute_texcoord = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("texcoord"));
     m_attribute_texcoord->vertex_attrib_pointer(
             vbo_tex_coord,
             2,        // number of elements per vertex, here (x,y)
@@ -30,9 +29,9 @@ Brush::Brush(vt::Program* program, vt::Buffer* vbo_vert_coord, vt::Buffer* vbo_t
             0,        // no extra data between each position
             0);       // offset of first element
 
-    m_uniform_mvp = std::unique_ptr<vt::VarUniform>(m_program->get_var_uniform("mvp"));
+    m_uniform_mvp = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp"));
 
-    m_uniform_mytexture = std::unique_ptr<vt::VarUniform>(m_program->get_var_uniform("mytexture"));
+    m_uniform_mytexture = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
 }
 
 void Brush::use_program()
