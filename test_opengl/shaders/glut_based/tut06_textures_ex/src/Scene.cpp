@@ -4,6 +4,7 @@
 #include <Mesh.h>
 #include <Material.h>
 #include <Texture.h>
+#include <GL/glew.h>
 
 namespace vt {
 
@@ -45,6 +46,12 @@ void Scene::reset()
 
 void Scene::render()
 {
+    glClearColor(1, 1, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    brushes_t::const_iterator p;
+    for(p = m_brushes.begin(); p != m_brushes.end(); p++) {
+        (*p)->render();
+    }
 }
 
 }

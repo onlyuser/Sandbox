@@ -59,10 +59,6 @@ int init_resources()
     mesh = vt::PrimitiveFactory::create(vt::PrimitiveFactory::PRIMITIVE_TYPE_UNIT_BOX);
     vt::Scene::instance()->add_mesh(mesh);
 
-    // ===================
-    // other shader config
-    // ===================
-
     vt::Material* material = new vt::Material(
             "src/cube.v.glsl",
             "src/cube.f.glsl");
@@ -133,12 +129,7 @@ void onTick()
 void onDisplay()
 {
     onTick();
-
-    glClearColor(1, 1, 1, 1);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-    brush->render();
-
+    vt::Scene::instance()->render();
     glutSwapBuffers();
 }
 
