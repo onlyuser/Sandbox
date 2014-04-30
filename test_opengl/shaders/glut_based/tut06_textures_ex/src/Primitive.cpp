@@ -5,7 +5,7 @@
 
 namespace vt {
 
-std::unique_ptr<vt::Mesh> create_box()
+std::unique_ptr<vt::Mesh> PrimitiveFactory::create_box()
 {
     std::unique_ptr<vt::Mesh> mesh = std::unique_ptr<vt::Mesh>(new vt::Mesh(24, 12));
 

@@ -7,7 +7,11 @@
 
 namespace vt {
 
-std::unique_ptr<vt::Mesh> create_box();
+class PrimitiveFactory
+{
+public:
+    static std::unique_ptr<vt::Mesh> create_box();
+};
 
 }
 

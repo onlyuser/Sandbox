@@ -33,6 +33,15 @@ public:
 
     void upload_to_gpu();
 
+    void set_material(vt::Material* material)
+    {
+        m_material = material;
+    }
+    vt::Material* get_material() const
+    {
+        return m_material;
+    }
+
 private:
     size_t                      m_num_vertex;
     size_t                      m_num_tri;
