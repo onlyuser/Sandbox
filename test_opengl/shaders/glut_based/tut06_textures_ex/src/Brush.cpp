@@ -13,7 +13,9 @@
 namespace vt {
 
 Brush::Brush(Material* material, Buffer* vbo_vert_coord, Buffer* vbo_tex_coord, Buffer* ibo_tri_indices)
-    : m_program(material->get_program()), m_ibo_tri_indices(ibo_tri_indices), m_textures(material->get_textures())
+    : m_program(material->get_program()),
+      m_ibo_tri_indices(ibo_tri_indices),
+      m_textures(material->get_textures())
 {
     m_var_attribute_coord3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("coord3d"));
     m_var_attribute_coord3d->vertex_attrib_pointer(
