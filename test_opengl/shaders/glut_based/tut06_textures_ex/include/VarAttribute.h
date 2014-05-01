@@ -1,7 +1,7 @@
 #ifndef VT_VAR_ATTRIBUTE_H_
 #define VT_VAR_ATTRIBUTE_H_
 
-#include <IdentObjectIFace.h>
+#include <IdentObject.h>
 #include <GL/glew.h>
 
 namespace vt {
@@ -9,7 +9,7 @@ namespace vt {
 class Buffer;
 class Program;
 
-class VarAttribute : public IdentObjectIFace
+class VarAttribute : public IdentObject
 {
 public:
     VarAttribute(const Program* program, const GLchar *name);

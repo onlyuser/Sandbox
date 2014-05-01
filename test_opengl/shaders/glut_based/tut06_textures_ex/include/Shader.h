@@ -1,13 +1,13 @@
 #ifndef VT_SHADER_H_
 #define VT_SHADER_H_
 
-#include <IdentObjectIFace.h>
+#include <IdentObject.h>
 #include <GL/glew.h>
 #include <string>
 
 namespace vt {
 
-class Shader : public IdentObjectIFace
+class Shader : public IdentObject
 {
 public:
     Shader(std::string filename, GLenum type);

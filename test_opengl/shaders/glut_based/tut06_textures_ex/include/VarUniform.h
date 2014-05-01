@@ -1,14 +1,14 @@
 #ifndef VT_VAR_UNIFORM_H_
 #define VT_VAR_UNIFORM_H_
 
-#include <IdentObjectIFace.h>
+#include <IdentObject.h>
 #include <GL/glew.h>
 
 namespace vt {
 
 class Program;
 
-class VarUniform : public IdentObjectIFace
+class VarUniform : public IdentObject
 {
 public:
     VarUniform(const Program* program, const GLchar *name);

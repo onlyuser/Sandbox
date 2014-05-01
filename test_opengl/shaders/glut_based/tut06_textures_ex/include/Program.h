@@ -1,7 +1,7 @@
 #ifndef VT_PROGRAM_H_
 #define VT_PROGRAM_H_
 
-#include <IdentObjectIFace.h>
+#include <IdentObject.h>
 #include <GL/glew.h>
 
 namespace vt {
@@ -10,7 +10,7 @@ class Shader;
 class VarAttribute;
 class VarUniform;
 
-class Program : public IdentObjectIFace
+class Program : public IdentObject
 {
 public:
     Program();

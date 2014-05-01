@@ -37,7 +37,7 @@ void Program::use() const
 VarAttribute* Program::get_var_attribute(const GLchar *name) const
 {
     VarAttribute* var_attrribute = new VarAttribute(this, name);
-    if(var_attrribute && var_attrribute->id() == -1)
+    if(var_attrribute && var_attrribute->id() == static_cast<GLuint>(-1))
     {
         fprintf(stderr, "Could not bind attribute %s\n", name);
         delete var_attrribute;

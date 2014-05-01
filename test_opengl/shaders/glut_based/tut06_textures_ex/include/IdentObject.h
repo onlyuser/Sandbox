@@ -5,7 +5,7 @@
 
 namespace vt {
 
-class IdentObjectIFace
+class IdentObject
 {
 public:
     GLuint id() const
