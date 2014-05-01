@@ -1,6 +1,7 @@
 #ifndef VT_PROGRAM_H_
 #define VT_PROGRAM_H_
 
+#include <IdentObjectIFace.h>
 #include <GL/glew.h>
 
 namespace vt {
@@ -9,11 +10,11 @@ class Shader;
 class VarAttribute;
 class VarUniform;
 
-class Program
+class Program : public IdentObjectIFace
 {
 public:
     Program();
-    ~Program();
+    virtual ~Program();
     void attach_shader(const Shader* shader) const;
     bool link() const;
     void use() const;
@@ -22,13 +23,6 @@ public:
     void get_program_iv(
             GLenum pname,
             GLint *params) const;
-    GLuint id() const
-    {
-        return m_id;
-    }
-
-private:
-    GLuint m_id;
 };
 
 }

@@ -1,17 +1,18 @@
 #ifndef VT_VAR_UNIFORM_H_
 #define VT_VAR_UNIFORM_H_
 
+#include <IdentObjectIFace.h>
 #include <GL/glew.h>
 
 namespace vt {
 
 class Program;
 
-class VarUniform
+class VarUniform : public IdentObjectIFace
 {
 public:
     VarUniform(const Program* program, const GLchar *name);
-    ~VarUniform();
+    virtual ~VarUniform();
     void uniform_1f(GLfloat v0) const;
     void uniform_2f(
             GLfloat v0,
@@ -123,13 +124,6 @@ public:
             GLsizei count,
             GLboolean transpose,
             const GLfloat *value) const;
-    GLint id() const
-    {
-        return m_id;
-    }
-
-private:
-    GLint m_id;
 };
 
 }

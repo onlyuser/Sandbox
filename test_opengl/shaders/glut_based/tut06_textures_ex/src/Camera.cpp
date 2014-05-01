@@ -24,7 +24,7 @@ Camera::Camera(
         float             ortho_height,
         float             zoom,
         projection_mode_t projection_mode)
-    : Object(origin),
+    : XformObject(origin),
       m_target(target),
       m_fov(fov),
       m_width(width),

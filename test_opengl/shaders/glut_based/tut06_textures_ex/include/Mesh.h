@@ -2,7 +2,7 @@
 #define VT_MESH_H_
 
 #include <Buffer.h>
-#include <Object.h>
+#include <XformObject.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <stddef.h>
@@ -12,7 +12,7 @@ namespace vt {
 
 class Material;
 
-class Mesh : public Object
+class Mesh : public XformObject
 {
 public:
     Mesh(size_t num_vertex = 0, size_t num_tri = 0);

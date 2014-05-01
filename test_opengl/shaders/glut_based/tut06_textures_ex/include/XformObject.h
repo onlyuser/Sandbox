@@ -1,15 +1,15 @@
-#ifndef VT_OBJECT_H_
-#define VT_OBJECT_H_
+#ifndef VT_XFORM_OBJECT_H_
+#define VT_XFORM_OBJECT_H_
 
 #include <glm/glm.hpp>
 
 namespace vt {
 
-class Object
+class XformObject
 {
 public:
-    Object(glm::vec3 origin = glm::vec3(0), glm::vec3 orient = glm::vec3(0));
-    ~Object();
+    XformObject(glm::vec3 origin = glm::vec3(0), glm::vec3 orient = glm::vec3(0), glm::vec3 scale = glm::vec3(1));
+    ~XformObject();
 
     const glm::vec3 &get_origin() const
     {
@@ -29,11 +29,21 @@ public:
         m_orient = orient;
     }
 
+    const glm::vec3 &get_scale() const
+    {
+        return m_scale;
+    }
+    void set_scale(glm::vec3 scale)
+    {
+        m_scale = scale;
+    }
+
     const glm::mat4 &get_xform();
 
 protected:
     glm::vec3 m_origin;
     glm::vec3 m_orient;
+    glm::vec3 m_scale;
     glm::mat4 m_xform;
 
     void set_need_update_xform()

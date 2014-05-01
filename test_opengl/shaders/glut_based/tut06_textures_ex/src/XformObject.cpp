@@ -1,20 +1,21 @@
-#include <Object.h>
+#include <XformObject.h>
 #include <glm/glm.hpp>
 
 namespace vt {
 
-Object::Object(glm::vec3 origin, glm::vec3 orient)
+XformObject::XformObject(glm::vec3 origin, glm::vec3 orient, glm::vec3 scale)
     : m_origin(origin),
       m_orient(orient),
+      m_scale(scale),
       m_need_update_xform(true)
 {
 }
 
-Object::~Object()
+XformObject::~XformObject()
 {
 }
 
-const glm::mat4 &Object::get_xform()
+const glm::mat4 &XformObject::get_xform()
 {
     if(m_need_update_xform) {
         update_xform();

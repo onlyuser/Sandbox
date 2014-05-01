@@ -1,12 +1,12 @@
 #ifndef VT_CAMERA_H_
 #define VT_CAMERA_H_
 
-#include <Object.h>
+#include <XformObject.h>
 #include <glm/glm.hpp>
 
 namespace vt {
 
-class Camera : public Object
+class Camera : public XformObject
 {
 public:
     enum projection_mode_t {
