@@ -12,7 +12,8 @@ namespace vt {
 Mesh::Mesh(size_t num_vertex, size_t num_tri)
     : m_num_vertex(num_vertex),
       m_num_tri(num_tri),
-      m_uploaded_to_gpu(false)
+      m_uploaded_to_gpu(false),
+      m_material(NULL)
 {
     m_vert_coords = new GLfloat[num_vertex*3];
     m_tex_coords  = new GLfloat[num_vertex*2];

@@ -10,6 +10,7 @@
 
 namespace vt {
 
+class Brush;
 class Material;
 
 class Mesh : public XformObject
@@ -43,6 +44,11 @@ public:
         return m_material;
     }
 
+    Brush* get_brush() const
+    {
+        return m_brush;
+    }
+
 private:
     size_t                  m_num_vertex;
     size_t                  m_num_tri;
@@ -54,6 +60,7 @@ private:
     std::unique_ptr<Buffer> m_ibo_tri_indices;
     bool                    m_uploaded_to_gpu;
     Material*               m_material; // TODO: Mesh has one Material
+    Brush*                  m_brush; // TODO: Mesh has one Brush
 
     void update_xform();
 };
