@@ -1,6 +1,7 @@
 #ifndef VT_MESH_H_
 #define VT_MESH_H_
 
+#include <Brush.h>
 #include <Buffer.h>
 #include <XformObject.h>
 #include <GL/glew.h>
@@ -10,7 +11,6 @@
 
 namespace vt {
 
-class Brush;
 class Material;
 
 class Mesh : public XformObject
@@ -29,11 +29,10 @@ public:
     glm::uvec3 get_tri_indices(int index);
     void       set_tri_indices(int index, glm::uvec3 indices);
 
+    void init_buffers();
     Buffer* get_vbo_vert_coord();
     Buffer* get_vbo_tex_coord();
     Buffer* get_ibo_tri_indices();
-
-    void upload_to_gpu();
 
     void set_material(Material* material)
     {
@@ -44,9 +43,11 @@ public:
         return m_material;
     }
 
-    Brush* get_brush() const
+    void init_brush();
+    Brush* get_brush()
     {
-        return m_brush;
+        init_brush();
+        return m_brush.get();
     }
 
 private:
@@ -58,9 +59,10 @@ private:
     std::unique_ptr<Buffer> m_vbo_vert_coords;
     std::unique_ptr<Buffer> m_vbo_tex_coord;
     std::unique_ptr<Buffer> m_ibo_tri_indices;
-    bool                    m_uploaded_to_gpu;
+    bool                    m_buffers_already_init;
     Material*               m_material; // TODO: Mesh has one Material
-    Brush*                  m_brush; // TODO: Mesh has one Brush
+    std::unique_ptr<Brush>  m_brush; // TODO: Mesh has one Brush
+    bool                    m_brush_already_init;
 
     void update_xform();
 };

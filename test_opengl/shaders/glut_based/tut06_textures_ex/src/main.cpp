@@ -40,7 +40,6 @@
 const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int init_screen_width = 800, init_screen_height = 600;
-vt::Brush* brush;
 vt::Camera* camera;
 vt::Mesh* mesh;
 
@@ -79,15 +78,6 @@ int init_resources()
     vt::Scene::instance()->add_texture(texture2);
     material->add_texture(texture2);
 
-    mesh->upload_to_gpu();
-
-    brush = new vt::Brush(
-            mesh->get_material(),
-            mesh->get_vbo_vert_coord(),
-            mesh->get_vbo_tex_coord(),
-            mesh->get_ibo_tri_indices());
-    vt::Scene::instance()->add_brush(brush);
-
     glm::vec3 origin = glm::vec3(0.5, 0.5, 0.5);
     camera = new vt::Camera(origin+glm::vec3(0, 0, radius), origin);
     vt::Scene::instance()->set_camera(camera);
@@ -98,8 +88,7 @@ void onIdle()
 {
     //float angle = 0;//1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15; // base 15° per second
     //mesh->set_orient(glm::vec3(angle*3, angle*2, angle*4));
-    glm::mat4 mvp = camera->get_xform()*mesh->get_xform();
-    brush->set_xform(mvp);
+    mesh->get_brush()->set_xform(camera->get_xform()*mesh->get_xform());
     glutPostRedisplay();
 }
 
@@ -156,7 +145,7 @@ void onKeyboard(unsigned char key, int x, int y)
             } else {
                 texture_index = 0; // GL_TEXTURE0
             }
-            brush->set_texture_index(texture_index);
+            mesh->get_brush()->set_texture_index(texture_index);
             break;
         case 'p':
             if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {
