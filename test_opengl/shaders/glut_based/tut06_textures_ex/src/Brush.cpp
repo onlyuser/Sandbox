@@ -14,30 +14,29 @@ namespace vt {
 
 Brush::Brush(Material* material, Buffer* vbo_vert_coord, Buffer* vbo_tex_coord, Buffer* ibo_tri_indices)
     : m_program(material->get_program()),
+      m_vbo_vert_coord(vbo_vert_coord),
+      m_vbo_tex_coord(vbo_tex_coord),
       m_ibo_tri_indices(ibo_tri_indices),
       m_textures(material->get_textures())
 {
-    m_var_attribute_coord3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("coord3d"));
+    m_var_attribute_coord3d  = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("coord3d"));
     m_var_attribute_coord3d->vertex_attrib_pointer(
-            vbo_vert_coord,
+            m_vbo_vert_coord,
             3,        // number of elements per vertex, here (x,y,z)
             GL_FLOAT, // the type of each element
             GL_FALSE, // take our values as-is
             0,        // no extra data between each position
             0);       // offset of first element
-
     m_var_attribute_texcoord = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("texcoord"));
     m_var_attribute_texcoord->vertex_attrib_pointer(
-            vbo_tex_coord,
+            m_vbo_tex_coord,
             2,        // number of elements per vertex, here (x,y)
             GL_FLOAT, // the type of each element
             GL_FALSE, // take our values as-is
             0,        // no extra data between each position
             0);       // offset of first element
-
-    m_var_uniform_mvp = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp"));
-
-    m_var_uniform_mytexture = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
+    m_var_uniform_mvp        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp"));
+    m_var_uniform_mytexture  = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
 }
 
 void Brush::render()

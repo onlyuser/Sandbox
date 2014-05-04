@@ -60,7 +60,7 @@ int init_resources()
     mesh2 = vt::PrimitiveFactory::create(vt::PrimitiveFactory::PRIMITIVE_TYPE_UNIT_BOX);
     vt::Scene::instance()->add_mesh(mesh2);
 
-    mesh2->set_scale(glm::vec3(1, 2, 3));
+    mesh2->set_scale(glm::vec3(0.5, 2, 3));
 
     vt::Material* material = new vt::Material(
             "src/cube.v.glsl",
@@ -91,10 +91,8 @@ int init_resources()
 
 void onIdle()
 {
-//    float angle = 1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15; // base 15 degrees per second
-//    mesh2->set_orient(glm::vec3(angle*3, angle*2, angle*4));
-    mesh->get_brush()->set_xform(camera->get_xform()*mesh->get_xform());
-    mesh2->get_brush()->set_xform(camera->get_xform()*mesh2->get_xform());
+    float angle = 1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15; // base 15 degrees per second
+    mesh2->set_orient(glm::vec3(angle*3, angle*2, angle*4));
     glutPostRedisplay();
 }
 
@@ -124,6 +122,8 @@ void onTick()
 void onDisplay()
 {
     onTick();
+    glClearColor(1, 1, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     vt::Scene::instance()->render();
     glutSwapBuffers();
 }

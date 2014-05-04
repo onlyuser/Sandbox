@@ -26,7 +26,7 @@ public:
 
 private:
     Program* m_program;
-    Buffer* m_ibo_tri_indices;
+    Buffer *m_vbo_vert_coord, *m_vbo_tex_coord, *m_ibo_tri_indices;
     std::unique_ptr<VarAttribute> m_var_attribute_coord3d, m_var_attribute_texcoord;
     std::unique_ptr<VarUniform> m_var_uniform_mvp, m_var_uniform_mytexture;
     const textures_t &m_textures;

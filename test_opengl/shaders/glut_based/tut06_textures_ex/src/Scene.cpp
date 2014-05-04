@@ -46,6 +46,7 @@ void Scene::render()
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     meshes_t::const_iterator p;
     for(p = m_meshes.begin(); p != m_meshes.end(); p++) {
+        (*p)->get_brush()->set_xform(m_camera->get_xform()*(*p)->get_xform());
         (*p)->get_brush()->render();
     }
 }
