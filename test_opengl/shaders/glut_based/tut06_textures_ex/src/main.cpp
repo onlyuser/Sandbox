@@ -41,7 +41,7 @@ const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int init_screen_width = 800, init_screen_height = 600;
 vt::Camera* camera;
-vt::Mesh* mesh;
+vt::Mesh* mesh, *mesh2;
 
 bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_drag;
@@ -57,12 +57,17 @@ int init_resources()
 {
     mesh = vt::PrimitiveFactory::create(vt::PrimitiveFactory::PRIMITIVE_TYPE_UNIT_BOX);
     vt::Scene::instance()->add_mesh(mesh);
+    mesh2 = vt::PrimitiveFactory::create(vt::PrimitiveFactory::PRIMITIVE_TYPE_UNIT_BOX);
+    vt::Scene::instance()->add_mesh(mesh2);
+
+    mesh2->set_scale(glm::vec3(1, 2, 3));
 
     vt::Material* material = new vt::Material(
             "src/cube.v.glsl",
             "src/cube.f.glsl");
     vt::Scene::instance()->add_material(material);
     mesh->set_material(material);
+    mesh2->set_material(material);
 
     vt::Texture* texture = new vt::Texture(
             res_texture.width,
@@ -86,9 +91,10 @@ int init_resources()
 
 void onIdle()
 {
-    //float angle = 0;//1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15; // base 15° per second
-    //mesh->set_orient(glm::vec3(angle*3, angle*2, angle*4));
+//    float angle = 1.0f * glutGet(GLUT_ELAPSED_TIME) / 1000 * 15; // base 15 degrees per second
+//    mesh2->set_orient(glm::vec3(angle*3, angle*2, angle*4));
     mesh->get_brush()->set_xform(camera->get_xform()*mesh->get_xform());
+    mesh2->get_brush()->set_xform(camera->get_xform()*mesh2->get_xform());
     glutPostRedisplay();
 }
 
@@ -146,6 +152,7 @@ void onKeyboard(unsigned char key, int x, int y)
                 texture_index = 0; // GL_TEXTURE0
             }
             mesh->get_brush()->set_texture_index(texture_index);
+            mesh2->get_brush()->set_texture_index(texture_index);
             break;
         case 'p':
             if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {
@@ -258,10 +265,10 @@ int main(int argc, char* argv[])
         glutMotionFunc(onMotion);
         glutReshapeFunc(onReshape);
         glutIdleFunc(onIdle);
-        glEnable(GL_BLEND);
+        //glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glutMainLoop();
     }
 

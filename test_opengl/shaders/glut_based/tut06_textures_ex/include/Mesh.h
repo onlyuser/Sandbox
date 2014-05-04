@@ -43,12 +43,7 @@ public:
         return m_material;
     }
 
-    void init_brush();
-    Brush* get_brush()
-    {
-        init_brush();
-        return m_brush.get();
-    }
+    Brush* get_brush();
 
 private:
     size_t                  m_num_vertex;

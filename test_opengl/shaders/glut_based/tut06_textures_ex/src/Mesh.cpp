@@ -13,7 +13,8 @@ Mesh::Mesh(size_t num_vertex, size_t num_tri)
     : m_num_vertex(num_vertex),
       m_num_tri(num_tri),
       m_buffers_already_init(false),
-      m_material(NULL)
+      m_material(NULL),
+      m_brush_already_init(false)
 {
     m_vert_coords = new GLfloat[num_vertex*3];
     m_tex_coords  = new GLfloat[num_vertex*2];
@@ -123,10 +124,10 @@ Buffer* Mesh::get_ibo_tri_indices()
     return m_ibo_tri_indices.get();
 }
 
-void Mesh::init_brush()
+Brush* Mesh::get_brush()
 {
     if(m_brush_already_init || !m_material) { // FIX-ME! -- potential bug if Material not set
-        return;
+        return m_brush.get();
     }
     m_brush = std::unique_ptr<Brush>(new Brush(
             m_material,
@@ -134,6 +135,7 @@ void Mesh::init_brush()
             get_vbo_tex_coord(),
             get_ibo_tri_indices()));
     m_brush_already_init = true;
+    return m_brush.get();
 }
 
 void Mesh::update_xform()
