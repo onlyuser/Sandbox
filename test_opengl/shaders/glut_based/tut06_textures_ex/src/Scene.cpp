@@ -34,17 +34,21 @@ Scene::~Scene()
     if(m_camera) {
         delete m_camera;
     }
-    meshes_t::const_iterator p;
-    for(p = m_meshes.begin(); p != m_meshes.end(); p++) {
+    lights_t::const_iterator p;
+    for(p = m_lights.begin(); p != m_lights.end(); p++) {
         delete *p;
     }
-    materials_t::const_iterator q;
-    for(q = m_materials.begin(); q != m_materials.end(); q++) {
+    meshes_t::const_iterator q;
+    for(q = m_meshes.begin(); q != m_meshes.end(); q++) {
         delete *q;
     }
-    textures_t::const_iterator r;
-    for(r = m_textures.begin(); r != m_textures.end(); r++) {
+    materials_t::const_iterator r;
+    for(r = m_materials.begin(); r != m_materials.end(); r++) {
         delete *r;
+    }
+    textures_t::const_iterator s;
+    for(s = m_textures.begin(); s != m_textures.end(); s++) {
+        delete *s;
     }
     if(m_light_pos) {
         delete []m_light_pos;
@@ -57,6 +61,7 @@ Scene::~Scene()
 void Scene::reset()
 {
     m_camera = NULL;
+    m_lights.clear();
     m_meshes.clear();
     m_materials.clear();
     m_textures.clear();
