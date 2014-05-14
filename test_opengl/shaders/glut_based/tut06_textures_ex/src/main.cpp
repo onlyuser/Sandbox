@@ -23,6 +23,7 @@
 #include <Buffer.h>
 #include <Camera.h>
 #include <Brush.h>
+#include <Light.h>
 #include <Material.h>
 #include <Mesh.h>
 #include <PrimitiveFactory.h>
@@ -86,6 +87,19 @@ int init_resources()
     glm::vec3 origin = glm::vec3(0.5, 0.5, 0.5);
     camera = new vt::Camera(origin+glm::vec3(0, 0, radius), origin);
     vt::Scene::instance()->set_camera(camera);
+
+    // red light
+    vt::Light* light0 = new vt::Light(origin+glm::vec3(radius, 0, 0), glm::vec3(1, 0, 0));
+    vt::Scene::instance()->add_light(light0);
+
+    // green light
+    vt::Light* light1 = new vt::Light(origin+glm::vec3(0, radius, 0), glm::vec3(0, 1, 0));
+    vt::Scene::instance()->add_light(light1);
+
+    // blue light
+    vt::Light* light2 = new vt::Light(origin+glm::vec3(0, 0, radius), glm::vec3(0, 0, 1));
+    vt::Scene::instance()->add_light(light2);
+
     return 1;
 }
 

@@ -17,6 +17,7 @@ Mesh::Mesh(size_t num_vertex, size_t num_tri)
       m_brush_already_init(false)
 {
     m_vert_coords = new GLfloat[num_vertex*3];
+    m_vert_norm   = new GLfloat[num_vertex*3];
     m_tex_coords  = new GLfloat[num_vertex*2];
     m_tri_indices = new GLushort[num_tri*3];
 }
@@ -25,6 +26,9 @@ Mesh::~Mesh()
 {
     if(m_vert_coords) {
         delete []m_vert_coords;
+    }
+    if(m_vert_norm) {
+        delete []m_vert_norm;
     }
     if(m_tex_coords) {
         delete []m_tex_coords;
@@ -61,6 +65,23 @@ void Mesh::set_vert_coord(int index, glm::vec3 coord)
     m_vert_coords[offset+0] = coord.x;
     m_vert_coords[offset+1] = coord.y;
     m_vert_coords[offset+2] = coord.z;
+}
+
+glm::vec3 Mesh::get_vert_norm(int index)
+{
+    int offset = index*3;
+    return glm::vec3(
+            m_vert_norm[offset+0],
+            m_vert_norm[offset+1],
+            m_vert_norm[offset+2]);
+}
+
+void Mesh::set_vert_norm(int index, glm::vec3 norm)
+{
+    int offset = index*3;
+    m_vert_norm[offset+0] = norm.x;
+    m_vert_norm[offset+1] = norm.y;
+    m_vert_norm[offset+2] = norm.z;
 }
 
 glm::vec2 Mesh::get_tex_coord(int index)
@@ -101,21 +122,28 @@ void Mesh::init_buffers()
         return;
     }
     m_vbo_vert_coords = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_coords));
-    m_vbo_tex_coord   = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_tex_coords));
+    m_vbo_vert_norm   = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_norm));
+    m_vbo_tex_coords  = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_tex_coords));
     m_ibo_tri_indices = std::unique_ptr<Buffer>(new Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*m_num_tri*3, m_tri_indices));
     m_buffers_already_init = true;
 }
 
-Buffer* Mesh::get_vbo_vert_coord()
+Buffer* Mesh::get_vbo_vert_coords()
 {
     init_buffers();
     return m_vbo_vert_coords.get();
 }
 
-Buffer* Mesh::get_vbo_tex_coord()
+Buffer* Mesh::get_vbo_vert_norm()
 {
     init_buffers();
-    return m_vbo_tex_coord.get();
+    return m_vbo_vert_norm.get();
+}
+
+Buffer* Mesh::get_vbo_tex_coords()
+{
+    init_buffers();
+    return m_vbo_tex_coords.get();
 }
 
 Buffer* Mesh::get_ibo_tri_indices()
@@ -131,8 +159,9 @@ Brush* Mesh::get_brush()
     }
     m_brush = std::unique_ptr<Brush>(new Brush(
             m_material,
-            get_vbo_vert_coord(),
-            get_vbo_tex_coord(),
+            get_vbo_vert_coords(),
+            get_vbo_vert_norm(),
+            get_vbo_tex_coords(),
             get_ibo_tri_indices()));
     m_brush_already_init = true;
     return m_brush.get();
@@ -146,7 +175,8 @@ void Mesh::update_xform()
             glm::rotate(glm::mat4(1), static_cast<float>(ORIENT_YAW(m_orient)*2),   glm::vec3(0, 1, 0)) * // Y axis
             glm::rotate(glm::mat4(1), static_cast<float>(ORIENT_ROLL(m_orient)*4),  glm::vec3(0, 0, 1));  // Z axis
     glm::mat4 scale_xform = glm::scale(glm::mat4(1), m_scale);
-    m_xform = translate_xform*rotate_xform*scale_xform;
+    m_local_xform = rotate_xform*scale_xform;
+    m_xform = translate_xform*m_local_xform;
 }
 
 }

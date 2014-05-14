@@ -27,36 +27,54 @@ Mesh* PrimitiveFactory::create_unit_box()
     mesh->set_vert_coord( 1, glm::vec3(0,0,1));
     mesh->set_vert_coord( 2, glm::vec3(0,1,1));
     mesh->set_vert_coord( 3, glm::vec3(0,1,0));
+    for(int i=0; i<4; i++) {
+        mesh->set_vert_norm(0*4+i, glm::vec3(-1,0,0));
+    }
 
     // front
     mesh->set_vert_coord( 4, glm::vec3(0,0,1));
     mesh->set_vert_coord( 5, glm::vec3(1,0,1));
     mesh->set_vert_coord( 6, glm::vec3(1,1,1));
     mesh->set_vert_coord( 7, glm::vec3(0,1,1));
+    for(int i=0; i<4; i++) {
+        mesh->set_vert_norm(1*4+i, glm::vec3(0,0,1));
+    }
 
     // left
     mesh->set_vert_coord( 8, glm::vec3(1,0,1));
     mesh->set_vert_coord( 9, glm::vec3(1,0,0));
     mesh->set_vert_coord(10, glm::vec3(1,1,0));
     mesh->set_vert_coord(11, glm::vec3(1,1,1));
+    for(int i=0; i<4; i++) {
+        mesh->set_vert_norm(2*4+i, glm::vec3(1,0,0));
+    }
 
     // back
     mesh->set_vert_coord(12, glm::vec3(1,0,0));
     mesh->set_vert_coord(13, glm::vec3(0,0,0));
     mesh->set_vert_coord(14, glm::vec3(0,1,0));
     mesh->set_vert_coord(15, glm::vec3(1,1,0));
+    for(int i=0; i<4; i++) {
+        mesh->set_vert_norm(3*4+i, glm::vec3(0,0,-1));
+    }
 
     // top
     mesh->set_vert_coord(16, glm::vec3(1,1,0));
     mesh->set_vert_coord(17, glm::vec3(0,1,0));
     mesh->set_vert_coord(18, glm::vec3(0,1,1));
     mesh->set_vert_coord(19, glm::vec3(1,1,1));
+    for(int i=0; i<4; i++) {
+        mesh->set_vert_norm(4*4+i, glm::vec3(0,1,0));
+    }
 
     // bottom
     mesh->set_vert_coord(20, glm::vec3(0,0,0));
     mesh->set_vert_coord(21, glm::vec3(1,0,0));
     mesh->set_vert_coord(22, glm::vec3(1,0,1));
     mesh->set_vert_coord(23, glm::vec3(0,0,1));
+    for(int i=0; i<4; i++) {
+        mesh->set_vert_norm(5*4+i, glm::vec3(0,-1,0));
+    }
 
     // ========================
     // init mesh texture coords
