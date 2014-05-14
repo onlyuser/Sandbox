@@ -100,18 +100,23 @@ Mesh* PrimitiveFactory::create_unit_box()
     // right
     mesh->set_tri_indices(0, glm::uvec3(0,1,2));
     mesh->set_tri_indices(1, glm::uvec3(2,3,0));
+
     // front
     mesh->set_tri_indices(2, glm::uvec3(4,5,6));
     mesh->set_tri_indices(3, glm::uvec3(6,7,4));
+
     // left
     mesh->set_tri_indices(4, glm::uvec3(8,9,10));
     mesh->set_tri_indices(5, glm::uvec3(10,11,8));
+
     // back
     mesh->set_tri_indices(6, glm::uvec3(12,13,14));
     mesh->set_tri_indices(7, glm::uvec3(14,15,12));
+
     // top
     mesh->set_tri_indices(8, glm::uvec3(16,17,18));
     mesh->set_tri_indices(9, glm::uvec3(18,19,16));
+
     // bottom
     mesh->set_tri_indices(10, glm::uvec3(20,21,22));
     mesh->set_tri_indices(11, glm::uvec3(22,23,20));
