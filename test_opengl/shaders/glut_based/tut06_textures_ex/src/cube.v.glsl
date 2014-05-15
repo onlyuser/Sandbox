@@ -2,7 +2,7 @@ attribute vec3 coord3d;
 attribute vec3 norm3d;
 attribute vec2 texcoord;
 uniform   mat4 mvp;
-uniform   mat4 local_xform;
+uniform   mat4 normal_xform;
 varying   vec2 f_texcoord;
 
 const int NUM_LIGHTS = 3;
@@ -15,7 +15,7 @@ varying vec3 cameraVector;
 varying vec3 lightVector[NUM_LIGHTS];
 
 void main(void) {
-    fragmentNormal = vec3(local_xform*vec4(norm3d, 1));
+    fragmentNormal = vec3(normal_xform*vec4(norm3d, 0));
     cameraVector = cameraPosition - coord3d;
 
     for(int i = 0; i < NUM_LIGHTS; ++i)

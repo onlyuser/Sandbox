@@ -52,7 +52,7 @@ Brush::Brush(
             0,        // no extra data between each position
             0);       // offset of first element
     m_var_uniform_mvp = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp"));
-    m_var_uniform_local_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("local_xform"));
+    m_var_uniform_normal_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("normal_xform"));
     m_var_uniform_mytexture = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
     m_var_uniform_camera_pos = std::unique_ptr<VarUniform>(m_program->get_var_uniform("cameraPosition"));
     m_var_uniform_light_pos = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightPosition"));
@@ -87,9 +87,9 @@ void Brush::set_xform(glm::mat4 mvp)
     m_var_uniform_mvp->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(mvp));
 }
 
-void Brush::set_local_xform(glm::mat4 local_xform)
+void Brush::set_normal_xform(glm::mat4 normal_xform)
 {
-    m_var_uniform_local_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(local_xform));
+    m_var_uniform_normal_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(normal_xform));
 }
 
 void Brush::set_texture_index(GLint texture_id)

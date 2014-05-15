@@ -27,7 +27,7 @@ public:
             Buffer*   ibo_tri_indices);
     void render();
     void set_xform(glm::mat4 mvp);
-    void set_local_xform(glm::mat4 local_xform);
+    void set_normal_xform(glm::mat4 normal_xform);
     void set_texture_index(GLint texture_id);
     void set_camera_pos(GLfloat* camera_pos_arr);
     void set_light_pos(GLfloat* light_pos_arr);
@@ -39,7 +39,7 @@ private:
     std::unique_ptr<VarAttribute> m_var_attribute_coord3d, m_var_attribute_norm3d, m_var_attribute_texcoord;
     std::unique_ptr<VarUniform>
             m_var_uniform_mvp,
-            m_var_uniform_local_xform,
+            m_var_uniform_normal_xform,
             m_var_uniform_mytexture,
             m_var_uniform_camera_pos,
             m_var_uniform_light_pos,

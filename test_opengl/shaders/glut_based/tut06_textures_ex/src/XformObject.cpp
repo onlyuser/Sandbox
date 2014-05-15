@@ -24,13 +24,9 @@ const glm::mat4 &XformObject::get_xform()
     return m_xform;
 }
 
-const glm::mat4 &XformObject::get_local_xform()
+const glm::mat4 &XformObject::get_normal_xform()
 {
-    if(m_need_update_xform) {
-        update_xform();
-        m_need_update_xform = false;
-    }
-    return m_local_xform;
+    return glm::transpose(glm::inverse(get_xform()));
 }
 
 }

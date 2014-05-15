@@ -39,7 +39,7 @@ public:
     }
 
     const glm::mat4 &get_xform();
-    const glm::mat4 &get_local_xform();
+    const glm::mat4 &get_normal_xform();
 
 protected:
     glm::vec3 m_origin;
