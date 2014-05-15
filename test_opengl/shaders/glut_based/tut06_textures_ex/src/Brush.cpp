@@ -30,7 +30,8 @@ Brush::Brush(
     m_var_attribute_coord3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("coord3d"));
     m_var_attribute_norm3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("norm3d"));
     m_var_attribute_texcoord = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("texcoord"));
-    m_var_uniform_mvp = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp"));
+    m_var_uniform_mvp_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp_xform"));
+    m_var_uniform_modelview_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("modelview_xform"));
     m_var_uniform_normal_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("normal_xform"));
     m_var_uniform_mytexture = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
     m_var_uniform_camera_pos = std::unique_ptr<VarUniform>(m_program->get_var_uniform("cameraPosition"));
@@ -82,9 +83,14 @@ void Brush::render()
     m_var_attribute_texcoord->disable_vertex_attrib_array();
 }
 
-void Brush::set_xform(glm::mat4 mvp)
+void Brush::set_mvp_xform(glm::mat4 mvp_xform)
 {
-    m_var_uniform_mvp->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(mvp));
+    m_var_uniform_mvp_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(mvp_xform));
+}
+
+void Brush::set_modelview_xform(glm::mat4 modelview_xform)
+{
+    m_var_uniform_modelview_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(modelview_xform));
 }
 
 void Brush::set_normal_xform(glm::mat4 normal_xform)
