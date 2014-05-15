@@ -24,7 +24,7 @@ const glm::mat4 &XformObject::get_xform()
     return m_xform;
 }
 
-const glm::mat4 &XformObject::get_normal_xform()
+const glm::mat4 XformObject::get_normal_xform()
 {
     return glm::transpose(glm::inverse(get_xform()));
 }

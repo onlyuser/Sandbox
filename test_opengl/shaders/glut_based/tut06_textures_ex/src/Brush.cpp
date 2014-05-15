@@ -28,29 +28,8 @@ Brush::Brush(
       m_textures(material->get_textures())
 {
     m_var_attribute_coord3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("coord3d"));
-    m_var_attribute_coord3d->vertex_attrib_pointer(
-            m_vbo_vert_coords,
-            3,        // number of elements per vertex, here (x,y,z)
-            GL_FLOAT, // the type of each element
-            GL_FALSE, // take our values as-is
-            0,        // no extra data between each position
-            0);       // offset of first element
     m_var_attribute_norm3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("norm3d"));
-    m_var_attribute_norm3d->vertex_attrib_pointer(
-            m_vbo_vert_norm,
-            3,        // number of elements per vertex, here (x,y,z)
-            GL_FLOAT, // the type of each element
-            GL_FALSE, // take our values as-is
-            0,        // no extra data between each position
-            0);       // offset of first element
     m_var_attribute_texcoord = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("texcoord"));
-    m_var_attribute_texcoord->vertex_attrib_pointer(
-            m_vbo_tex_coords,
-            2,        // number of elements per vertex, here (x,y)
-            GL_FLOAT, // the type of each element
-            GL_FALSE, // take our values as-is
-            0,        // no extra data between each position
-            0);       // offset of first element
     m_var_uniform_mvp = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp"));
     m_var_uniform_normal_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("normal_xform"));
     m_var_uniform_mytexture = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
@@ -70,6 +49,27 @@ void Brush::render()
         (*p)->bind();
         i++;
     }
+    m_var_attribute_coord3d->vertex_attrib_pointer(
+            m_vbo_vert_coords,
+            3,        // number of elements per vertex, here (x,y,z)
+            GL_FLOAT, // the type of each element
+            GL_FALSE, // take our values as-is
+            0,        // no extra data between each position
+            0);       // offset of first element
+    m_var_attribute_norm3d->vertex_attrib_pointer(
+            m_vbo_vert_norm,
+            3,        // number of elements per vertex, here (x,y,z)
+            GL_FLOAT, // the type of each element
+            GL_FALSE, // take our values as-is
+            0,        // no extra data between each position
+            0);       // offset of first element
+    m_var_attribute_texcoord->vertex_attrib_pointer(
+            m_vbo_tex_coords,
+            2,        // number of elements per vertex, here (x,y)
+            GL_FLOAT, // the type of each element
+            GL_FALSE, // take our values as-is
+            0,        // no extra data between each position
+            0);       // offset of first element
     m_var_attribute_coord3d->enable_vertex_attrib_array();
     m_var_attribute_norm3d->enable_vertex_attrib_array();
     m_var_attribute_texcoord->enable_vertex_attrib_array();

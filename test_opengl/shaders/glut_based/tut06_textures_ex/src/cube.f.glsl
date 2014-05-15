@@ -3,7 +3,7 @@ uniform sampler2D mytexture;
 
 const int NUM_LIGHTS = 3;
 const vec3 AMBIENT = vec3(0.1, 0.1, 0.1);
-const float MAX_DIST = 10;
+const float MAX_DIST = 20;
 const float MAX_DIST_SQUARED = MAX_DIST * MAX_DIST;
 
 uniform vec3 lightColor[NUM_LIGHTS];
@@ -42,4 +42,6 @@ void main(void) {
     vec2 flipped_texcoord = vec2(f_texcoord.x, 1-f_texcoord.y);
     vec4 sample = texture2D(mytexture, flipped_texcoord); //vec4(1.0, 1.0, 1.0, 1.0);
     gl_FragColor = vec4(clamp(sample.rgb * (diffuse + AMBIENT) + specular, 0.0, 1.0), sample.a);
+
+    //gl_FragColor = vec4(normal, 1);
 }

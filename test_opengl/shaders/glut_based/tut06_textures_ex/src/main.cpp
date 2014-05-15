@@ -42,7 +42,7 @@ const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int init_screen_width = 800, init_screen_height = 600;
 vt::Camera* camera;
-vt::Mesh* mesh, *mesh2;
+vt::Mesh* mesh, *mesh2, *mesh3;
 
 bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_drag;
@@ -60,8 +60,11 @@ int init_resources()
     vt::Scene::instance()->add_mesh(mesh);
     mesh2 = vt::PrimitiveFactory::create(vt::PrimitiveFactory::PRIMITIVE_TYPE_UNIT_BOX);
     vt::Scene::instance()->add_mesh(mesh2);
+    mesh3 = vt::PrimitiveFactory::create_grid(4, 4, 10, 10);
+    vt::Scene::instance()->add_mesh(mesh3);
 
     mesh2->set_scale(glm::vec3(0.5, 2, 3));
+    mesh3->set_origin(glm::vec3(-5, -5, -1));
 
     vt::Material* material = new vt::Material(
             "src/cube.v.glsl",
@@ -69,6 +72,7 @@ int init_resources()
     vt::Scene::instance()->add_material(material);
     mesh->set_material(material);
     mesh2->set_material(material);
+    mesh3->set_material(material);
 
     vt::Texture* texture = new vt::Texture(
             res_texture.width,
@@ -167,6 +171,7 @@ void onKeyboard(unsigned char key, int x, int y)
             }
             mesh->get_brush()->set_texture_index(texture_index);
             mesh2->get_brush()->set_texture_index(texture_index);
+            mesh3->get_brush()->set_texture_index(texture_index);
             break;
         case 'p':
             if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {

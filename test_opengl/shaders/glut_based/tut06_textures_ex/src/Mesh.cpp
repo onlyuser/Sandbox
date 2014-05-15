@@ -175,8 +175,7 @@ void Mesh::update_xform()
             glm::rotate(glm::mat4(1), static_cast<float>(ORIENT_YAW(m_orient)*2),   glm::vec3(0, 1, 0)) * // Y axis
             glm::rotate(glm::mat4(1), static_cast<float>(ORIENT_ROLL(m_orient)*4),  glm::vec3(0, 0, 1));  // Z axis
     glm::mat4 scale_xform = glm::scale(glm::mat4(1), m_scale);
-    m_local_xform = rotate_xform*scale_xform;
-    m_xform = translate_xform*m_local_xform;
+    m_xform = translate_xform*rotate_xform*scale_xform;
 }
 
 }

@@ -14,13 +14,67 @@ Mesh* PrimitiveFactory::create(PrimitiveFactory::primitive_type_t _type)
     }
 }
 
+Mesh* PrimitiveFactory::create_grid(int rows, int cols, float width, float height)
+{
+    int num_vertex = (rows+1)*(cols+1);
+    int num_tri = rows*cols*2;
+    Mesh* mesh = new Mesh(num_vertex, num_tri);
+
+    // ==============================
+    // init mesh vertex/normal coords
+    // ==============================
+
+    int vert_index = 0;
+    for(int row_pos = 0; row_pos <= rows; row_pos++) {
+        for(int col_pos = 0; col_pos <= cols; col_pos++) {
+            mesh->set_vert_coord(vert_index, glm::vec3(
+                    width*(static_cast<float>(col_pos)/cols),
+                    height*(static_cast<float>(row_pos)/rows),
+                    0));
+            mesh->set_vert_norm(vert_index, glm::vec3(0, 0, 1));
+            vert_index++;
+        }
+    }
+
+    // ========================
+    // init mesh texture coords
+    // ========================
+
+    int tex_vert_index = 0;
+    for(int row_pos = 0; row_pos <= rows; row_pos++) {
+        for(int col_pos = 0; col_pos <= cols; col_pos++) {
+            mesh->set_tex_coord(tex_vert_index++, glm::vec2(
+                    1.0f*(static_cast<float>(col_pos)/cols),
+                    1.0f*(static_cast<float>(row_pos)/rows)));
+        }
+    }
+
+    // ==========================
+    // init mesh triangle indices
+    // ==========================
+
+    int tri_index = 0;
+    for(int row_pos = 0; row_pos<rows; row_pos++) {
+        for(int col_pos = 0; col_pos<cols; col_pos++) {
+            int lower_left  = row_pos*(cols+1)+col_pos;
+            int lower_right = lower_left+1;
+            int upper_left  = (row_pos+1)*(cols+1)+col_pos;
+            int upper_right = upper_left+1;
+            mesh->set_tri_indices(tri_index++, glm::uvec3(lower_left, lower_right, upper_right));
+            mesh->set_tri_indices(tri_index++, glm::uvec3(upper_right, upper_left, lower_left));
+        }
+    }
+
+    return mesh;
+}
+
 Mesh* PrimitiveFactory::create_unit_box()
 {
     Mesh* mesh = new Mesh(24, 12);
 
-    // =======================
-    // init mesh vertex coords
-    // =======================
+    // ==============================
+    // init mesh vertex/normal coords
+    // ==============================
 
     // right
     mesh->set_vert_coord( 0, glm::vec3(0,0,0));

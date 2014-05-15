@@ -15,8 +15,7 @@ public:
     };
 
     static Mesh* create(PrimitiveFactory::primitive_type_t _type);
-
-private:
+    static Mesh* create_grid(int rows, int cols, float width = 1.0f, float height = 1.0f);
     static Mesh* create_unit_box();
 };
 
