@@ -15,13 +15,15 @@ namespace vt {
 
 glm::vec3 orient_to_offset(glm::vec3 orient)
 {
+    static glm::vec3 left    = glm::vec3(1, 0, 0);
+    static glm::vec3 up      = glm::vec3(0, 1, 0);
     static glm::vec3 forward = glm::vec3(0, 0, 1);
     glm::mat4 pitch = glm::rotate(
             glm::mat4(1),
-            PITCH(orient), glm::vec3(1, 0, 0));
+            PITCH(orient), left);
     glm::mat4 yaw = glm::rotate(
             glm::mat4(1),
-            YAW(orient), glm::vec3(0, 1, 0));
+            YAW(orient), up);
     return glm::vec3(yaw*pitch*glm::vec4(forward, 1));
 }
 
@@ -32,8 +34,7 @@ glm::vec3 offset_to_orient(glm::vec3 offset)
     glm::vec3 r(
         0,
         glm::angle(t, offset),
-        glm::angle(t, forward)
-        );
+        glm::angle(t, forward));
     if(static_cast<float>(fabs(offset.x))<EPSILON && static_cast<float>(fabs(offset.z))<EPSILON)
     {
         PITCH(r) = -SIGN(offset.y)*glm::radians(90.0f);
