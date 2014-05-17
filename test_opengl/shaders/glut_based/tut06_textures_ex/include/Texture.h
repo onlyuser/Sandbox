@@ -4,13 +4,15 @@
 #include <IdentObject.h>
 #include <BindableObjectIFace.h>
 #include <GL/glew.h>
+#include <string>
 
 namespace vt {
 
 class Texture : public IdentObject, public BindableObjectIFace
 {
 public:
-    Texture(size_t width, size_t height, const void* pixel_data);
+    Texture(const void* pixel_data, size_t width, size_t height);
+    Texture(std::string png_filename);
     virtual ~Texture();
     void bind() const;
 };

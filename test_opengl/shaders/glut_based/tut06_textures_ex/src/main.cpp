@@ -83,16 +83,14 @@ int init_resources()
     mesh5->set_material(material);
 
     vt::Texture* texture = new vt::Texture(
+            res_texture.pixel_data,
             res_texture.width,
-            res_texture.height,
-            res_texture.pixel_data);
+            res_texture.height);
     vt::Scene::instance()->add_texture(texture);
     material->add_texture(texture);
 
     vt::Texture* texture2 = new vt::Texture(
-            res_texture2.width,
-            res_texture2.height,
-            res_texture2.pixel_data);
+            "data/mattress_normal.png");
     vt::Scene::instance()->add_texture(texture2);
     material->add_texture(texture2);
 

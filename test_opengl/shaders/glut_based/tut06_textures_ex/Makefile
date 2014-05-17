@@ -23,7 +23,7 @@ INCLUDE_PATH_FLAGS = $(patsubst %, -I%, $(INCLUDE_PATHS))
 LIB_PATHS = $(LIB_PATH)
 LIB_PATH_FLAGS = $(patsubst %, -L%, $(LIB_PATHS))
 
-LIB_STEMS = glut GLEW GL
+LIB_STEMS = glut GLEW GL png
 LIBS = $(patsubst %, $(LIB_PATH)/lib%.a, $(LIB_STEMS))
 LIB_FLAGS = $(patsubst %, -l%, $(LIB_STEMS))
 
