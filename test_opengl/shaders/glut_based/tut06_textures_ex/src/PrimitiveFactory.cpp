@@ -32,7 +32,8 @@ Mesh* PrimitiveFactory::create_grid(int rows, int cols, float width, float heigh
                     width*(static_cast<float>(col_pos)/cols),
                     height*(static_cast<float>(row_pos)/rows),
                     0));
-            mesh->set_vert_norm(vert_index, glm::vec3(0, 0, 1));
+            mesh->set_vert_normal( vert_index, glm::vec3(0, 0, 1));
+            mesh->set_vert_tangent(vert_index, glm::vec3(1, 0, 0));
             vert_index++;
         }
     }
@@ -71,6 +72,8 @@ Mesh* PrimitiveFactory::create_grid(int rows, int cols, float width, float heigh
 
 Mesh* PrimitiveFactory::create_sphere(int longitude, int latitude, float radius)
 {
+    const int ccw_delta = 1;
+
     Mesh* mesh = create_grid(longitude, latitude);
     int cols = longitude;
     int rows = latitude;
@@ -87,8 +90,14 @@ Mesh* PrimitiveFactory::create_sphere(int longitude, int latitude, float radius)
                     -(static_cast<float>(row_pos)/rows*180-90), // pitch
                     static_cast<float>(col_pos)/cols*360));     // yaw
             glm::vec3 offset = normal*radius;
+            glm::vec3 normal_ccw = orient_to_offset(glm::vec3(
+                    0,
+                    -(static_cast<float>(row_pos)/rows*180-90),       // pitch
+                    static_cast<float>(col_pos)/cols*360+ccw_delta)); // yaw
+            glm::vec3 offset_ccw = normal_ccw*radius;
             mesh->set_vert_coord(vert_index, offset);
-            mesh->set_vert_norm(vert_index, glm::normalize(offset));
+            mesh->set_vert_normal(vert_index, glm::normalize(offset));
+            mesh->set_vert_tangent(vert_index, glm::normalize(offset_ccw-offset));
             vert_index++;
         }
     }
@@ -98,6 +107,8 @@ Mesh* PrimitiveFactory::create_sphere(int longitude, int latitude, float radius)
 
 Mesh* PrimitiveFactory::create_torus(int longitude, int latitude, float radius_major, float radius_minor)
 {
+    const int ccw_delta = 1;
+
     Mesh* mesh = create_grid(longitude, latitude);
     int cols = longitude;
     int rows = latitude;
@@ -113,13 +124,19 @@ Mesh* PrimitiveFactory::create_torus(int longitude, int latitude, float radius_m
                     0,
                     0,                                      // pitch
                     static_cast<float>(col_pos)/cols*360)); // yaw
+            glm::vec3 normal_major_ccw = orient_to_offset(glm::vec3(
+                    0,
+                    0,                                                // pitch
+                    static_cast<float>(col_pos)/cols*360+ccw_delta)); // yaw
             glm::vec3 normal_minor = orient_to_offset(glm::vec3(
                     0,
                     -(static_cast<float>(row_pos)/rows*360-180), // pitch
                     static_cast<float>(col_pos)/cols*360));      // yaw
-            glm::vec3 offset = normal_major*radius_major+normal_minor*radius_minor;
+            glm::vec3 offset     = normal_major*radius_major+normal_minor*radius_minor;
+            glm::vec3 offset_ccw = normal_major_ccw*radius_major+normal_minor*radius_minor;
             mesh->set_vert_coord(vert_index, offset);
-            mesh->set_vert_norm(vert_index, glm::normalize(offset));
+            mesh->set_vert_normal(vert_index, glm::normalize(offset));
+            mesh->set_vert_tangent(vert_index, glm::normalize(offset_ccw-offset));
             vert_index++;
         }
     }
@@ -136,21 +153,23 @@ Mesh* PrimitiveFactory::create_unit_box()
     // ==============================
 
     // right
-    mesh->set_vert_coord( 0, glm::vec3(0, 0, 0));
-    mesh->set_vert_coord( 1, glm::vec3(0, 0, 1));
-    mesh->set_vert_coord( 2, glm::vec3(0, 1, 1));
-    mesh->set_vert_coord( 3, glm::vec3(0, 1, 0));
+    mesh->set_vert_coord(0, glm::vec3(0, 0, 0));
+    mesh->set_vert_coord(1, glm::vec3(0, 0, 1));
+    mesh->set_vert_coord(2, glm::vec3(0, 1, 1));
+    mesh->set_vert_coord(3, glm::vec3(0, 1, 0));
     for(int i=0; i<4; i++) {
-        mesh->set_vert_norm(0*4+i, glm::vec3(-1, 0, 0));
+        mesh->set_vert_normal( 0*4+i, glm::vec3(-1, 0, 0));
+        mesh->set_vert_tangent(0*4+i, glm::vec3( 0, 0, 1));
     }
 
     // front
-    mesh->set_vert_coord( 4, glm::vec3(0, 0, 1));
-    mesh->set_vert_coord( 5, glm::vec3(1, 0, 1));
-    mesh->set_vert_coord( 6, glm::vec3(1, 1, 1));
-    mesh->set_vert_coord( 7, glm::vec3(0, 1, 1));
+    mesh->set_vert_coord(4, glm::vec3(0, 0, 1));
+    mesh->set_vert_coord(5, glm::vec3(1, 0, 1));
+    mesh->set_vert_coord(6, glm::vec3(1, 1, 1));
+    mesh->set_vert_coord(7, glm::vec3(0, 1, 1));
     for(int i=0; i<4; i++) {
-        mesh->set_vert_norm(1*4+i, glm::vec3(0, 0, 1));
+        mesh->set_vert_normal( 1*4+i, glm::vec3(0, 0, 1));
+        mesh->set_vert_tangent(1*4+i, glm::vec3(1, 0, 0));
     }
 
     // left
@@ -159,7 +178,8 @@ Mesh* PrimitiveFactory::create_unit_box()
     mesh->set_vert_coord(10, glm::vec3(1, 1, 0));
     mesh->set_vert_coord(11, glm::vec3(1, 1, 1));
     for(int i=0; i<4; i++) {
-        mesh->set_vert_norm(2*4+i, glm::vec3(1, 0, 0));
+        mesh->set_vert_normal( 2*4+i, glm::vec3(1, 0,  0));
+        mesh->set_vert_tangent(2*4+i, glm::vec3(0, 0, -1));
     }
 
     // back
@@ -168,7 +188,8 @@ Mesh* PrimitiveFactory::create_unit_box()
     mesh->set_vert_coord(14, glm::vec3(0, 1, 0));
     mesh->set_vert_coord(15, glm::vec3(1, 1, 0));
     for(int i=0; i<4; i++) {
-        mesh->set_vert_norm(3*4+i, glm::vec3(0, 0, -1));
+        mesh->set_vert_normal( 3*4+i, glm::vec3( 0, 0, -1));
+        mesh->set_vert_tangent(3*4+i, glm::vec3(-1, 0,  0));
     }
 
     // top
@@ -177,7 +198,8 @@ Mesh* PrimitiveFactory::create_unit_box()
     mesh->set_vert_coord(18, glm::vec3(0, 1, 1));
     mesh->set_vert_coord(19, glm::vec3(1, 1, 1));
     for(int i=0; i<4; i++) {
-        mesh->set_vert_norm(4*4+i, glm::vec3(0, 1, 0));
+        mesh->set_vert_normal( 4*4+i, glm::vec3( 0, 1, 0));
+        mesh->set_vert_tangent(4*4+i, glm::vec3(-1, 0, 0));
     }
 
     // bottom
@@ -186,7 +208,8 @@ Mesh* PrimitiveFactory::create_unit_box()
     mesh->set_vert_coord(22, glm::vec3(1, 0, 1));
     mesh->set_vert_coord(23, glm::vec3(0, 0, 1));
     for(int i=0; i<4; i++) {
-        mesh->set_vert_norm(5*4+i, glm::vec3(0, -1, 0));
+        mesh->set_vert_normal( 5*4+i, glm::vec3(0, -1, 0));
+        mesh->set_vert_tangent(5*4+i, glm::vec3(1,  0, 0));
     }
 
     // ========================

@@ -90,9 +90,21 @@ int init_resources()
     material->add_texture(texture);
 
     vt::Texture* texture2 = new vt::Texture(
-            "data/mattress_normal.png");
+            res_texture2.pixel_data,
+            res_texture2.width,
+            res_texture2.height);
     vt::Scene::instance()->add_texture(texture2);
     material->add_texture(texture2);
+
+    vt::Texture* texture3 = new vt::Texture(
+            "data/mattress_color.png");
+    vt::Scene::instance()->add_texture(texture3);
+    material->add_texture(texture3);
+
+    vt::Texture* texture4 = new vt::Texture(
+            "data/mattress_normal.png");
+    vt::Scene::instance()->add_texture(texture4);
+    material->add_texture(texture4);
 
     glm::vec3 origin = glm::vec3(0.5, 0.5, 0.5);
     camera = new vt::Camera(origin+glm::vec3(0, 0, radius), origin);
@@ -109,6 +121,18 @@ int init_resources()
     // blue light
     vt::Light* light2 = new vt::Light(origin+glm::vec3(0, 0, radius), glm::vec3(0, 0, 1));
     vt::Scene::instance()->add_light(light2);
+
+    vt::Scene::instance()->render();
+    mesh->get_brush()->set_texture_index( 2);
+    mesh2->get_brush()->set_texture_index(2);
+    mesh3->get_brush()->set_texture_index(2);
+    mesh4->get_brush()->set_texture_index(2);
+    mesh5->get_brush()->set_texture_index(2);
+    mesh->get_brush()->set_normal_map_texture_index( 3);
+    mesh2->get_brush()->set_normal_map_texture_index(3);
+    mesh3->get_brush()->set_normal_map_texture_index(3);
+    mesh4->get_brush()->set_normal_map_texture_index(3);
+    mesh5->get_brush()->set_normal_map_texture_index(3);
 
     return 1;
 }
@@ -172,10 +196,12 @@ void onKeyboard(unsigned char key, int x, int y)
         case 't':
             if(texture_index == 0) {
                 texture_index = 1; // GL_TEXTURE1
-            } else {
+            } else if(texture_index == 1) {
+                texture_index = 2; // GL_TEXTURE2
+            } else if(texture_index == 2) {
                 texture_index = 0; // GL_TEXTURE0
             }
-            mesh->get_brush()->set_texture_index(texture_index);
+            mesh->get_brush()->set_texture_index( texture_index);
             mesh2->get_brush()->set_texture_index(texture_index);
             mesh3->get_brush()->set_texture_index(texture_index);
             mesh4->get_brush()->set_texture_index(texture_index);

@@ -16,10 +16,11 @@ Mesh::Mesh(size_t num_vertex, size_t num_tri)
       m_material(NULL),
       m_brush_already_init(false)
 {
-    m_vert_coords = new GLfloat[num_vertex*3];
-    m_vert_norm   = new GLfloat[num_vertex*3];
-    m_tex_coords  = new GLfloat[num_vertex*2];
-    m_tri_indices = new GLushort[num_tri*3];
+    m_vert_coords  = new GLfloat[num_vertex*3];
+    m_vert_normal  = new GLfloat[num_vertex*3];
+    m_vert_tangent = new GLfloat[num_vertex*3];
+    m_tex_coords   = new GLfloat[num_vertex*2];
+    m_tri_indices  = new GLushort[num_tri*3];
 }
 
 Mesh::~Mesh()
@@ -27,8 +28,11 @@ Mesh::~Mesh()
     if(m_vert_coords) {
         delete []m_vert_coords;
     }
-    if(m_vert_norm) {
-        delete []m_vert_norm;
+    if(m_vert_normal) {
+        delete []m_vert_normal;
+    }
+    if(m_vert_tangent) {
+        delete []m_vert_tangent;
     }
     if(m_tex_coords) {
         delete []m_tex_coords;
@@ -67,21 +71,38 @@ void Mesh::set_vert_coord(int index, glm::vec3 coord)
     m_vert_coords[offset+2] = coord.z;
 }
 
-glm::vec3 Mesh::get_vert_norm(int index)
+glm::vec3 Mesh::get_vert_normal(int index)
 {
     int offset = index*3;
     return glm::vec3(
-            m_vert_norm[offset+0],
-            m_vert_norm[offset+1],
-            m_vert_norm[offset+2]);
+            m_vert_normal[offset+0],
+            m_vert_normal[offset+1],
+            m_vert_normal[offset+2]);
 }
 
-void Mesh::set_vert_norm(int index, glm::vec3 norm)
+void Mesh::set_vert_normal(int index, glm::vec3 normal)
 {
     int offset = index*3;
-    m_vert_norm[offset+0] = norm.x;
-    m_vert_norm[offset+1] = norm.y;
-    m_vert_norm[offset+2] = norm.z;
+    m_vert_normal[offset+0] = normal.x;
+    m_vert_normal[offset+1] = normal.y;
+    m_vert_normal[offset+2] = normal.z;
+}
+
+glm::vec3 Mesh::get_vert_tangent(int index)
+{
+    int offset = index*3;
+    return glm::vec3(
+            m_vert_tangent[offset+0],
+            m_vert_tangent[offset+1],
+            m_vert_tangent[offset+2]);
+}
+
+void Mesh::set_vert_tangent(int index, glm::vec3 tangent)
+{
+    int offset = index*3;
+    m_vert_tangent[offset+0] = tangent.x;
+    m_vert_tangent[offset+1] = tangent.y;
+    m_vert_tangent[offset+2] = tangent.z;
 }
 
 glm::vec2 Mesh::get_tex_coord(int index)
@@ -121,10 +142,11 @@ void Mesh::init_buffers()
     if(m_buffers_already_init) {
         return;
     }
-    m_vbo_vert_coords = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_coords));
-    m_vbo_vert_norm   = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_norm));
-    m_vbo_tex_coords  = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_tex_coords));
-    m_ibo_tri_indices = std::unique_ptr<Buffer>(new Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*m_num_tri*3, m_tri_indices));
+    m_vbo_vert_coords  = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_coords));
+    m_vbo_vert_normal  = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_normal));
+    m_vbo_vert_tangent = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*3, m_vert_tangent));
+    m_vbo_tex_coords   = std::unique_ptr<Buffer>(new Buffer(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_num_vertex*2, m_tex_coords));
+    m_ibo_tri_indices  = std::unique_ptr<Buffer>(new Buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*m_num_tri*3, m_tri_indices));
     m_buffers_already_init = true;
 }
 
@@ -134,10 +156,16 @@ Buffer* Mesh::get_vbo_vert_coords()
     return m_vbo_vert_coords.get();
 }
 
-Buffer* Mesh::get_vbo_vert_norm()
+Buffer* Mesh::get_vbo_vert_normal()
 {
     init_buffers();
-    return m_vbo_vert_norm.get();
+    return m_vbo_vert_normal.get();
+}
+
+Buffer* Mesh::get_vbo_vert_tangent()
+{
+    init_buffers();
+    return m_vbo_vert_tangent.get();
 }
 
 Buffer* Mesh::get_vbo_tex_coords()
@@ -160,7 +188,8 @@ Brush* Mesh::get_brush()
     m_brush = std::unique_ptr<Brush>(new Brush(
             m_material,
             get_vbo_vert_coords(),
-            get_vbo_vert_norm(),
+            get_vbo_vert_normal(),
+            get_vbo_vert_tangent(),
             get_vbo_tex_coords(),
             get_ibo_tri_indices()));
     m_brush_already_init = true;
