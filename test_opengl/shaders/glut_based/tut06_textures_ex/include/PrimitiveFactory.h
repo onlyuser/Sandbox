@@ -17,6 +17,7 @@ public:
     static Mesh* create(PrimitiveFactory::primitive_type_t _type);
     static Mesh* create_grid(int rows, int cols, float width = 1.0f, float height = 1.0f);
     static Mesh* create_sphere(int longitude, int latitude, float radius = 1.0f);
+    static Mesh* create_torus(int longitude, int latitude, float radius_major = 1.0f, float radius_minor = 0.5f);
     static Mesh* create_unit_box();
 };
 

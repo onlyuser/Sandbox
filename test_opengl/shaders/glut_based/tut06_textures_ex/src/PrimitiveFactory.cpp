@@ -84,10 +84,42 @@ Mesh* PrimitiveFactory::create_sphere(int longitude, int latitude, float radius)
         for(int col_pos = 0; col_pos <= cols; col_pos++) {
             glm::vec3 normal = orient_to_offset(glm::vec3(
                     0,
-                    static_cast<float>(row_pos)/rows*360-180,
-                    static_cast<float>(col_pos)/cols*360));
-            mesh->set_vert_coord(vert_index, normal*radius);
-            mesh->set_vert_norm(vert_index, normal);
+                    -(static_cast<float>(row_pos)/rows*180-90), // pitch
+                    static_cast<float>(col_pos)/cols*360));     // yaw
+            glm::vec3 offset = normal*radius;
+            mesh->set_vert_coord(vert_index, offset);
+            mesh->set_vert_norm(vert_index, glm::normalize(offset));
+            vert_index++;
+        }
+    }
+
+    return mesh;
+}
+
+Mesh* PrimitiveFactory::create_torus(int longitude, int latitude, float radius_major, float radius_minor)
+{
+    Mesh* mesh = create_grid(longitude, latitude);
+    int cols = longitude;
+    int rows = latitude;
+
+    // ==============================
+    // init mesh vertex/normal coords
+    // ==============================
+
+    int vert_index = 0;
+    for(int row_pos = 0; row_pos <= rows; row_pos++) {
+        for(int col_pos = 0; col_pos <= cols; col_pos++) {
+            glm::vec3 normal_major = orient_to_offset(glm::vec3(
+                    0,
+                    0,                                      // pitch
+                    static_cast<float>(col_pos)/cols*360)); // yaw
+            glm::vec3 normal_minor = orient_to_offset(glm::vec3(
+                    0,
+                    -(static_cast<float>(row_pos)/rows*360-180), // pitch
+                    static_cast<float>(col_pos)/cols*360));      // yaw
+            glm::vec3 offset = normal_major*radius_major+normal_minor*radius_minor;
+            mesh->set_vert_coord(vert_index, offset);
+            mesh->set_vert_norm(vert_index, glm::normalize(offset));
             vert_index++;
         }
     }
