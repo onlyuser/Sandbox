@@ -62,15 +62,16 @@ int init_resources()
     vt::Scene::instance()->add_mesh(mesh2);
     mesh3 = vt::PrimitiveFactory::create_grid(4, 4, 10, 10);
     vt::Scene::instance()->add_mesh(mesh3);
-    mesh4 = vt::PrimitiveFactory::create_sphere(16, 16, 1);
+    mesh4 = vt::PrimitiveFactory::create_sphere(16, 16, 0.5);
     vt::Scene::instance()->add_mesh(mesh4);
-    mesh5 = vt::PrimitiveFactory::create_torus(16, 16, 1, 0.5);
+    mesh5 = vt::PrimitiveFactory::create_torus(16, 16, 0.5, 0.25);
     vt::Scene::instance()->add_mesh(mesh5);
 
-    mesh2->set_scale(glm::vec3(0.5, 2, 3));
-    mesh3->set_origin(glm::vec3(-5, -5, -1));
-    mesh4->set_origin(glm::vec3(0, 1, 0));
-    mesh5->set_origin(glm::vec3(0, -1, 0));
+    mesh->set_origin(glm::vec3(-0.5, -0.5, -0.5)); // box
+    mesh2->set_scale(glm::vec3(0.5, 2, 3)); // scaled box
+    mesh3->set_origin(glm::vec3(-5, -5, -1)); // grid
+    mesh4->set_origin(glm::vec3(2, 0, 0)); // sphere
+    mesh5->set_origin(glm::vec3(-2, 0, 0)); // torus
 
     vt::Material* material = new vt::Material(
             "src/cube.v.glsl",
@@ -106,7 +107,7 @@ int init_resources()
     vt::Scene::instance()->add_texture(texture4);
     material->add_texture(texture4);
 
-    glm::vec3 origin = glm::vec3(0.5, 0.5, 0.5);
+    glm::vec3 origin = glm::vec3();
     camera = new vt::Camera(origin+glm::vec3(0, 0, radius), origin);
     vt::Scene::instance()->set_camera(camera);
 
@@ -170,7 +171,7 @@ void onTick()
 void onDisplay()
 {
     onTick();
-    glClearColor(1, 1, 1, 1);
+    glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     vt::Scene::instance()->render();
     glutSwapBuffers();
