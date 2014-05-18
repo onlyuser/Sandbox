@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-#define NUM_LIGHTS 3
+#define NUM_LIGHTS 8
 
 namespace vt {
 
@@ -108,6 +108,7 @@ void Scene::render()
         (*q)->get_brush()->set_light_pos(m_light_pos);
         (*q)->get_brush()->set_light_color(m_light_color);
         (*q)->get_brush()->set_light_enabled(m_light_enabled);
+        (*q)->get_brush()->set_light_count(m_lights.size());
         (*q)->get_brush()->render();
     }
 }

@@ -4,8 +4,6 @@
 #include <GL/glew.h>
 #include <vector>
 
-#define NUM_LIGHTS 3
-
 namespace vt {
 
 class Camera;

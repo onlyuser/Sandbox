@@ -7,7 +7,8 @@ uniform   mat4 modelview_xform;
 uniform   mat4 normal_xform;
 varying   vec2 f_texcoord;
 
-const int NUM_LIGHTS = 3;
+const int NUM_LIGHTS = 8;
+uniform int lightCount;
 
 uniform int lightEnabled[NUM_LIGHTS];
 

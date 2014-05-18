@@ -2,7 +2,9 @@ varying vec2      f_texcoord;
 uniform sampler2D mytexture;
 uniform sampler2D normal_map_texture;
 
-const int NUM_LIGHTS = 3;
+const int NUM_LIGHTS = 8;
+uniform int lightCount;
+
 const vec3 AMBIENT = vec3(0.1, 0.1, 0.1);
 const float MAX_DIST = 20;
 const float MAX_DIST_SQUARED = MAX_DIST * MAX_DIST;
@@ -33,7 +35,7 @@ void main(void) {
     vec3 bumpy_world_normal = normalize(tbn_xform*bumpy_surface_normal);
 
     // loop through each light
-    for(int i = 0; i < NUM_LIGHTS; ++i) {
+    for(int i = 0; i < NUM_LIGHTS && i < lightCount; ++i) {
         if(lightEnabled[i] == 0) {
             continue;
         }

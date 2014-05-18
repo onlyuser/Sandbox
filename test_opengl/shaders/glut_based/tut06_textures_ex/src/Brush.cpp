@@ -42,6 +42,7 @@ Brush::Brush(
     m_var_uniform_light_pos          = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightPosition"));
     m_var_uniform_light_color        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightColor"));
     m_var_uniform_light_enabled      = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightEnabled"));
+    m_var_uniform_light_count        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightCount"));
 }
 
 void Brush::render()
@@ -140,6 +141,11 @@ void Brush::set_light_color(GLfloat* light_color_arr)
 void Brush::set_light_enabled(GLint* light_enabled_arr)
 {
     m_var_uniform_light_enabled->uniform_1iv(NUM_LIGHTS, light_enabled_arr);
+}
+
+void Brush::set_light_count(GLint light_count)
+{
+    m_var_uniform_light_count->uniform_1i(light_count);
 }
 
 }
