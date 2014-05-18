@@ -43,6 +43,7 @@ const char* DEFAULT_CAPTION = "My Textured Cube";
 int init_screen_width = 800, init_screen_height = 600;
 vt::Camera* camera;
 vt::Mesh* mesh, *mesh2, *mesh3, *mesh4, *mesh5, *mesh6, *mesh7;
+vt::Light* light, *light2, *light3;
 
 bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_drag;
@@ -124,18 +125,16 @@ int init_resources()
     vt::Scene::instance()->set_camera(camera);
 
     // red light
-    vt::Light* light0 = new vt::Light(origin+glm::vec3(light_distance, 0, 0), glm::vec3(1, 0, 0));
-    vt::Scene::instance()->add_light(light0);
+    light = new vt::Light(origin+glm::vec3(light_distance, 0, 0), glm::vec3(1, 0, 0));
+    vt::Scene::instance()->add_light(light);
 
     // green light
-    vt::Light* light1 = new vt::Light(origin+glm::vec3(0, light_distance, 0), glm::vec3(0, 1, 0));
-    vt::Scene::instance()->add_light(light1);
-
-    // blue light
-    vt::Light* light2 = new vt::Light(origin+glm::vec3(0, 0, light_distance), glm::vec3(0, 0, 1));
+    light2 = new vt::Light(origin+glm::vec3(0, light_distance, 0), glm::vec3(0, 1, 0));
     vt::Scene::instance()->add_light(light2);
 
-    light2->set_enabled(false);
+    // blue light
+    light3 = new vt::Light(origin+glm::vec3(0, 0, light_distance), glm::vec3(0, 0, 1));
+    vt::Scene::instance()->add_light(light3);
 
     vt::Scene::instance()->use_program();
     mesh->get_brush()->set_texture_index( 2);
@@ -250,6 +249,15 @@ void onKeyboard(unsigned char key, int x, int y)
 void onSpecial(int key, int x, int y)
 {
     switch(key) {
+        case GLUT_KEY_F1:
+            light->set_enabled(!light->get_enabled());
+            break;
+        case GLUT_KEY_F2:
+            light2->set_enabled(!light2->get_enabled());
+            break;
+        case GLUT_KEY_F3:
+            light3->set_enabled(!light3->get_enabled());
+            break;
         case GLUT_KEY_LEFT:
         case GLUT_KEY_RIGHT:
         case GLUT_KEY_UP:
@@ -261,6 +269,7 @@ void onSpecial(int key, int x, int y)
 void onSpecialUp(int key, int x, int y)
 {
     switch(key) {
+        case GLUT_KEY_F1:
         case GLUT_KEY_LEFT:
         case GLUT_KEY_RIGHT:
         case GLUT_KEY_UP:
