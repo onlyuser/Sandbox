@@ -68,6 +68,13 @@ void Scene::reset()
     m_textures.clear();
 }
 
+void Scene::use_program()
+{
+    for(meshes_t::const_iterator q = m_meshes.begin(); q != m_meshes.end(); q++) {
+        (*q)->get_brush()->get_program()->use();
+    }
+}
+
 void Scene::render()
 {
     glm::vec3 camera_pos = m_camera->get_origin();

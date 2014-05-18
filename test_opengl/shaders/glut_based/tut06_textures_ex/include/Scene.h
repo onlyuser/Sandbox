@@ -58,6 +58,7 @@ public:
     }
 
     void reset();
+    void use_program();
     void render();
     void render_vert_normals();
 

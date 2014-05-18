@@ -124,7 +124,7 @@ int init_resources()
     vt::Light* light2 = new vt::Light(origin+glm::vec3(0, 0, light_distance), glm::vec3(0, 0, 1));
     vt::Scene::instance()->add_light(light2);
 
-    vt::Scene::instance()->render();
+    vt::Scene::instance()->use_program();
     mesh->get_brush()->set_texture_index( 2);
     mesh2->get_brush()->set_texture_index(2);
     mesh3->get_brush()->set_texture_index(2);
