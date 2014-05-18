@@ -80,6 +80,9 @@ int init_resources()
     mesh6->set_origin(glm::vec3(0, -2.5, 0));      // cylinder
     mesh7->set_origin(glm::vec3(0, 1.5, 0));       // cone
 
+    mesh6->set_visible(false);
+    mesh7->set_visible(false);
+
     vt::Material* material = new vt::Material(
             "src/cube.v.glsl",
             "src/cube.f.glsl");
@@ -131,6 +134,7 @@ int init_resources()
     // blue light
     vt::Light* light2 = new vt::Light(origin+glm::vec3(0, 0, light_distance), glm::vec3(0, 0, 1));
     vt::Scene::instance()->add_light(light2);
+
     light2->set_enabled(false);
 
     vt::Scene::instance()->use_program();

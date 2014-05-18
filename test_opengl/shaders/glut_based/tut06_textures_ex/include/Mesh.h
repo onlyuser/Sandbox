@@ -30,6 +30,15 @@ public:
     void set_origin(glm::vec3 origin);
     void set_orient(glm::vec3 orient);
 
+    const bool get_visible() const
+    {
+        return m_visible;
+    }
+    void set_visible(bool visible)
+    {
+        m_visible = visible;
+    }
+
     glm::vec3  get_vert_coord(int index);
     void       set_vert_coord(int index, glm::vec3 coord);
     glm::vec3  get_vert_normal(int index);
@@ -62,6 +71,7 @@ public:
 private:
     size_t                  m_num_vertex;
     size_t                  m_num_tri;
+    bool                    m_visible;
     GLfloat*                m_vert_coords;
     GLfloat*                m_vert_normal;
     GLfloat*                m_vert_tangent;

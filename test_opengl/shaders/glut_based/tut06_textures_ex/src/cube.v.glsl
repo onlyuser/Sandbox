@@ -26,8 +26,9 @@ void main(void) {
     vec3 coord3d_world = vec3(modelview_xform*vec4(coord3d, 1));
     cameraVector = cameraPosition - coord3d_world;
 
-    for(int i = 0; i < NUM_LIGHTS; ++i)
+    for(int i = 0; i < NUM_LIGHTS; ++i) {
         lightVector[i] = lightPosition[i] - coord3d_world;
+    }
 
     gl_Position = mvp_xform*vec4(coord3d, 1);
     f_texcoord = texcoord;

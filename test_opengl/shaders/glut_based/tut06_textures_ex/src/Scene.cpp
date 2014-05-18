@@ -100,6 +100,9 @@ void Scene::render()
         i++;
     }
     for(meshes_t::const_iterator q = m_meshes.begin(); q != m_meshes.end(); q++) {
+        if(!(*q)->get_visible()) {
+            continue;
+        }
         (*q)->get_brush()->get_program()->use();
         (*q)->get_brush()->set_mvp_xform(m_camera->get_xform()*(*q)->get_xform());
         (*q)->get_brush()->set_modelview_xform((*q)->get_xform());
@@ -131,6 +134,9 @@ void Scene::render_vert_normals()
         glutWireSphere(light_radius, 4, 2);
     }
     for(meshes_t::const_iterator q = m_meshes.begin(); q != m_meshes.end(); q++) {
+        if(!(*q)->get_visible()) {
+            continue;
+        }
         glm::mat4 modelview_xform = m_camera->get_view_xform()*(*q)->get_xform();
         glLoadMatrixf((const GLfloat*) &modelview_xform[0]);
         glColor3f(0, 0, 1);

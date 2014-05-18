@@ -12,6 +12,7 @@ namespace vt {
 Mesh::Mesh(size_t num_vertex, size_t num_tri)
     : m_num_vertex(num_vertex),
       m_num_tri(num_tri),
+      m_visible(true),
       m_buffers_already_init(false),
       m_material(NULL),
       m_brush_already_init(false)
