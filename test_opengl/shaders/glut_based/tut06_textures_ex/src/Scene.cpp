@@ -107,19 +107,20 @@ void Scene::render()
 
 void Scene::render_vert_normals()
 {
-    const float axis_surface_distance = 0.05f;
-    const float axis_arm_length       = 0.1f;
+    const float axis_surface_distance = 0.05;
+    const float axis_arm_length       = 0.1;
+    const float light_radius          = 0.125;
 
     glUseProgram(0);
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf((const GLfloat*) &m_camera->get_projection_xform());
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
+    glColor3f(1, 1, 0);
     for(lights_t::const_iterator p = m_lights.begin(); p != m_lights.end(); p++) {
         glm::mat4 modelview_xform = m_camera->get_view_xform()*(*p)->get_xform();
         glLoadMatrixf((const GLfloat*) &modelview_xform[0]);
-        glColor3f((*p)->get_color().r, (*p)->get_color().g, (*p)->get_color().b);
-        glutWireSphere(0.25, 4, 2);
+        glutWireSphere(light_radius, 4, 2);
     }
     for(meshes_t::const_iterator q = m_meshes.begin(); q != m_meshes.end(); q++) {
         glm::mat4 modelview_xform = m_camera->get_view_xform()*(*q)->get_xform();

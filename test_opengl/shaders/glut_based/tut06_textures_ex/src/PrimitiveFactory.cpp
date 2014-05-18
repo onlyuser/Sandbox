@@ -46,8 +46,8 @@ Mesh* PrimitiveFactory::create_grid(int rows, int cols, float width, float heigh
     for(int row_pos = 0; row_pos <= rows; row_pos++) {
         for(int col_pos = 0; col_pos <= cols; col_pos++) {
             mesh->set_tex_coord(tex_vert_index++, glm::vec2(
-                    1.0f*(static_cast<float>(col_pos)/cols),
-                    1.0f*(static_cast<float>(row_pos)/rows)));
+                    static_cast<float>(col_pos)/cols,
+                    static_cast<float>(row_pos)/rows));
         }
     }
 
