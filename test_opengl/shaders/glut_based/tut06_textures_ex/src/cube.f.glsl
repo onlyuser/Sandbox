@@ -8,6 +8,7 @@ const float MAX_DIST = 20;
 const float MAX_DIST_SQUARED = MAX_DIST * MAX_DIST;
 
 uniform vec3 lightColor[NUM_LIGHTS];
+uniform int lightEnabled[NUM_LIGHTS];
 
 varying vec3 fragmentNormal;
 varying vec3 fragmentTangent;
@@ -33,6 +34,10 @@ void main(void) {
 
     // loop through each light
     for(int i = 0; i < NUM_LIGHTS; ++i) {
+        if(lightEnabled[i] == 0) {
+            continue;
+        }
+
         // calculate distance between 0.0 and 1.0
         float dist = min(dot(lightVector[i], lightVector[i]), MAX_DIST_SQUARED) / MAX_DIST_SQUARED;
         float distFactor = 1.0 - dist;

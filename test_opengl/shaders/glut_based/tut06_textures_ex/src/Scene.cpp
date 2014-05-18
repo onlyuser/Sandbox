@@ -18,8 +18,9 @@ Scene::Scene()
     m_camera_pos[0] = 0;
     m_camera_pos[1] = 0;
     m_camera_pos[2] = 0;
-    m_light_pos   = new GLfloat[NUM_LIGHTS*3];
-    m_light_color = new GLfloat[NUM_LIGHTS*3];
+    m_light_pos     = new GLfloat[NUM_LIGHTS*3];
+    m_light_color   = new GLfloat[NUM_LIGHTS*3];
+    m_light_enabled = new GLint[NUM_LIGHTS];
     for(int i = 0; i<NUM_LIGHTS; i++) {
         m_light_pos[i*3+0] = 0;
         m_light_pos[i*3+1] = 0;
@@ -27,6 +28,7 @@ Scene::Scene()
         m_light_color[i*3+0] = 0;
         m_light_color[i*3+1] = 0;
         m_light_color[i*3+2] = 0;
+        m_light_enabled[i] = 0;
     }
 }
 
@@ -56,6 +58,9 @@ Scene::~Scene()
     }
     if(m_light_color) {
         delete []m_light_color;
+    }
+    if(m_light_enabled) {
+        delete []m_light_enabled;
     }
 }
 
@@ -91,6 +96,7 @@ void Scene::render()
         m_light_color[i*3+0] = light_color.r;
         m_light_color[i*3+1] = light_color.g;
         m_light_color[i*3+2] = light_color.b;
+        m_light_enabled[i] = (*p)->get_enabled();
         i++;
     }
     for(meshes_t::const_iterator q = m_meshes.begin(); q != m_meshes.end(); q++) {
@@ -101,6 +107,7 @@ void Scene::render()
         (*q)->get_brush()->set_camera_pos(m_camera_pos);
         (*q)->get_brush()->set_light_pos(m_light_pos);
         (*q)->get_brush()->set_light_color(m_light_color);
+        (*q)->get_brush()->set_light_enabled(m_light_enabled);
         (*q)->get_brush()->render();
     }
 }

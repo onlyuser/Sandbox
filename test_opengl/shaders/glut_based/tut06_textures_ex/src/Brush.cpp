@@ -41,6 +41,7 @@ Brush::Brush(
     m_var_uniform_camera_pos         = std::unique_ptr<VarUniform>(m_program->get_var_uniform("cameraPosition"));
     m_var_uniform_light_pos          = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightPosition"));
     m_var_uniform_light_color        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightColor"));
+    m_var_uniform_light_enabled      = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightEnabled"));
 }
 
 void Brush::render()
@@ -134,6 +135,11 @@ void Brush::set_light_pos(GLfloat* light_pos_arr)
 void Brush::set_light_color(GLfloat* light_color_arr)
 {
     m_var_uniform_light_color->uniform_3fv(NUM_LIGHTS, light_color_arr);
+}
+
+void Brush::set_light_enabled(GLint* light_enabled_arr)
+{
+    m_var_uniform_light_enabled->uniform_1iv(NUM_LIGHTS, light_enabled_arr);
 }
 
 }

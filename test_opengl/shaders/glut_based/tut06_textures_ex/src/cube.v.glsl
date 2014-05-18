@@ -9,6 +9,8 @@ varying   vec2 f_texcoord;
 
 const int NUM_LIGHTS = 3;
 
+uniform int lightEnabled[NUM_LIGHTS];
+
 uniform vec3 cameraPosition;
 uniform vec3 lightPosition[NUM_LIGHTS];
 

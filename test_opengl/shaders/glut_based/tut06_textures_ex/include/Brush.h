@@ -39,6 +39,7 @@ public:
     void set_camera_pos(GLfloat* camera_pos_arr);
     void set_light_pos(GLfloat* light_pos_arr);
     void set_light_color(GLfloat* light_color_arr);
+    void set_light_enabled(GLint* light_enabled_arr);
 
 private:
     Program* m_program;
@@ -52,7 +53,8 @@ private:
             m_var_uniform_normal_map_texture,
             m_var_uniform_camera_pos,
             m_var_uniform_light_pos,
-            m_var_uniform_light_color;
+            m_var_uniform_light_color,
+            m_var_uniform_light_enabled;
     const textures_t &m_textures;
 };
 

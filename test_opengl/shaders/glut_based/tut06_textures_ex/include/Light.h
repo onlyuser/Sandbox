@@ -16,8 +16,18 @@ public:
         return m_color;
     }
 
+    const bool get_enabled() const
+    {
+        return m_enabled;
+    }
+    void set_enabled(bool enabled)
+    {
+        m_enabled = enabled;
+    }
+
 private:
     glm::vec3 m_color;
+    bool      m_enabled;
 
     void update_xform();
 };

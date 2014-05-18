@@ -72,6 +72,7 @@ private:
     GLfloat  m_camera_pos[3];
     GLfloat* m_light_pos;
     GLfloat* m_light_color;
+    GLint*   m_light_enabled;
 
     Scene();
     ~Scene();

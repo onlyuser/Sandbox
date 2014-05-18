@@ -5,7 +5,9 @@
 namespace vt {
 
 Light::Light(glm::vec3 origin, glm::vec3 color)
-    : XformObject(origin), m_color(color)
+    : XformObject(origin),
+      m_color(color),
+      m_enabled(true)
 {
 }
 
