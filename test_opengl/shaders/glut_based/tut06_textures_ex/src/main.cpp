@@ -42,7 +42,7 @@ const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int init_screen_width = 800, init_screen_height = 600;
 vt::Camera* camera;
-vt::Mesh* mesh, *mesh2, *mesh3, *mesh4, *mesh5;
+vt::Mesh* mesh, *mesh2, *mesh3, *mesh4, *mesh5, *mesh6, *mesh7;
 
 bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_drag;
@@ -67,12 +67,18 @@ int init_resources()
     vt::Scene::instance()->add_mesh(mesh4);
     mesh5 = vt::PrimitiveFactory::create_torus(16, 16, 0.5, 0.25);
     vt::Scene::instance()->add_mesh(mesh5);
+    mesh6 = vt::PrimitiveFactory::create_cylinder(16, 0.5, 1);
+    vt::Scene::instance()->add_mesh(mesh6);
+    mesh7 = vt::PrimitiveFactory::create_cone(16, 0.5, 1);
+    vt::Scene::instance()->add_mesh(mesh7);
 
     mesh->set_origin(glm::vec3(-0.5, -0.5, -0.5)); // box
     mesh2->set_scale(glm::vec3(0.5, 2, 3)); // scaled box
     mesh3->set_origin(glm::vec3(-5, -5, -1)); // grid
     mesh4->set_origin(glm::vec3(2, 0, 0)); // sphere
     mesh5->set_origin(glm::vec3(-2, 0, 0)); // torus
+    mesh6->set_origin(glm::vec3(0, -2.5, 0)); // cylinder
+    mesh7->set_origin(glm::vec3(0, 1.5, 0)); // cone
 
     vt::Material* material = new vt::Material(
             "src/cube.v.glsl",
@@ -83,6 +89,8 @@ int init_resources()
     mesh3->set_material(material);
     mesh4->set_material(material);
     mesh5->set_material(material);
+    mesh6->set_material(material);
+    mesh7->set_material(material);
 
     vt::Texture* texture = new vt::Texture(
             res_texture.pixel_data,
@@ -130,11 +138,15 @@ int init_resources()
     mesh3->get_brush()->set_texture_index(2);
     mesh4->get_brush()->set_texture_index(2);
     mesh5->get_brush()->set_texture_index(2);
+    mesh6->get_brush()->set_texture_index(2);
+    mesh7->get_brush()->set_texture_index(2);
     mesh->get_brush()->set_normal_map_texture_index( 3);
     mesh2->get_brush()->set_normal_map_texture_index(3);
     mesh3->get_brush()->set_normal_map_texture_index(3);
     mesh4->get_brush()->set_normal_map_texture_index(3);
     mesh5->get_brush()->set_normal_map_texture_index(3);
+    mesh6->get_brush()->set_normal_map_texture_index(3);
+    mesh7->get_brush()->set_normal_map_texture_index(3);
 
     return 1;
 }
@@ -211,6 +223,8 @@ void onKeyboard(unsigned char key, int x, int y)
             mesh3->get_brush()->set_texture_index(texture_index);
             mesh4->get_brush()->set_texture_index(texture_index);
             mesh5->get_brush()->set_texture_index(texture_index);
+            mesh6->get_brush()->set_texture_index(texture_index);
+            mesh7->get_brush()->set_texture_index(texture_index);
             break;
         case 'n':
             debug_vert_normals = !debug_vert_normals;
