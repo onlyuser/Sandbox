@@ -47,9 +47,10 @@ vt::Mesh* mesh, *mesh2, *mesh3, *mesh4, *mesh5;
 bool left_mouse_down = false, right_mouse_down = false;
 glm::vec2 prev_mouse_coord, mouse_drag;
 glm::vec3 prev_orient, orient, orbit_speed = glm::vec3(0, -0.5, -0.5);
-float prev_radius = 0, radius = 8, dolly_speed = 0.1;
+float prev_orbit_radius = 0, orbit_radius = 8, dolly_speed = 0.1, light_distance = 4;
 bool wire_frame_mode = false;
 bool show_fps = false;
+bool debug_vert_normals = false;
 
 int texture_index = 0;
 float prev_zoom = 0, zoom = 1, ortho_dolly_speed = 0.1;
@@ -108,19 +109,19 @@ int init_resources()
     material->add_texture(texture4);
 
     glm::vec3 origin = glm::vec3();
-    camera = new vt::Camera(origin+glm::vec3(0, 0, radius), origin);
+    camera = new vt::Camera(origin+glm::vec3(0, 0, orbit_radius), origin);
     vt::Scene::instance()->set_camera(camera);
 
     // red light
-    vt::Light* light0 = new vt::Light(origin+glm::vec3(radius, 0, 0), glm::vec3(1, 0, 0));
+    vt::Light* light0 = new vt::Light(origin+glm::vec3(light_distance, 0, 0), glm::vec3(1, 0, 0));
     vt::Scene::instance()->add_light(light0);
 
     // green light
-    vt::Light* light1 = new vt::Light(origin+glm::vec3(0, radius, 0), glm::vec3(0, 1, 0));
+    vt::Light* light1 = new vt::Light(origin+glm::vec3(0, light_distance, 0), glm::vec3(0, 1, 0));
     vt::Scene::instance()->add_light(light1);
 
     // blue light
-    vt::Light* light2 = new vt::Light(origin+glm::vec3(0, 0, radius), glm::vec3(0, 0, 1));
+    vt::Light* light2 = new vt::Light(origin+glm::vec3(0, 0, light_distance), glm::vec3(0, 0, 1));
     vt::Scene::instance()->add_light(light2);
 
     vt::Scene::instance()->render();
@@ -161,7 +162,7 @@ void onTick()
         std::stringstream ss;
         ss << std::setprecision(2) << std::fixed << fps << " FPS, "
             << "Mouse: {" << mouse_drag.x << ", " << mouse_drag.y << "}, "
-            << "Yaw=" << ORIENT_YAW(orient) << ", Pitch=" << ORIENT_PITCH(orient) << ", Radius=" << radius << ", "
+            << "Yaw=" << ORIENT_YAW(orient) << ", Pitch=" << ORIENT_PITCH(orient) << ", Radius=" << orbit_radius << ", "
             << "Zoom=" << zoom;
         glutSetWindowTitle(ss.str().c_str());
     }
@@ -174,6 +175,9 @@ void onDisplay()
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     vt::Scene::instance()->render();
+    if(debug_vert_normals) {
+        vt::Scene::instance()->render_vert_normals();
+    }
     glutSwapBuffers();
 }
 
@@ -207,6 +211,9 @@ void onKeyboard(unsigned char key, int x, int y)
             mesh3->get_brush()->set_texture_index(texture_index);
             mesh4->get_brush()->set_texture_index(texture_index);
             mesh5->get_brush()->set_texture_index(texture_index);
+            break;
+        case 'n':
+            debug_vert_normals = !debug_vert_normals;
             break;
         case 'p':
             if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {
@@ -255,7 +262,7 @@ void onMouse(int button, int state, int x, int y)
         if(button == GLUT_RIGHT_BUTTON) {
             right_mouse_down = true;
             if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {
-                prev_radius = radius;
+                prev_orbit_radius = orbit_radius;
             } else if (camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_ORTHO) {
                 prev_zoom = zoom;
             }
@@ -273,12 +280,12 @@ void onMotion(int x, int y)
     }
     if(left_mouse_down) {
         orient = prev_orient+glm::vec3(0, mouse_drag.y*ORIENT_PITCH(orbit_speed), mouse_drag.x*ORIENT_YAW(orbit_speed));
-        camera->orbit(orient, radius);
+        camera->orbit(orient, orbit_radius);
     }
     if(right_mouse_down) {
         if(camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_PERSPECTIVE) {
-            radius = prev_radius+mouse_drag.y*dolly_speed;
-            camera->orbit(orient, radius);
+            orbit_radius = prev_orbit_radius+mouse_drag.y*dolly_speed;
+            camera->orbit(orient, orbit_radius);
         } else if (camera->get_projection_mode() == vt::Camera::PROJECTION_MODE_ORTHO) {
             zoom = prev_zoom+mouse_drag.y*ortho_dolly_speed;
             camera->set_zoom(zoom);

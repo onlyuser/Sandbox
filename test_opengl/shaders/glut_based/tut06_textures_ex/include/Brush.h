@@ -26,6 +26,10 @@ public:
             Buffer*   vbo_vert_tangent,
             Buffer*   vbo_tex_coords,
             Buffer*   ibo_tri_indices);
+    Program *get_program() const
+    {
+        return m_program;
+    }
     void render();
     void set_mvp_xform(glm::mat4 mvp_xform);
     void set_modelview_xform(glm::mat4 modelview_xform);

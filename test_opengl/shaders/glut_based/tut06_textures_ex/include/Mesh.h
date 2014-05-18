@@ -19,6 +19,14 @@ public:
     Mesh(size_t num_vertex = 0, size_t num_tri = 0);
     virtual ~Mesh();
 
+    size_t get_num_vertex() const {
+        return m_num_vertex;
+    }
+
+    size_t get_num_tri() const {
+        return m_num_tri;
+    }
+
     void set_origin(glm::vec3 origin);
     void set_orient(glm::vec3 orient);
 

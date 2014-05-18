@@ -59,6 +59,7 @@ public:
 
     void reset();
     void render();
+    void render_vert_normals();
 
 private:
     Camera*     m_camera;

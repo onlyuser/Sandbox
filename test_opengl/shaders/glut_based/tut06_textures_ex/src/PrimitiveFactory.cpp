@@ -135,7 +135,7 @@ Mesh* PrimitiveFactory::create_torus(int longitude, int latitude, float radius_m
             glm::vec3 offset     = normal_major*radius_major+normal_minor*radius_minor;
             glm::vec3 offset_ccw = normal_major_ccw*radius_major+normal_minor*radius_minor;
             mesh->set_vert_coord(vert_index, offset);
-            mesh->set_vert_normal(vert_index, glm::normalize(offset));
+            mesh->set_vert_normal(vert_index, glm::normalize(normal_minor*radius_minor));
             mesh->set_vert_tangent(vert_index, glm::normalize(offset_ccw-offset));
             vert_index++;
         }
