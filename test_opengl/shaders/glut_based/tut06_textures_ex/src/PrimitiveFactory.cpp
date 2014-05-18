@@ -70,13 +70,13 @@ Mesh* PrimitiveFactory::create_grid(int rows, int cols, float width, float heigh
     return mesh;
 }
 
-Mesh* PrimitiveFactory::create_sphere(int longitude, int latitude, float radius)
+Mesh* PrimitiveFactory::create_sphere(int slices, int stacks, float radius)
 {
     const int ccw_delta = 1;
 
-    Mesh* mesh = create_grid(longitude, latitude);
-    int cols = longitude;
-    int rows = latitude;
+    int cols = slices;
+    int rows = stacks;
+    Mesh* mesh = create_grid(cols, rows);
 
     // ==============================
     // init mesh vertex/normal coords
@@ -105,13 +105,13 @@ Mesh* PrimitiveFactory::create_sphere(int longitude, int latitude, float radius)
     return mesh;
 }
 
-Mesh* PrimitiveFactory::create_torus(int longitude, int latitude, float radius_major, float radius_minor)
+Mesh* PrimitiveFactory::create_torus(int slices, int stacks, float radius_major, float radius_minor)
 {
     const int ccw_delta = 1;
 
-    Mesh* mesh = create_grid(longitude, latitude);
-    int cols = longitude;
-    int rows = latitude;
+    int cols = slices;
+    int rows = stacks;
+    Mesh* mesh = create_grid(cols, rows);
 
     // ==============================
     // init mesh vertex/normal coords

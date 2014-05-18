@@ -100,6 +100,9 @@ void Scene::render()
 
 void Scene::render_vert_normals()
 {
+    const float axis_surface_distance = 0.05f;
+    const float axis_arm_length       = 0.1f;
+
     glUseProgram(0);
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf((const GLfloat*) &m_camera->get_projection_xform());
@@ -117,31 +120,32 @@ void Scene::render_vert_normals()
         glColor3f(0, 0, 1);
         glBegin(GL_LINES);
         for (int i=0; i<static_cast<int>((*q)->get_num_vertex()); i++){
-            glm::vec3 vert_coord = (*q)->get_vert_coord(i);
-            glVertex3fv(&vert_coord.x);
-            glm::vec3 offset = (*q)->get_vert_normal(i);
-            vert_coord += offset*0.1f;
-            glVertex3fv(&vert_coord.x);
+            glm::vec3 v = (*q)->get_vert_coord(i);
+            v += (*q)->get_vert_normal(i)*axis_surface_distance;
+            glVertex3fv(&v.x);
+            v += (*q)->get_vert_normal(i)*axis_arm_length;
+            glVertex3fv(&v.x);
         }
         glEnd();
         glColor3f(1, 0, 0);
         glBegin(GL_LINES);
         for (int i=0; i<static_cast<int>((*q)->get_num_vertex()); i++){
-            glm::vec3 vert_coord = (*q)->get_vert_coord(i);
-            glVertex3fv(&vert_coord.x);
-            glm::vec3 offset = (*q)->get_vert_tangent(i);
-            vert_coord += offset*0.1f;
-            glVertex3fv(&vert_coord.x);
+            glm::vec3 v = (*q)->get_vert_coord(i);
+            v += (*q)->get_vert_normal(i)*axis_surface_distance;
+            glVertex3fv(&v.x);
+            v += (*q)->get_vert_tangent(i)*axis_arm_length;
+            glVertex3fv(&v.x);
         }
         glEnd();
         glColor3f(0, 1, 0);
         glBegin(GL_LINES);
         for (int i=0; i<static_cast<int>((*q)->get_num_vertex()); i++){
-            glm::vec3 vert_coord = (*q)->get_vert_coord(i);
-            glVertex3fv(&vert_coord.x);
-            glm::vec3 offset = glm::cross((*q)->get_vert_normal(i), (*q)->get_vert_tangent(i));
-            vert_coord += offset*0.1f;
-            glVertex3fv(&vert_coord.x);
+            glm::vec3 v = (*q)->get_vert_coord(i);
+            v += (*q)->get_vert_normal(i)*axis_surface_distance;
+            glVertex3fv(&v.x);
+            glm::vec3 bitangent = glm::normalize(glm::cross((*q)->get_vert_normal(i), (*q)->get_vert_tangent(i)));
+            v += bitangent*axis_arm_length;
+            glVertex3fv(&v.x);
         }
         glEnd();
     }
