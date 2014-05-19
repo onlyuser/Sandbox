@@ -81,8 +81,8 @@ int init_resources()
     mesh6->set_origin(glm::vec3(0, -2.5, 0));      // cylinder
     mesh7->set_origin(glm::vec3(0, 1.5, 0));       // cone
 
-    mesh6->set_visible(false);
-    mesh7->set_visible(false);
+//    mesh6->set_visible(false);
+//    mesh7->set_visible(false);
 
     vt::Material* material = new vt::Material(
             "src/cube.v.glsl",
