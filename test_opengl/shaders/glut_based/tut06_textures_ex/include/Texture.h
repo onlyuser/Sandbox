@@ -15,6 +15,9 @@ public:
     Texture(std::string png_filename);
     virtual ~Texture();
     void bind() const;
+
+private:
+    static bool read_png(std::string png_filename, void **pixel_data, size_t *width, size_t *height);
 };
 
 }

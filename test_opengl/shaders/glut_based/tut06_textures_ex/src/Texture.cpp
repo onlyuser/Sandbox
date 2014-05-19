@@ -28,13 +28,47 @@ Texture::Texture(const void* pixel_data, size_t width, size_t height)
 
 Texture::Texture(std::string png_filename)
 {
+    void *pixel_data = NULL;
+    size_t width;
+    size_t height;
+
+    read_png(png_filename, &pixel_data, &width, &height);
+    if(!pixel_data) {
+        return;
+    }
+
+    // now generate the opengL m_id object
+    glGenTextures(1, &m_id);
+    glBindTexture(GL_TEXTURE_2D, m_id);
+    glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*) pixel_data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    delete[] pixel_data;
+}
+
+Texture::~Texture()
+{
+    glDeleteTextures(1, &m_id);
+}
+
+void Texture::bind() const
+{
+    glBindTexture(GL_TEXTURE_2D, m_id);
+}
+
+bool Texture::read_png(std::string png_filename, void **pixel_data, size_t *width, size_t *height)
+{
+    if(!pixel_data || !width || !height) {
+        return false;
+    }
+
     // header for testing if it is a png
     png_byte header[8];
 
     // open file as binary
     FILE *fp = fopen(png_filename.c_str(), "rb");
     if (!fp) {
-        return;
+        return false;
     }
 
     // read the header
@@ -44,7 +78,7 @@ Texture::Texture(std::string png_filename)
     int is_png = !png_sig_cmp(header, 0, 8);
     if (!is_png) {
         fclose(fp);
-        return;
+        return false;
     }
 
     // create png struct
@@ -52,7 +86,7 @@ Texture::Texture(std::string png_filename)
         NULL, NULL);
     if (!png_ptr) {
         fclose(fp);
-        return;
+        return false;
     }
 
     // create png info struct
@@ -60,7 +94,7 @@ Texture::Texture(std::string png_filename)
     if (!info_ptr) {
         png_destroy_read_struct(&png_ptr, (png_infopp) NULL, (png_infopp) NULL);
         fclose(fp);
-        return;
+        return false;
     }
 
     // create png info struct
@@ -68,14 +102,14 @@ Texture::Texture(std::string png_filename)
     if (!end_info) {
         png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp) NULL);
         fclose(fp);
-        return;
+        return false;
     }
 
     // png error stuff, not sure libpng man suggests this
     if (setjmp(png_jmpbuf(png_ptr))) {
         png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
         fclose(fp);
-        return;
+        return false;
     }
 
     // init png reading
@@ -94,10 +128,6 @@ Texture::Texture(std::string png_filename)
     // get info about png
     png_get_IHDR(png_ptr, info_ptr, &twidth, &theight, &bit_depth, &color_type, NULL, NULL, NULL);
 
-    // update width and height based on png info
-    size_t width = twidth;
-    size_t height = theight;
-
     // update the png info struct.
     png_read_update_info(png_ptr, info_ptr);
 
@@ -105,51 +135,42 @@ Texture::Texture(std::string png_filename)
     int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
 
     // allocate the image_data as a big block, to be given to opengl
-    png_byte *image_data = new png_byte[rowbytes * height];
+    png_byte *image_data = new png_byte[rowbytes * theight];
     if (!image_data) {
         // clean up memory and close stuff
         png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
         fclose(fp);
-        return;
+        return false;
     }
 
     // row_pointers is for pointing to image_data for reading the png with libpng
-    png_bytep *row_pointers = new png_bytep[height];
+    png_bytep *row_pointers = new png_bytep[theight];
     if (!row_pointers) {
         //clean up memory and close stuff
         png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
         delete[] image_data;
         fclose(fp);
-        return;
+        return false;
     }
     // set the individual row_pointers to point at the correct offsets of image_data
-    for (int i = 0; i < static_cast<int>(height); ++i)
-        row_pointers[height - 1 - i] = image_data + i * rowbytes;
+    for (int i = 0; i < static_cast<int>(theight); ++i)
+        row_pointers[theight - 1 - i] = image_data + i * rowbytes;
 
     //read the png into image_data through row_pointers
     png_read_image(png_ptr, row_pointers);
 
-    // now generate the opengL m_id object
-    glGenTextures(1, &m_id);
-    glBindTexture(GL_TEXTURE_2D, m_id);
-    glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*) image_data);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    delete[] row_pointers;
+    fclose(fp);
 
     // clean up memory and close stuff
     png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-    delete[] image_data;
-    delete[] row_pointers;
-    fclose(fp);
-}
 
-Texture::~Texture()
-{
-    glDeleteTextures(1, &m_id);
-}
+    // update width and height based on png info
+    *pixel_data = image_data;
+    *width = twidth;
+    *height = theight;
 
-void Texture::bind() const
-{
-    glBindTexture(GL_TEXTURE_2D, m_id);
+    return true;
 }
 
 }
