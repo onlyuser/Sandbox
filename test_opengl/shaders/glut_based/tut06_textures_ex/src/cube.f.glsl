@@ -14,6 +14,7 @@ uniform int lightEnabled[NUM_LIGHTS];
 
 varying vec3 fragmentNormal;
 varying vec3 fragmentTangent;
+varying mat3 tbn_xform;
 varying vec3 cameraVector;
 varying vec3 lightVector[NUM_LIGHTS];
 
@@ -22,11 +23,7 @@ void main(void) {
     vec3 diffuse = vec3(0.0, 0.0, 0.0);
     vec3 specular = vec3(0.0, 0.0, 0.0);
 
-    // normalize the fragment normal and camera direction
-    vec3 normal = normalize(fragmentNormal);
-    vec3 tangent = normalize(fragmentTangent);
-    vec3 bitangent = normalize(cross(normal, tangent));
-    mat3 tbn_xform = mat3(tangent, bitangent, normal);
+    // normalize the camera direction
     vec3 cameraDir = normalize(cameraVector);
 
     vec2 flipped_texcoord = vec2(f_texcoord.x, 1-f_texcoord.y);
@@ -58,6 +55,4 @@ void main(void) {
 
     vec4 sample = texture2D(mytexture, flipped_texcoord); //vec4(1.0, 1.0, 1.0, 1.0);
     gl_FragColor = vec4(clamp(sample.rgb * (diffuse + AMBIENT) + specular, 0.0, 1.0), sample.a);
-
-    //gl_FragColor = vec4(normal, 1);
 }
