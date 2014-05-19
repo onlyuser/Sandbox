@@ -15,19 +15,16 @@ uniform int lightEnabled[NUM_LIGHTS];
 uniform vec3 cameraPosition;
 uniform vec3 lightPosition[NUM_LIGHTS];
 
-varying vec3 fragmentNormal;
-varying vec3 fragmentTangent;
 varying mat3 tbn_xform;
 varying vec3 cameraVector;
 varying vec3 lightVector[NUM_LIGHTS];
 
 void main(void) {
-    fragmentNormal  = vec3(normal_xform*vec4(norm3d, 0));
-    fragmentTangent = vec3(normal_xform*vec4(tangent3d, 0));
-    vec3 normal = normalize(fragmentNormal);
-    vec3 tangent = normalize(fragmentTangent);
+    vec3 normal = normalize(vec3(normal_xform*vec4(norm3d, 0)));
+    vec3 tangent = normalize(vec3(normal_xform*vec4(tangent3d, 0)));
     vec3 bitangent = normalize(cross(normal, tangent));
     tbn_xform = mat3(tangent, bitangent, normal);
+
     vec3 coord3d_world = vec3(modelview_xform*vec4(coord3d, 1));
     cameraVector = cameraPosition - coord3d_world;
 

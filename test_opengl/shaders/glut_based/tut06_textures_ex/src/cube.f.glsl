@@ -12,8 +12,6 @@ const float MAX_DIST_SQUARED = MAX_DIST * MAX_DIST;
 uniform vec3 lightColor[NUM_LIGHTS];
 uniform int lightEnabled[NUM_LIGHTS];
 
-varying vec3 fragmentNormal;
-varying vec3 fragmentTangent;
 varying mat3 tbn_xform;
 varying vec3 cameraVector;
 varying vec3 lightVector[NUM_LIGHTS];
