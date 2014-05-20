@@ -13,7 +13,8 @@
 namespace vt {
 
 Scene::Scene()
-    : m_camera(NULL)
+    : m_camera(NULL),
+      m_skybox(NULL)
 {
     m_camera_pos[0] = 0;
     m_camera_pos[1] = 0;
@@ -98,6 +99,18 @@ void Scene::render()
         m_light_color[i*3+2] = light_color.b;
         m_light_enabled[i] = (*p)->get_enabled();
         i++;
+    }
+    if(m_skybox) {
+        m_skybox->get_brush()->get_program()->use();
+        m_skybox->get_brush()->set_mvp_xform(m_camera->get_xform()*m_skybox->get_xform());
+        m_skybox->get_brush()->set_modelview_xform(m_skybox->get_xform());
+        m_skybox->get_brush()->set_normal_xform(m_skybox->get_normal_xform());
+        m_skybox->get_brush()->set_camera_pos(m_camera_pos);
+        m_skybox->get_brush()->set_light_pos(m_light_pos);
+        m_skybox->get_brush()->set_light_color(m_light_color);
+        m_skybox->get_brush()->set_light_enabled(m_light_enabled);
+        m_skybox->get_brush()->set_light_count(m_lights.size());
+        m_skybox->get_brush()->render();
     }
     for(meshes_t::const_iterator q = m_meshes.begin(); q != m_meshes.end(); q++) {
         if(!(*q)->get_visible()) {

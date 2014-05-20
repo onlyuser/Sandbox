@@ -42,7 +42,7 @@ const char* DEFAULT_CAPTION = "My Textured Cube";
 
 int init_screen_width = 800, init_screen_height = 600;
 vt::Camera* camera;
-vt::Mesh* mesh, *mesh2, *mesh3, *mesh4, *mesh5, *mesh6, *mesh7;
+vt::Mesh* skybox, *mesh, *mesh2, *mesh3, *mesh4, *mesh5, *mesh6, *mesh7;
 vt::Light* light, *light2, *light3;
 
 bool left_mouse_down = false, right_mouse_down = false;
@@ -58,9 +58,11 @@ float prev_zoom = 0, zoom = 1, ortho_dolly_speed = 0.1;
 
 int init_resources()
 {
-    mesh = vt::PrimitiveFactory::create(vt::PrimitiveFactory::PRIMITIVE_TYPE_UNIT_BOX);
+//    skybox = vt::PrimitiveFactory::create_box(10, 10, 10, true);
+//    vt::Scene::instance()->set_skybox(skybox);
+    mesh = vt::PrimitiveFactory::create_box();
     vt::Scene::instance()->add_mesh(mesh);
-    mesh2 = vt::PrimitiveFactory::create(vt::PrimitiveFactory::PRIMITIVE_TYPE_UNIT_BOX);
+    mesh2 = vt::PrimitiveFactory::create_box();
     vt::Scene::instance()->add_mesh(mesh2);
     mesh3 = vt::PrimitiveFactory::create_grid(4, 4, 10, 10);
     vt::Scene::instance()->add_mesh(mesh3);
@@ -73,6 +75,7 @@ int init_resources()
     mesh7 = vt::PrimitiveFactory::create_cone(16, 0.5, 1);
     vt::Scene::instance()->add_mesh(mesh7);
 
+//    skybox->set_origin(glm::vec3(-5, -5, -5));     // skybox
     mesh->set_origin(glm::vec3(-0.5, -0.5, -0.5)); // box
     mesh2->set_scale(glm::vec3(0.5, 2, 3));        // scaled box
     mesh3->set_origin(glm::vec3(-5, -5, -1));      // grid
@@ -88,6 +91,11 @@ int init_resources()
             "src/cube.v.glsl",
             "src/cube.f.glsl");
     vt::Scene::instance()->add_material(material);
+//    vt::Material* skybox_material = new vt::Material(
+//            "src/skybox.v.glsl",
+//            "src/skybox.f.glsl");
+//    vt::Scene::instance()->add_material(skybox_material);
+//    skybox->set_material(skybox_material);
     mesh->set_material(material);
     mesh2->set_material(material);
     mesh3->set_material(material);
@@ -137,6 +145,7 @@ int init_resources()
     vt::Scene::instance()->add_light(light3);
 
     vt::Scene::instance()->use_program();
+    //skybox->get_brush()->set_texture_index(2);
     mesh->get_brush()->set_texture_index( 2);
     mesh2->get_brush()->set_texture_index(2);
     mesh3->get_brush()->set_texture_index(2);
@@ -144,6 +153,7 @@ int init_resources()
     mesh5->get_brush()->set_texture_index(2);
     mesh6->get_brush()->set_texture_index(2);
     mesh7->get_brush()->set_texture_index(2);
+    //skybox->get_brush()->set_normal_map_texture_index(3);
     mesh->get_brush()->set_normal_map_texture_index( 3);
     mesh2->get_brush()->set_normal_map_texture_index(3);
     mesh3->get_brush()->set_normal_map_texture_index(3);

@@ -10,7 +10,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <memory> // std::unique_ptr
 
-#define NUM_LIGHTS 3
+#define NUM_LIGHTS 8
 
 namespace vt {
 

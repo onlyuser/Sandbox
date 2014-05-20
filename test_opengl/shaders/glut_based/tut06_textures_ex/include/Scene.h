@@ -55,6 +55,15 @@ public:
         m_textures.push_back(texture);
     }
 
+    void set_skybox(Mesh* skybox)
+    {
+        m_skybox = skybox;
+    }
+    Mesh* get_skybox() const
+    {
+        return m_skybox;
+    }
+
     void reset();
     void use_program();
     void render();
@@ -62,6 +71,7 @@ public:
 
 private:
     Camera*     m_camera;
+    Mesh*       m_skybox;
     lights_t    m_lights;
     meshes_t    m_meshes;
     materials_t m_materials;

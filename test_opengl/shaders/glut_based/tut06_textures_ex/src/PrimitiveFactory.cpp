@@ -10,7 +10,7 @@ Mesh* PrimitiveFactory::create(PrimitiveFactory::primitive_type_t _type)
 {
     switch(_type)
     {
-        case PRIMITIVE_TYPE_UNIT_BOX: return create_unit_box();
+        case PRIMITIVE_TYPE_UNIT_BOX: return create_box();
         default:
             return new Mesh();
     }
@@ -239,7 +239,7 @@ Mesh* PrimitiveFactory::create_torus(int slices, int stacks, float radius_major,
     return mesh;
 }
 
-Mesh* PrimitiveFactory::create_unit_box()
+Mesh* PrimitiveFactory::create_box(float width, float height, float length, bool skybox)
 {
     Mesh* mesh = new Mesh(24, 12);
 
@@ -248,60 +248,60 @@ Mesh* PrimitiveFactory::create_unit_box()
     // ==============================
 
     // right
-    mesh->set_vert_coord(0, glm::vec3(0, 0, 0));
-    mesh->set_vert_coord(1, glm::vec3(0, 0, 1));
-    mesh->set_vert_coord(2, glm::vec3(0, 1, 1));
-    mesh->set_vert_coord(3, glm::vec3(0, 1, 0));
+    mesh->set_vert_coord(0, glm::vec3(0, 0,      0));
+    mesh->set_vert_coord(1, glm::vec3(0, 0,      length));
+    mesh->set_vert_coord(2, glm::vec3(0, height, length));
+    mesh->set_vert_coord(3, glm::vec3(0, height, 0));
     for(int i=0; i<4; i++) {
         mesh->set_vert_normal( 0*4+i, glm::vec3(-1, 0, 0));
         mesh->set_vert_tangent(0*4+i, glm::vec3( 0, 0, 1));
     }
 
     // front
-    mesh->set_vert_coord(4, glm::vec3(0, 0, 1));
-    mesh->set_vert_coord(5, glm::vec3(1, 0, 1));
-    mesh->set_vert_coord(6, glm::vec3(1, 1, 1));
-    mesh->set_vert_coord(7, glm::vec3(0, 1, 1));
+    mesh->set_vert_coord(4, glm::vec3(0,     0,      length));
+    mesh->set_vert_coord(5, glm::vec3(width, 0,      length));
+    mesh->set_vert_coord(6, glm::vec3(width, height, length));
+    mesh->set_vert_coord(7, glm::vec3(0,     height, length));
     for(int i=0; i<4; i++) {
         mesh->set_vert_normal( 1*4+i, glm::vec3(0, 0, 1));
         mesh->set_vert_tangent(1*4+i, glm::vec3(1, 0, 0));
     }
 
     // left
-    mesh->set_vert_coord( 8, glm::vec3(1, 0, 1));
-    mesh->set_vert_coord( 9, glm::vec3(1, 0, 0));
-    mesh->set_vert_coord(10, glm::vec3(1, 1, 0));
-    mesh->set_vert_coord(11, glm::vec3(1, 1, 1));
+    mesh->set_vert_coord( 8, glm::vec3(width, 0,      length));
+    mesh->set_vert_coord( 9, glm::vec3(width, 0,      0));
+    mesh->set_vert_coord(10, glm::vec3(width, height, 0));
+    mesh->set_vert_coord(11, glm::vec3(width, height, length));
     for(int i=0; i<4; i++) {
         mesh->set_vert_normal( 2*4+i, glm::vec3(1, 0,  0));
         mesh->set_vert_tangent(2*4+i, glm::vec3(0, 0, -1));
     }
 
     // back
-    mesh->set_vert_coord(12, glm::vec3(1, 0, 0));
-    mesh->set_vert_coord(13, glm::vec3(0, 0, 0));
-    mesh->set_vert_coord(14, glm::vec3(0, 1, 0));
-    mesh->set_vert_coord(15, glm::vec3(1, 1, 0));
+    mesh->set_vert_coord(12, glm::vec3(width, 0,      0));
+    mesh->set_vert_coord(13, glm::vec3(0,     0,      0));
+    mesh->set_vert_coord(14, glm::vec3(0,     height, 0));
+    mesh->set_vert_coord(15, glm::vec3(width, height, 0));
     for(int i=0; i<4; i++) {
         mesh->set_vert_normal( 3*4+i, glm::vec3( 0, 0, -1));
         mesh->set_vert_tangent(3*4+i, glm::vec3(-1, 0,  0));
     }
 
     // top
-    mesh->set_vert_coord(16, glm::vec3(1, 1, 0));
-    mesh->set_vert_coord(17, glm::vec3(0, 1, 0));
-    mesh->set_vert_coord(18, glm::vec3(0, 1, 1));
-    mesh->set_vert_coord(19, glm::vec3(1, 1, 1));
+    mesh->set_vert_coord(16, glm::vec3(width, height, 0));
+    mesh->set_vert_coord(17, glm::vec3(0,     height, 0));
+    mesh->set_vert_coord(18, glm::vec3(0,     height, length));
+    mesh->set_vert_coord(19, glm::vec3(width, height, length));
     for(int i=0; i<4; i++) {
         mesh->set_vert_normal( 4*4+i, glm::vec3( 0, 1, 0));
         mesh->set_vert_tangent(4*4+i, glm::vec3(-1, 0, 0));
     }
 
     // bottom
-    mesh->set_vert_coord(20, glm::vec3(0, 0, 0));
-    mesh->set_vert_coord(21, glm::vec3(1, 0, 0));
-    mesh->set_vert_coord(22, glm::vec3(1, 0, 1));
-    mesh->set_vert_coord(23, glm::vec3(0, 0, 1));
+    mesh->set_vert_coord(20, glm::vec3(0,     0, 0));
+    mesh->set_vert_coord(21, glm::vec3(width, 0, 0));
+    mesh->set_vert_coord(22, glm::vec3(width, 0, length));
+    mesh->set_vert_coord(23, glm::vec3(0,     0, length));
     for(int i=0; i<4; i++) {
         mesh->set_vert_normal( 5*4+i, glm::vec3(0, -1, 0));
         mesh->set_vert_tangent(5*4+i, glm::vec3(1,  0, 0));
@@ -351,6 +351,16 @@ Mesh* PrimitiveFactory::create_unit_box()
     // bottom
     mesh->set_tri_indices(10, glm::uvec3(20, 21, 22));
     mesh->set_tri_indices(11, glm::uvec3(22, 23, 20));
+
+    if(skybox) {
+        for(int i = 0; i<6; i++) {
+            glm::uvec3 first_vec  = mesh->get_tri_indices(i*2+0);
+            glm::uvec3 second_vec = mesh->get_tri_indices(i*2+1);
+            std::swap(first_vec[1], second_vec[1]);
+            mesh->set_tri_indices(i*2+0, first_vec);
+            mesh->set_tri_indices(i*2+1, second_vec);
+        }
+    }
 
     return mesh;
 }
