@@ -106,6 +106,45 @@ Mesh* PrimitiveFactory::create_sphere(int slices, int stacks, float radius)
     return mesh;
 }
 
+Mesh* PrimitiveFactory::create_hemisphere(int slices, int stacks, float radius)
+{
+    const int ccw_delta = 1;
+
+    int cols = slices;
+    int rows = stacks*0.5+1;
+    Mesh* mesh = create_grid(cols, rows);
+
+    // ==============================
+    // init mesh vertex/normal coords
+    // ==============================
+
+    int vert_index = 0;
+    for(int row_pos = 0; row_pos <= rows; row_pos++) {
+        for(int col_pos = 0; col_pos <= cols; col_pos++) {
+            glm::vec3 normal = orient_to_offset(glm::vec3(
+                    0,
+                    -(static_cast<float>(row_pos-1)/(rows-1)*90), // pitch
+                    static_cast<float>(col_pos)/cols*360));       // yaw
+            glm::vec3 offset = normal*radius;
+            glm::vec3 normal_ccw = orient_to_offset(glm::vec3(
+                    0,
+                    -(static_cast<float>(row_pos-1)/(rows-1)*90),     // pitch
+                    static_cast<float>(col_pos)/cols*360+ccw_delta)); // yaw
+            glm::vec3 offset_ccw = normal_ccw*radius;
+            mesh->set_vert_normal(vert_index, glm::normalize(offset));
+            mesh->set_vert_tangent(vert_index, glm::normalize(offset_ccw-offset));
+            if(row_pos == 0) {
+                offset = glm::vec3(0, 0, 0);
+                mesh->set_vert_normal(vert_index, glm::vec3(0, -1, 0));
+            }
+            mesh->set_vert_coord(vert_index, offset);
+            vert_index++;
+        }
+    }
+
+    return mesh;
+}
+
 Mesh* PrimitiveFactory::create_cylinder(int slices, float radius, float height)
 {
     const int ccw_delta = 1;
