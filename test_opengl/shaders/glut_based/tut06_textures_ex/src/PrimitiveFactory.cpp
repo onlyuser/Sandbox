@@ -73,8 +73,6 @@ Mesh* PrimitiveFactory::create_grid(int cols, int rows, float width, float heigh
 
 Mesh* PrimitiveFactory::create_sphere(int slices, int stacks, float radius)
 {
-    const int ccw_delta = 1;
-
     int cols = slices;
     int rows = stacks;
     Mesh* mesh = create_grid(cols, rows);
@@ -91,14 +89,12 @@ Mesh* PrimitiveFactory::create_sphere(int slices, int stacks, float radius)
                     -(static_cast<float>(row_pos)/rows*180-90), // pitch
                     static_cast<float>(col_pos)/cols*360));     // yaw
             glm::vec3 offset = normal*radius;
-            glm::vec3 normal_ccw = orient_to_offset(glm::vec3(
-                    0,
-                    -(static_cast<float>(row_pos)/rows*180-90),       // pitch
-                    static_cast<float>(col_pos)/cols*360+ccw_delta)); // yaw
-            glm::vec3 offset_ccw = normal_ccw*radius;
             mesh->set_vert_coord(vert_index, offset);
             mesh->set_vert_normal(vert_index, glm::normalize(offset));
-            mesh->set_vert_tangent(vert_index, glm::normalize(offset_ccw-offset));
+            mesh->set_vert_tangent(vert_index, orient_to_offset(glm::vec3(
+                    0,
+                    0,                                          // pitch
+                    static_cast<float>(col_pos)/cols*360+90))); // yaw
             vert_index++;
         }
     }
@@ -108,8 +104,6 @@ Mesh* PrimitiveFactory::create_sphere(int slices, int stacks, float radius)
 
 Mesh* PrimitiveFactory::create_hemisphere(int slices, int stacks, float radius)
 {
-    const int ccw_delta = 1;
-
     int cols = slices;
     int rows = stacks*0.5+1;
     Mesh* mesh = create_grid(cols, rows);
@@ -121,23 +115,22 @@ Mesh* PrimitiveFactory::create_hemisphere(int slices, int stacks, float radius)
     int vert_index = 0;
     for(int row_pos = 0; row_pos <= rows; row_pos++) {
         for(int col_pos = 0; col_pos <= cols; col_pos++) {
-            glm::vec3 normal = orient_to_offset(glm::vec3(
-                    0,
-                    -(static_cast<float>(row_pos-1)/(rows-1)*90), // pitch
-                    static_cast<float>(col_pos)/cols*360));       // yaw
-            glm::vec3 offset = normal*radius;
-            glm::vec3 normal_ccw = orient_to_offset(glm::vec3(
-                    0,
-                    -(static_cast<float>(row_pos-1)/(rows-1)*90),     // pitch
-                    static_cast<float>(col_pos)/cols*360+ccw_delta)); // yaw
-            glm::vec3 offset_ccw = normal_ccw*radius;
-            mesh->set_vert_normal(vert_index, glm::normalize(offset));
-            mesh->set_vert_tangent(vert_index, glm::normalize(offset_ccw-offset));
             if(row_pos == 0) {
-                offset = glm::vec3(0, 0, 0);
+                mesh->set_vert_coord(vert_index, glm::vec3(0, 0, 0));
                 mesh->set_vert_normal(vert_index, glm::vec3(0, -1, 0));
+            } else {
+                glm::vec3 offset = orient_to_offset(glm::vec3(
+                        0,
+                        -(static_cast<float>(row_pos-1)/(rows-1)*90), // pitch
+                        static_cast<float>(col_pos)/cols*360))        // yaw
+                        *radius;
+                mesh->set_vert_coord(vert_index, offset);
+                mesh->set_vert_normal(vert_index, glm::normalize(offset));
             }
-            mesh->set_vert_coord(vert_index, offset);
+            mesh->set_vert_tangent(vert_index, orient_to_offset(glm::vec3(
+                    0,
+                    0,                                          // pitch
+                    static_cast<float>(col_pos)/cols*360+90))); // yaw
             vert_index++;
         }
     }
@@ -147,8 +140,6 @@ Mesh* PrimitiveFactory::create_hemisphere(int slices, int stacks, float radius)
 
 Mesh* PrimitiveFactory::create_cylinder(int slices, float radius, float height)
 {
-    const int ccw_delta = 1;
-
     int cols = slices;
     int rows = 3;
     Mesh* mesh = create_grid(cols, rows);
@@ -160,33 +151,34 @@ Mesh* PrimitiveFactory::create_cylinder(int slices, float radius, float height)
     int vert_index = 0;
     for(int row_pos = 0; row_pos <= rows; row_pos++) {
         for(int col_pos = 0; col_pos <= cols; col_pos++) {
-            glm::vec3 normal = orient_to_offset(glm::vec3(
-                    0,
-                    0,                                      // pitch
-                    static_cast<float>(col_pos)/cols*360)); // yaw
-            glm::vec3 offset = normal*radius;
-            glm::vec3 normal_ccw = orient_to_offset(glm::vec3(
-                    0,
-                    0,                                                // pitch
-                    static_cast<float>(col_pos)/cols*360+ccw_delta)); // yaw
-            glm::vec3 offset_ccw = normal_ccw*radius;
-            mesh->set_vert_normal(vert_index, glm::normalize(offset));
-            mesh->set_vert_tangent(vert_index, glm::normalize(offset_ccw-offset));
             if(row_pos == 0) {
-                offset = glm::vec3(0, 0, 0);
+                mesh->set_vert_coord(vert_index, glm::vec3(0, 0, 0));
                 mesh->set_vert_normal(vert_index, glm::vec3(0, -1, 0));
             } else if(row_pos == 1) {
-                offset.y     = 0;
-                offset_ccw.y = 0;
+                glm::vec3 offset = orient_to_offset(glm::vec3(
+                        0,
+                        0,                                     // pitch
+                        static_cast<float>(col_pos)/cols*360)) // yaw
+                        *radius;
+                mesh->set_vert_coord(vert_index, glm::vec3(offset.x, 0, offset.z));
+                mesh->set_vert_normal(vert_index, glm::normalize(offset));
             }
             if(row_pos == 3) {
-                offset = glm::vec3(0, height, 0);
+                mesh->set_vert_coord(vert_index, glm::vec3(0, height, 0));
                 mesh->set_vert_normal(vert_index, glm::vec3(0, 1, 0));
             } else if(row_pos == 2) {
-                offset.y     = height;
-                offset_ccw.y = height;
+                glm::vec3 offset = orient_to_offset(glm::vec3(
+                        0,
+                        0,                                     // pitch
+                        static_cast<float>(col_pos)/cols*360)) // yaw
+                        *radius;
+                mesh->set_vert_coord(vert_index, glm::vec3(offset.x, height, offset.z));
+                mesh->set_vert_normal(vert_index, glm::normalize(offset));
             }
-            mesh->set_vert_coord(vert_index, offset);
+            mesh->set_vert_tangent(vert_index, orient_to_offset(glm::vec3(
+                    0,
+                    0,                                          // pitch
+                    static_cast<float>(col_pos)/cols*360+90))); // yaw
             vert_index++;
         }
     }
@@ -196,8 +188,6 @@ Mesh* PrimitiveFactory::create_cylinder(int slices, float radius, float height)
 
 Mesh* PrimitiveFactory::create_cone(int slices, float radius, float height)
 {
-    const int ccw_delta = 1;
-
     int cols = slices;
     int rows = 2;
     Mesh* mesh = create_grid(cols, rows);
@@ -210,28 +200,31 @@ Mesh* PrimitiveFactory::create_cone(int slices, float radius, float height)
     int vert_index = 0;
     for(int row_pos = 0; row_pos <= rows; row_pos++) {
         for(int col_pos = 0; col_pos <= cols; col_pos++) {
-            glm::vec3 normal = orient_to_offset(glm::vec3(
-                    0,
-                    0,                                      // pitch
-                    static_cast<float>(col_pos)/cols*360)); // yaw
-            glm::vec3 offset = normal*radius;
-            glm::vec3 normal_ccw = orient_to_offset(glm::vec3(
-                    0,
-                    0,                                                // pitch
-                    static_cast<float>(col_pos)/cols*360+ccw_delta)); // yaw
-            glm::vec3 offset_ccw = normal_ccw*radius;
-            mesh->set_vert_tangent(vert_index, glm::normalize(offset_ccw-offset));
             if(row_pos == 0) {
-                offset = glm::vec3(0, 0, 0);
+                mesh->set_vert_coord(vert_index, glm::vec3(0, 0, 0));
                 mesh->set_vert_normal(vert_index, glm::vec3(0, -1, 0));
             } else if(row_pos == 1) {
+                glm::vec3 offset = orient_to_offset(glm::vec3(
+                        0,
+                        0,                                     // pitch
+                        static_cast<float>(col_pos)/cols*360)) // yaw
+                        *radius;
+                mesh->set_vert_coord(vert_index, offset);
                 mesh->set_vert_normal(vert_index, glm::normalize(offset+glm::vec3(0, rim_y_offset, 0)));
             }
             if(row_pos == 2) {
+                glm::vec3 offset = orient_to_offset(glm::vec3(
+                        0,
+                        0,                                     // pitch
+                        static_cast<float>(col_pos)/cols*360)) // yaw
+                        *radius;
+                mesh->set_vert_coord(vert_index, glm::vec3(0, height, 0));
                 mesh->set_vert_normal(vert_index, glm::normalize(offset+glm::vec3(0, rim_y_offset, 0)));
-                offset = glm::vec3(0, height, 0);
             }
-            mesh->set_vert_coord(vert_index, offset);
+            mesh->set_vert_tangent(vert_index, orient_to_offset(glm::vec3(
+                    0,
+                    0,                                          // pitch
+                    static_cast<float>(col_pos)/cols*360+90))); // yaw
             vert_index++;
         }
     }
@@ -241,8 +234,6 @@ Mesh* PrimitiveFactory::create_cone(int slices, float radius, float height)
 
 Mesh* PrimitiveFactory::create_torus(int slices, int stacks, float radius_major, float radius_minor)
 {
-    const int ccw_delta = 1;
-
     int cols = slices;
     int rows = stacks;
     Mesh* mesh = create_grid(cols, rows);
@@ -258,19 +249,16 @@ Mesh* PrimitiveFactory::create_torus(int slices, int stacks, float radius_major,
                     0,
                     0,                                      // pitch
                     static_cast<float>(col_pos)/cols*360)); // yaw
-            glm::vec3 normal_major_ccw = orient_to_offset(glm::vec3(
-                    0,
-                    0,                                                // pitch
-                    static_cast<float>(col_pos)/cols*360+ccw_delta)); // yaw
             glm::vec3 normal_minor = orient_to_offset(glm::vec3(
                     0,
                     -(static_cast<float>(row_pos)/rows*360-180), // pitch
                     static_cast<float>(col_pos)/cols*360));      // yaw
-            glm::vec3 offset     = normal_major*radius_major+normal_minor*radius_minor;
-            glm::vec3 offset_ccw = normal_major_ccw*radius_major+normal_minor*radius_minor;
-            mesh->set_vert_coord(vert_index, offset);
+            mesh->set_vert_coord(vert_index, normal_major*radius_major+normal_minor*radius_minor);
             mesh->set_vert_normal(vert_index, normal_minor);
-            mesh->set_vert_tangent(vert_index, glm::normalize(offset_ccw-offset));
+            mesh->set_vert_tangent(vert_index, orient_to_offset(glm::vec3(
+                    0,
+                    0,                                          // pitch
+                    static_cast<float>(col_pos)/cols*360+90))); // yaw
             vert_index++;
         }
     }
