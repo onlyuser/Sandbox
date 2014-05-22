@@ -91,6 +91,20 @@ int init_resources()
             "src/cube.v.glsl",
             "src/cube.f.glsl");
     vt::Scene::instance()->add_material(material);
+    material->get_program()->add_var("coord3d");
+    material->get_program()->add_var("norm3d");
+    material->get_program()->add_var("tangent3d");
+    material->get_program()->add_var("texcoord");
+    material->get_program()->add_var("mvp_xform");
+    material->get_program()->add_var("modelview_xform");
+    material->get_program()->add_var("normal_xform");
+    material->get_program()->add_var("mytexture");
+    material->get_program()->add_var("normal_map_texture");
+    material->get_program()->add_var("cameraPosition");
+    material->get_program()->add_var("lightPosition");
+    material->get_program()->add_var("lightColor");
+    material->get_program()->add_var("lightEnabled");
+    material->get_program()->add_var("lightCount");
 //    vt::Material* skybox_material = new vt::Material(
 //            "src/skybox.v.glsl",
 //            "src/skybox.f.glsl");

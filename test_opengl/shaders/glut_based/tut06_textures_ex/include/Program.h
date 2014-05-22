@@ -3,6 +3,8 @@
 
 #include <IdentObject.h>
 #include <GL/glew.h>
+#include <set>
+#include <string>
 
 namespace vt {
 
@@ -23,6 +25,12 @@ public:
     void get_program_iv(
             GLenum pname,
             GLint *params) const;
+    void add_var(std::string var_name);
+    bool check_var(std::string var_name) const;
+    void reset_vars(std::string var_name);
+
+private:
+    std::set<std::string> m_vars;
 };
 
 }
