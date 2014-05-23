@@ -15,7 +15,11 @@ class Material
 public:
     typedef std::vector<Texture*> textures_t;
 
-    Material(std::string vertex_shader_file, std::string fragment_shader_file);
+    Material(
+            std::string vertex_shader_file,
+            std::string fragment_shader_file,
+            bool        requires_texture_mapping = false,
+            bool        requires_normal_mapping = false);
     Program* get_program() const
     {
         return m_program.get();
@@ -33,10 +37,20 @@ public:
     {
         return m_textures;
     }
+    bool requires_texture_mapping() const
+    {
+        return m_requires_texture_mapping;
+    }
+    bool requires_normal_mapping() const
+    {
+        return m_requires_normal_mapping;
+    }
 
 private:
     std::unique_ptr<Program> m_program;
     textures_t               m_textures; // TODO: Material has multiple Textures
+    bool                     m_requires_texture_mapping;
+    bool                     m_requires_normal_mapping;
 };
 
 }

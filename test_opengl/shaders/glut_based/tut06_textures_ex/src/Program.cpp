@@ -3,8 +3,6 @@
 #include <VarAttribute.h>
 #include <VarUniform.h>
 #include <GL/glew.h>
-#include <set>
-#include <string>
 
 namespace vt {
 
@@ -65,21 +63,6 @@ void Program::get_program_iv(
         GLint *params) const
 {
     glGetProgramiv(m_id, pname, params);
-}
-
-void Program::add_var(std::string var_name)
-{
-    m_vars.insert(var_name);
-}
-
-bool Program::check_var(std::string var_name) const
-{
-    return m_vars.find(var_name) != m_vars.end();
-}
-
-void Program::reset_vars(std::string var_name)
-{
-    m_vars.clear();
 }
 
 }

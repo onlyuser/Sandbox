@@ -58,6 +58,8 @@ private:
             m_var_uniform_light_enabled,
             m_var_uniform_light_count;
     const textures_t &m_textures;
+    bool m_texture_mapping;
+    bool m_normal_mapping;
 };
 
 }

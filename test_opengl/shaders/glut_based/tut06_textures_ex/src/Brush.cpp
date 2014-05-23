@@ -29,47 +29,25 @@ Brush::Brush(
       m_ibo_tri_indices(ibo_tri_indices),
       m_textures(material->get_textures())
 {
-    if(m_program->check_var("coord3d")) {
-        m_var_attribute_coord3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("coord3d"));
-    }
-    if(m_program->check_var("norm3d")) {
-        m_var_attribute_norm3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("norm3d"));
-    }
-    if(m_program->check_var("tangent3d")) {
-        m_var_attribute_tangent3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("tangent3d"));
-    }
-    if(m_program->check_var("texcoord")) {
+    m_var_attribute_coord3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("coord3d"));
+    m_var_attribute_norm3d  = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("norm3d"));
+    m_var_uniform_mvp_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp_xform"));
+    if(material->requires_texture_mapping()) {
+        m_var_uniform_mytexture  = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
         m_var_attribute_texcoord = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("texcoord"));
+        m_texture_mapping = true;
     }
-    if(m_program->check_var("mvp_xform")) {
-        m_var_uniform_mvp_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp_xform"));
-    }
-    if(m_program->check_var("modelview_xform")) {
-        m_var_uniform_modelview_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("modelview_xform"));
-    }
-    if(m_program->check_var("normal_xform")) {
-        m_var_uniform_normal_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("normal_xform"));
-    }
-    if(m_program->check_var("mytexture")) {
-        m_var_uniform_mytexture = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
-    }
-    if(m_program->check_var("normal_map_texture")) {
+    if(material->requires_normal_mapping()) {
+        m_var_attribute_tangent3d        = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("tangent3d"));
+        m_var_uniform_modelview_xform    = std::unique_ptr<VarUniform>(m_program->get_var_uniform("modelview_xform"));
+        m_var_uniform_normal_xform       = std::unique_ptr<VarUniform>(m_program->get_var_uniform("normal_xform"));
         m_var_uniform_normal_map_texture = std::unique_ptr<VarUniform>(m_program->get_var_uniform("normal_map_texture"));
-    }
-    if(m_program->check_var("cameraPosition")) {
-        m_var_uniform_camera_pos = std::unique_ptr<VarUniform>(m_program->get_var_uniform("cameraPosition"));
-    }
-    if(m_program->check_var("lightPosition")) {
-        m_var_uniform_light_pos = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightPosition"));
-    }
-    if(m_program->check_var("lightColor")) {
-        m_var_uniform_light_color = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightColor"));
-    }
-    if(m_program->check_var("lightEnabled")) {
-        m_var_uniform_light_enabled = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightEnabled"));
-    }
-    if(m_program->check_var("lightCount")) {
-        m_var_uniform_light_count = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightCount"));
+        m_var_uniform_camera_pos         = std::unique_ptr<VarUniform>(m_program->get_var_uniform("cameraPosition"));
+        m_var_uniform_light_pos          = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightPosition"));
+        m_var_uniform_light_color        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightColor"));
+        m_var_uniform_light_enabled      = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightEnabled"));
+        m_var_uniform_light_count        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightCount"));
+        m_normal_mapping = true;
     }
 }
 
@@ -84,34 +62,24 @@ void Brush::render()
         (*p)->bind();
         i++;
     }
-    if(m_var_attribute_coord3d) {
-        m_var_attribute_coord3d->vertex_attrib_pointer(
-                m_vbo_vert_coords,
-                3,        // number of elements per vertex, here (x,y,z)
-                GL_FLOAT, // the type of each element
-                GL_FALSE, // take our values as-is
-                0,        // no extra data between each position
-                0);       // offset of first element
-    }
-    if(m_var_attribute_norm3d) {
-        m_var_attribute_norm3d->vertex_attrib_pointer(
-                m_vbo_vert_normal,
-                3,        // number of elements per vertex, here (x,y,z)
-                GL_FLOAT, // the type of each element
-                GL_FALSE, // take our values as-is
-                0,        // no extra data between each position
-                0);       // offset of first element
-    }
-    if(m_var_attribute_tangent3d) {
-        m_var_attribute_tangent3d->vertex_attrib_pointer(
-                m_vbo_vert_tangent,
-                3,        // number of elements per vertex, here (x,y,z)
-                GL_FLOAT, // the type of each element
-                GL_FALSE, // take our values as-is
-                0,        // no extra data between each position
-                0);       // offset of first element
-    }
-    if(m_var_attribute_texcoord) {
+    m_var_attribute_coord3d->vertex_attrib_pointer(
+            m_vbo_vert_coords,
+            3,        // number of elements per vertex, here (x,y,z)
+            GL_FLOAT, // the type of each element
+            GL_FALSE, // take our values as-is
+            0,        // no extra data between each position
+            0);       // offset of first element
+    m_var_attribute_norm3d->vertex_attrib_pointer(
+            m_vbo_vert_normal,
+            3,        // number of elements per vertex, here (x,y,z)
+            GL_FLOAT, // the type of each element
+            GL_FALSE, // take our values as-is
+            0,        // no extra data between each position
+            0);       // offset of first element
+    m_var_attribute_coord3d->enable_vertex_attrib_array();
+    m_var_attribute_norm3d->enable_vertex_attrib_array();
+    if(m_texture_mapping) {
+        m_var_attribute_texcoord->enable_vertex_attrib_array();
         m_var_attribute_texcoord->vertex_attrib_pointer(
                 m_vbo_tex_coords,
                 2,        // number of elements per vertex, here (x,y)
@@ -120,34 +88,24 @@ void Brush::render()
                 0,        // no extra data between each position
                 0);       // offset of first element
     }
-    if(m_var_attribute_coord3d) {
-        m_var_attribute_coord3d->enable_vertex_attrib_array();
-    }
-    if(m_var_attribute_norm3d) {
-        m_var_attribute_norm3d->enable_vertex_attrib_array();
-    }
-    if(m_var_attribute_tangent3d) {
+    if(m_normal_mapping) {
         m_var_attribute_tangent3d->enable_vertex_attrib_array();
-    }
-    if(m_var_attribute_texcoord) {
-        m_var_attribute_texcoord->enable_vertex_attrib_array();
+        m_var_attribute_tangent3d->vertex_attrib_pointer(
+                m_vbo_vert_tangent,
+                3,        // number of elements per vertex, here (x,y,z)
+                GL_FLOAT, // the type of each element
+                GL_FALSE, // take our values as-is
+                0,        // no extra data between each position
+                0);       // offset of first element
     }
     if(m_ibo_tri_indices) {
         m_ibo_tri_indices->bind();
         glDrawElements(GL_TRIANGLES, m_ibo_tri_indices->size()/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
     }
-    if(m_var_attribute_coord3d) {
-        m_var_attribute_coord3d->disable_vertex_attrib_array();
-    }
-    if(m_var_attribute_norm3d) {
-        m_var_attribute_norm3d->disable_vertex_attrib_array();
-    }
-    if(m_var_attribute_tangent3d) {
-        m_var_attribute_tangent3d->disable_vertex_attrib_array();
-    }
-    if(m_var_attribute_texcoord) {
-        m_var_attribute_texcoord->disable_vertex_attrib_array();
-    }
+    m_var_attribute_coord3d->disable_vertex_attrib_array();
+    m_var_attribute_norm3d->disable_vertex_attrib_array();
+    if(m_texture_mapping) m_var_attribute_texcoord->disable_vertex_attrib_array();
+    if(m_normal_mapping)  m_var_attribute_tangent3d->disable_vertex_attrib_array();
 }
 
 void Brush::set_mvp_xform(glm::mat4 mvp_xform)

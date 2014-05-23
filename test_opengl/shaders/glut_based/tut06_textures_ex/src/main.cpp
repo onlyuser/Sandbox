@@ -58,8 +58,8 @@ float prev_zoom = 0, zoom = 1, ortho_dolly_speed = 0.1;
 
 int init_resources()
 {
-//    skybox = vt::PrimitiveFactory::create_box(10, 10, 10, true);
-//    vt::Scene::instance()->set_skybox(skybox);
+    skybox = vt::PrimitiveFactory::create_box(10, 10, 10, true);
+    vt::Scene::instance()->set_skybox(skybox);
     mesh = vt::PrimitiveFactory::create_box();
     vt::Scene::instance()->add_mesh(mesh);
     mesh2 = vt::PrimitiveFactory::create_box();
@@ -75,7 +75,7 @@ int init_resources()
     mesh7 = vt::PrimitiveFactory::create_cone(16, 0.5, 1);
     vt::Scene::instance()->add_mesh(mesh7);
 
-//    skybox->set_origin(glm::vec3(-5, -5, -5));     // skybox
+    skybox->set_origin(glm::vec3(-5, -5, -5));     // skybox
     mesh->set_origin(glm::vec3(-0.5, -0.5, -0.5)); // box
     mesh2->set_scale(glm::vec3(0.5, 2, 3));        // scaled box
     mesh3->set_origin(glm::vec3(-5, -5, -1));      // grid
@@ -89,27 +89,17 @@ int init_resources()
 
     vt::Material* material = new vt::Material(
             "src/cube.v.glsl",
-            "src/cube.f.glsl");
+            "src/cube.f.glsl",
+            true,
+            true);
     vt::Scene::instance()->add_material(material);
-    material->get_program()->add_var("coord3d");
-    material->get_program()->add_var("norm3d");
-    material->get_program()->add_var("tangent3d");
-    material->get_program()->add_var("texcoord");
-    material->get_program()->add_var("mvp_xform");
-    material->get_program()->add_var("modelview_xform");
-    material->get_program()->add_var("normal_xform");
-    material->get_program()->add_var("mytexture");
-    material->get_program()->add_var("normal_map_texture");
-    material->get_program()->add_var("cameraPosition");
-    material->get_program()->add_var("lightPosition");
-    material->get_program()->add_var("lightColor");
-    material->get_program()->add_var("lightEnabled");
-    material->get_program()->add_var("lightCount");
-//    vt::Material* skybox_material = new vt::Material(
-//            "src/skybox.v.glsl",
-//            "src/skybox.f.glsl");
-//    vt::Scene::instance()->add_material(skybox_material);
-//    skybox->set_material(skybox_material);
+    vt::Material* skybox_material = new vt::Material(
+            "src/skybox.v.glsl",
+            "src/skybox.f.glsl",
+            true,
+            true);
+    vt::Scene::instance()->add_material(skybox_material);
+    skybox->set_material(skybox_material);
     mesh->set_material(material);
     mesh2->set_material(material);
     mesh3->set_material(material);
@@ -159,7 +149,7 @@ int init_resources()
     vt::Scene::instance()->add_light(light3);
 
     vt::Scene::instance()->use_program();
-    //skybox->get_brush()->set_texture_index(2);
+    skybox->get_brush()->set_texture_index(2);
     mesh->get_brush()->set_texture_index( 2);
     mesh2->get_brush()->set_texture_index(2);
     mesh3->get_brush()->set_texture_index(2);
@@ -167,7 +157,7 @@ int init_resources()
     mesh5->get_brush()->set_texture_index(2);
     mesh6->get_brush()->set_texture_index(2);
     mesh7->get_brush()->set_texture_index(2);
-    //skybox->get_brush()->set_normal_map_texture_index(3);
+    skybox->get_brush()->set_normal_map_texture_index(3);
     mesh->get_brush()->set_normal_map_texture_index( 3);
     mesh2->get_brush()->set_normal_map_texture_index(3);
     mesh3->get_brush()->set_normal_map_texture_index(3);
