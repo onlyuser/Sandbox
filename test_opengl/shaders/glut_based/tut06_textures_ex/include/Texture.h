@@ -31,6 +31,7 @@ public:
 private:
     std::string m_name;
 
+    static GLuint gen_texture_internal(const void* pixel_data, size_t width, size_t height);
     static bool read_png(std::string png_filename, void **pixel_data, size_t *width, size_t *height);
 };
 

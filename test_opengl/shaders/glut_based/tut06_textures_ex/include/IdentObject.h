@@ -15,6 +15,8 @@ public:
 
 protected:
     GLuint m_id;
+
+    IdentObject();
 };
 
 }

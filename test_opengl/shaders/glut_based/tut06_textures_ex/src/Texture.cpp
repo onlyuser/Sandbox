@@ -12,8 +12,53 @@ namespace vt {
 Texture::Texture(std::string name, const void* pixel_data, size_t width, size_t height)
     : m_name(name)
 {
-    glGenTextures(1, &m_id);
-    bind();
+    if(pixel_data) {
+        m_id = gen_texture_internal(pixel_data, width, height);
+    }
+}
+
+Texture::Texture(std::string name, std::string png_filename)
+    : m_name(name)
+{
+    void *pixel_data = NULL;
+    size_t width  = 0;
+    size_t height = 0;
+
+    if(read_png(png_filename, &pixel_data, &width, &height)) {
+        m_id = gen_texture_internal(pixel_data, width, height);
+        if(pixel_data) {
+            delete[] pixel_data;
+        }
+    }
+}
+
+Texture::Texture(
+        std::string name,
+        std::string png_filename_pos_x,
+        std::string png_filename_neg_x,
+        std::string png_filename_pos_y,
+        std::string png_filename_neg_y,
+        std::string png_filename_pos_z,
+        std::string png_filename_neg_z)
+    : m_name(name)
+{
+}
+
+Texture::~Texture()
+{
+    glDeleteTextures(1, &m_id);
+}
+
+void Texture::bind() const
+{
+    glBindTexture(GL_TEXTURE_2D, m_id);
+}
+
+GLuint Texture::gen_texture_internal(const void* pixel_data, size_t width, size_t height)
+{
+    GLuint id = 0;
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_2D, id);
     glTexImage2D(
             GL_TEXTURE_2D,    // target
             0,                // level, 0 = base, no mipmap,
@@ -26,58 +71,7 @@ Texture::Texture(std::string name, const void* pixel_data, size_t width, size_t 
             pixel_data);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-}
-
-Texture::Texture(std::string name, std::string png_filename)
-    : m_name(name)
-{
-    void *pixel_data = NULL;
-    size_t width;
-    size_t height;
-
-    read_png(png_filename, &pixel_data, &width, &height);
-    if(!pixel_data) {
-        return;
-    }
-
-    // now generate the opengL m_id object
-    glGenTextures(1, &m_id);
-    bind();
-    glTexImage2D(
-            GL_TEXTURE_2D,    // target
-            0,                // level, 0 = base, no mipmap,
-            GL_RGBA,          // internal format
-            width,            // width
-            height,           // height
-            0,                // border, always 0 in OpenGL ES
-            GL_RGB,           // format
-            GL_UNSIGNED_BYTE, // type
-            pixel_data);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    delete[] pixel_data;
-}
-
-Texture::Texture(
-        std::string name,
-        std::string png_filename_pos_x,
-        std::string png_filename_neg_x,
-        std::string png_filename_pos_y,
-        std::string png_filename_neg_y,
-        std::string png_filename_pos_z,
-        std::string png_filename_neg_z)
-{
-}
-
-Texture::~Texture()
-{
-    glDeleteTextures(1, &m_id);
-}
-
-void Texture::bind() const
-{
-    glBindTexture(GL_TEXTURE_2D, m_id);
+    return id;
 }
 
 bool Texture::read_png(std::string png_filename, void **pixel_data, size_t *width, size_t *height)
