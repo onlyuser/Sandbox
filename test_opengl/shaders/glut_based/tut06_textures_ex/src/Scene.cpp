@@ -128,6 +128,13 @@ void Scene::render()
         m_light_enabled[i] = (*p)->get_enabled();
         i++;
     }
+    int j = 0;
+    for(vt::Brush::textures_t::const_iterator p = m_textures.begin(); p != m_textures.end(); p++)
+    {
+        glActiveTexture(GL_TEXTURE0+j);
+        (*p)->bind();
+        j++;
+    }
     if(m_skybox) {
         m_skybox->get_brush()->get_program()->use();
         m_skybox->get_brush()->set_mvp_xform(m_camera->get_xform()*m_skybox->get_xform());

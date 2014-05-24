@@ -145,7 +145,7 @@ int init_resources()
             "data/Colosseum/posz.png",
             "data/Colosseum/negz.png");
     vt::Scene::instance()->add_texture(texture5);
-    material->add_texture(texture5);
+    skybox_material->add_texture(texture5);
 
     glm::vec3 origin = glm::vec3();
     camera = new vt::Camera(origin+glm::vec3(0, 0, orbit_radius), origin);

@@ -54,14 +54,13 @@ Brush::Brush(
 void Brush::render()
 {
     m_program->use();
-    vt::Brush::textures_t::const_iterator p;
-    int i = 0;
-    for(p = m_textures.begin(); p != m_textures.end(); p++)
-    {
-        glActiveTexture(GL_TEXTURE0+i);
-        (*p)->bind();
-        i++;
-    }
+//    int i = 0;
+//    for(vt::Brush::textures_t::const_iterator p = m_textures.begin(); p != m_textures.end(); p++)
+//    {
+//        glActiveTexture(GL_TEXTURE0+i);
+//        (*p)->bind();
+//        i++;
+//    }
     m_var_attribute_coord3d->vertex_attrib_pointer(
             m_vbo_vert_coords,
             3,        // number of elements per vertex, here (x,y,z)
