@@ -109,7 +109,7 @@ int init_resources()
     mesh7->set_material(material);
 
     vt::Texture* texture = new vt::Texture(
-            "box1",
+            "dex3d",
             res_texture.pixel_data,
             res_texture.width,
             res_texture.height);
@@ -117,7 +117,7 @@ int init_resources()
     material->add_texture(texture);
 
     vt::Texture* texture2 = new vt::Texture(
-            "box2",
+            "lode_runner",
             res_texture2.pixel_data,
             res_texture2.width,
             res_texture2.height);
@@ -125,16 +125,27 @@ int init_resources()
     material->add_texture(texture2);
 
     vt::Texture* texture3 = new vt::Texture(
-            "skybox_tex",
+            "mattress_tex",
             "data/mattress_color.png");
     vt::Scene::instance()->add_texture(texture3);
     material->add_texture(texture3);
 
     vt::Texture* texture4 = new vt::Texture(
-            "skybox_normal",
+            "mattress_normal",
             "data/mattress_normal.png");
     vt::Scene::instance()->add_texture(texture4);
     material->add_texture(texture4);
+
+    vt::Texture* texture5 = new vt::Texture(
+            "skybox",
+            "data/Colosseum/posx.png",
+            "data/Colosseum/negx.png",
+            "data/Colosseum/posy.png",
+            "data/Colosseum/negy.png",
+            "data/Colosseum/posz.png",
+            "data/Colosseum/negz.png");
+    vt::Scene::instance()->add_texture(texture5);
+    material->add_texture(texture5);
 
     glm::vec3 origin = glm::vec3();
     camera = new vt::Camera(origin+glm::vec3(0, 0, orbit_radius), origin);
@@ -153,21 +164,21 @@ int init_resources()
     vt::Scene::instance()->add_light(light3);
 
     vt::Scene::instance()->use_program();
-    skybox->get_brush()->set_texture_index(vt::Scene::instance()->get_texture_index_by_name("skybox_tex"));
-    mesh->get_brush()->set_texture_index(  vt::Scene::instance()->get_texture_index_by_name("skybox_tex"));
-    mesh2->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("skybox_tex"));
-    mesh3->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("skybox_tex"));
-    mesh4->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("skybox_tex"));
-    mesh5->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("skybox_tex"));
-    mesh6->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("skybox_tex"));
-    mesh7->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("skybox_tex"));
-    mesh->get_brush()->set_normal_map_texture_index( vt::Scene::instance()->get_texture_index_by_name("skybox_normal"));
-    mesh2->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("skybox_normal"));
-    mesh3->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("skybox_normal"));
-    mesh4->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("skybox_normal"));
-    mesh5->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("skybox_normal"));
-    mesh6->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("skybox_normal"));
-    mesh7->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("skybox_normal"));
+    skybox->get_brush()->set_texture_index(vt::Scene::instance()->get_texture_index_by_name("skybox"));
+    mesh->get_brush()->set_texture_index(  vt::Scene::instance()->get_texture_index_by_name("mattress_tex"));
+    mesh2->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("mattress_tex"));
+    mesh3->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("mattress_tex"));
+    mesh4->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("mattress_tex"));
+    mesh5->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("mattress_tex"));
+    mesh6->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("mattress_tex"));
+    mesh7->get_brush()->set_texture_index( vt::Scene::instance()->get_texture_index_by_name("mattress_tex"));
+    mesh->get_brush()->set_normal_map_texture_index( vt::Scene::instance()->get_texture_index_by_name("mattress_normal"));
+    mesh2->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("mattress_normal"));
+    mesh3->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("mattress_normal"));
+    mesh4->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("mattress_normal"));
+    mesh5->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("mattress_normal"));
+    mesh6->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("mattress_normal"));
+    mesh7->get_brush()->set_normal_map_texture_index(vt::Scene::instance()->get_texture_index_by_name("mattress_normal"));
 
     return 1;
 }
@@ -374,6 +385,7 @@ int main(int argc, char* argv[])
         //glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
+        glEnable(GL_TEXTURE_CUBE_MAP);
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glutMainLoop();
     }

@@ -20,15 +20,15 @@ Texture::Texture(std::string name, const void* pixel_data, size_t width, size_t 
 Texture::Texture(std::string name, std::string png_filename)
     : m_name(name)
 {
-    void *pixel_data = NULL;
+    unsigned char *pixel_data = NULL;
     size_t width  = 0;
     size_t height = 0;
-
-    if(read_png(png_filename, &pixel_data, &width, &height)) {
+    if(!read_png(png_filename, (void**)&pixel_data, &width, &height)) {
+        return;
+    }
+    if(pixel_data) {
         m_id = gen_texture_internal(pixel_data, width, height);
-        if(pixel_data) {
-            delete[] pixel_data;
-        }
+        delete[] pixel_data;
     }
 }
 
@@ -42,6 +42,56 @@ Texture::Texture(
         std::string png_filename_neg_z)
     : m_name(name)
 {
+    unsigned char *pixel_data_pos_x = NULL;
+    unsigned char *pixel_data_neg_x = NULL;
+    unsigned char *pixel_data_pos_y = NULL;
+    unsigned char *pixel_data_neg_y = NULL;
+    unsigned char *pixel_data_pos_z = NULL;
+    unsigned char *pixel_data_neg_z = NULL;
+    size_t width  = 0;
+    size_t height = 0;
+    if(!read_png(png_filename_pos_x, (void**)&pixel_data_pos_x, &width, &height)) {
+        return;
+    }
+    if(!read_png(png_filename_neg_x, (void**)&pixel_data_neg_x, &width, &height)) {
+        return;
+    }
+    if(!read_png(png_filename_pos_y, (void**)&pixel_data_pos_y, &width, &height)) {
+        return;
+    }
+    if(!read_png(png_filename_neg_y, (void**)&pixel_data_neg_y, &width, &height)) {
+        return;
+    }
+    if(!read_png(png_filename_pos_z, (void**)&pixel_data_pos_z, &width, &height)) {
+        return;
+    }
+    if(!read_png(png_filename_neg_z, (void**)&pixel_data_neg_z, &width, &height)) {
+        return;
+    }
+    if(
+            pixel_data_pos_x &&
+            pixel_data_neg_x &&
+            pixel_data_pos_y &&
+            pixel_data_neg_y &&
+            pixel_data_pos_z &&
+            pixel_data_neg_z)
+    {
+        m_id = gen_texture_skybox_internal(
+                pixel_data_pos_x,
+                pixel_data_neg_x,
+                pixel_data_pos_y,
+                pixel_data_neg_y,
+                pixel_data_pos_z,
+                pixel_data_neg_z,
+                width,
+                height);
+        delete[] pixel_data_pos_x;
+        delete[] pixel_data_neg_x;
+        delete[] pixel_data_pos_y;
+        delete[] pixel_data_neg_y;
+        delete[] pixel_data_pos_z;
+        delete[] pixel_data_neg_z;
+    }
 }
 
 Texture::~Texture()
@@ -59,6 +109,8 @@ GLuint Texture::gen_texture_internal(const void* pixel_data, size_t width, size_
     GLuint id = 0;
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_2D, id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(
             GL_TEXTURE_2D,    // target
             0,                // level, 0 = base, no mipmap,
@@ -69,8 +121,87 @@ GLuint Texture::gen_texture_internal(const void* pixel_data, size_t width, size_
             GL_RGB,           // format
             GL_UNSIGNED_BYTE, // type
             pixel_data);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    return id;
+}
+
+GLuint Texture::gen_texture_skybox_internal(
+        const void* pixel_data_pos_x,
+        const void* pixel_data_neg_x,
+        const void* pixel_data_pos_y,
+        const void* pixel_data_neg_y,
+        const void* pixel_data_pos_z,
+        const void* pixel_data_neg_z,
+        size_t width,
+        size_t height)
+{
+    GLuint id = 0;
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X, // target
+            0,                              // level, 0 = base, no mipmap,
+            GL_RGB,                         // internal format
+            width,                          // width
+            height,                         // height
+            0,                              // border, always 0 in OpenGL ES
+            GL_RGB,                         // format
+            GL_UNSIGNED_BYTE,               // type
+            pixel_data_pos_x);
+    glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_NEGATIVE_X, // target
+            0,                              // level, 0 = base, no mipmap,
+            GL_RGB,                         // internal format
+            width,                          // width
+            height,                         // height
+            0,                              // border, always 0 in OpenGL ES
+            GL_RGB,                         // format
+            GL_UNSIGNED_BYTE,               // type
+            pixel_data_neg_x);
+    glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_POSITIVE_Y, // target
+            0,                              // level, 0 = base, no mipmap,
+            GL_RGB,                         // internal format
+            width,                          // width
+            height,                         // height
+            0,                              // border, always 0 in OpenGL ES
+            GL_RGB,                         // format
+            GL_UNSIGNED_BYTE,               // type
+            pixel_data_pos_y);
+    glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, // target
+            0,                              // level, 0 = base, no mipmap,
+            GL_RGB,                         // internal format
+            width,                          // width
+            height,                         // height
+            0,                              // border, always 0 in OpenGL ES
+            GL_RGB,                         // format
+            GL_UNSIGNED_BYTE,               // type
+            pixel_data_neg_y);
+    glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_POSITIVE_Z, // target
+            0,                              // level, 0 = base, no mipmap,
+            GL_RGB,                         // internal format
+            width,                          // width
+            height,                         // height
+            0,                              // border, always 0 in OpenGL ES
+            GL_RGB,                         // format
+            GL_UNSIGNED_BYTE,               // type
+            pixel_data_pos_z);
+    glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, // target
+            0,                              // level, 0 = base, no mipmap,
+            GL_RGB,                         // internal format
+            width,                          // width
+            height,                         // height
+            0,                              // border, always 0 in OpenGL ES
+            GL_RGB,                         // format
+            GL_UNSIGNED_BYTE,               // type
+            pixel_data_neg_z);
     return id;
 }
 

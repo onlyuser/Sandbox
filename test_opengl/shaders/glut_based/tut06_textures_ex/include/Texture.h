@@ -32,6 +32,15 @@ private:
     std::string m_name;
 
     static GLuint gen_texture_internal(const void* pixel_data, size_t width, size_t height);
+    static GLuint gen_texture_skybox_internal(
+            const void* pixel_data_pos_x,
+            const void* pixel_data_neg_x,
+            const void* pixel_data_pos_y,
+            const void* pixel_data_neg_y,
+            const void* pixel_data_pos_z,
+            const void* pixel_data_neg_z,
+            size_t width,
+            size_t height);
     static bool read_png(std::string png_filename, void **pixel_data, size_t *width, size_t *height);
 };
 
