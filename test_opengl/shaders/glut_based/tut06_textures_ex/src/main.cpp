@@ -157,7 +157,6 @@ int init_resources()
     mesh5->get_brush()->set_texture_index(2);
     mesh6->get_brush()->set_texture_index(2);
     mesh7->get_brush()->set_texture_index(2);
-    skybox->get_brush()->set_normal_map_texture_index(3);
     mesh->get_brush()->set_normal_map_texture_index( 3);
     mesh2->get_brush()->set_normal_map_texture_index(3);
     mesh3->get_brush()->set_normal_map_texture_index(3);

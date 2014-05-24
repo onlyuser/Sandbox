@@ -103,13 +103,6 @@ void Scene::render()
     if(m_skybox) {
         m_skybox->get_brush()->get_program()->use();
         m_skybox->get_brush()->set_mvp_xform(m_camera->get_xform()*m_skybox->get_xform());
-        m_skybox->get_brush()->set_modelview_xform(m_skybox->get_xform());
-        m_skybox->get_brush()->set_normal_xform(m_skybox->get_normal_xform());
-        m_skybox->get_brush()->set_camera_pos(m_camera_pos);
-        m_skybox->get_brush()->set_light_pos(m_light_pos);
-        m_skybox->get_brush()->set_light_color(m_light_color);
-        m_skybox->get_brush()->set_light_enabled(m_light_enabled);
-        m_skybox->get_brush()->set_light_count(m_lights.size());
         m_skybox->get_brush()->render();
     }
     for(meshes_t::const_iterator q = m_meshes.begin(); q != m_meshes.end(); q++) {
@@ -121,9 +114,9 @@ void Scene::render()
         (*q)->get_brush()->set_modelview_xform((*q)->get_xform());
         (*q)->get_brush()->set_normal_xform((*q)->get_normal_xform());
         (*q)->get_brush()->set_camera_pos(m_camera_pos);
-        (*q)->get_brush()->set_light_pos(m_light_pos);
-        (*q)->get_brush()->set_light_color(m_light_color);
-        (*q)->get_brush()->set_light_enabled(m_light_enabled);
+        (*q)->get_brush()->set_light_pos(NUM_LIGHTS, m_light_pos);
+        (*q)->get_brush()->set_light_color(NUM_LIGHTS, m_light_color);
+        (*q)->get_brush()->set_light_enabled(NUM_LIGHTS, m_light_enabled);
         (*q)->get_brush()->set_light_count(m_lights.size());
         (*q)->get_brush()->render();
     }

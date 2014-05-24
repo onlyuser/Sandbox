@@ -37,9 +37,9 @@ public:
     void set_texture_index(GLint texture_id);
     void set_normal_map_texture_index(GLint texture_id);
     void set_camera_pos(GLfloat* camera_pos_arr);
-    void set_light_pos(GLfloat* light_pos_arr);
-    void set_light_color(GLfloat* light_color_arr);
-    void set_light_enabled(GLint* light_enabled_arr);
+    void set_light_pos(size_t num_lights, GLfloat* light_pos_arr);
+    void set_light_color(size_t num_lights, GLfloat* light_color_arr);
+    void set_light_enabled(size_t num_lights, GLint* light_enabled_arr);
     void set_light_count(GLint light_count);
 
 private:
@@ -58,8 +58,8 @@ private:
             m_var_uniform_light_enabled,
             m_var_uniform_light_count;
     const textures_t &m_textures;
-    bool m_texture_mapping;
-    bool m_normal_mapping;
+    bool m_supports_texture_mapping;
+    bool m_supports_normal_mapping;
 };
 
 }
