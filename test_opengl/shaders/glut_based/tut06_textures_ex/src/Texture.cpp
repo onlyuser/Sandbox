@@ -9,8 +9,6 @@
 
 namespace vt {
 
-int Texture::m_first_texture_id = -1;
-
 Texture::Texture(std::string name, const void* pixel_data, size_t width, size_t height)
     : m_name(name)
 {
@@ -28,9 +26,6 @@ Texture::Texture(std::string name, const void* pixel_data, size_t width, size_t 
             GL_RGB,           // format
             GL_UNSIGNED_BYTE, // type
             pixel_data);
-    if(m_first_texture_id == -1) {
-        m_first_texture_id = m_id;
-    }
 }
 
 Texture::Texture(std::string name, std::string png_filename)
