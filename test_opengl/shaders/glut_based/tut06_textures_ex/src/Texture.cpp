@@ -3,12 +3,16 @@
 #include <png.h>
 #include <cstdio>
 #include <string>
+#include <iostream>
 
 #define TEXTURE_LOAD_ERROR 0
 
 namespace vt {
 
-Texture::Texture(const void* pixel_data, size_t width, size_t height)
+int Texture::m_first_texture_id = -1;
+
+Texture::Texture(std::string name, const void* pixel_data, size_t width, size_t height)
+    : m_name(name)
 {
     glGenTextures(1, &m_id);
     bind();
@@ -24,9 +28,13 @@ Texture::Texture(const void* pixel_data, size_t width, size_t height)
             GL_RGB,           // format
             GL_UNSIGNED_BYTE, // type
             pixel_data);
+    if(m_first_texture_id == -1) {
+        m_first_texture_id = m_id;
+    }
 }
 
-Texture::Texture(std::string png_filename)
+Texture::Texture(std::string name, std::string png_filename)
+    : m_name(name)
 {
     void *pixel_data = NULL;
     size_t width;

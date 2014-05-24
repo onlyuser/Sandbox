@@ -3,6 +3,8 @@
 
 #include <GL/glew.h>
 #include <vector>
+#include <map>
+#include <string>
 
 namespace vt {
 
@@ -50,10 +52,7 @@ public:
         m_materials.push_back(material);
     }
 
-    void add_texture(Texture* texture)
-    {
-        m_textures.push_back(texture);
-    }
+    void add_texture(Texture* texture);
 
     void set_skybox(Mesh* skybox)
     {
@@ -63,6 +62,9 @@ public:
     {
         return m_skybox;
     }
+
+    Texture* get_texture_by_name(std::string name) const;
+    int get_texture_index_by_name(std::string name) const;
 
     void reset();
     void use_program();
@@ -81,6 +83,9 @@ private:
     GLfloat* m_light_pos;
     GLfloat* m_light_color;
     GLint*   m_light_enabled;
+
+    typedef std::map<std::string, Texture*> texture_lookup_table_t;
+    texture_lookup_table_t m_texture_lookup_table;
 
     Scene();
     ~Scene();

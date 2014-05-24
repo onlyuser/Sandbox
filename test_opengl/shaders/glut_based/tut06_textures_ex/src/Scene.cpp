@@ -7,6 +7,8 @@
 #include <Texture.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include <algorithm>
+#include <iterator>
 
 #define NUM_LIGHTS 8
 
@@ -23,13 +25,13 @@ Scene::Scene()
     m_light_color   = new GLfloat[NUM_LIGHTS*3];
     m_light_enabled = new GLint[NUM_LIGHTS];
     for(int i = 0; i<NUM_LIGHTS; i++) {
-        m_light_pos[i*3+0] = 0;
-        m_light_pos[i*3+1] = 0;
-        m_light_pos[i*3+2] = 0;
+        m_light_pos[i*3+0]   = 0;
+        m_light_pos[i*3+1]   = 0;
+        m_light_pos[i*3+2]   = 0;
         m_light_color[i*3+0] = 0;
         m_light_color[i*3+1] = 0;
         m_light_color[i*3+2] = 0;
-        m_light_enabled[i] = 0;
+        m_light_enabled[i]   = 0;
     }
 }
 
@@ -65,6 +67,31 @@ Scene::~Scene()
     }
 }
 
+void Scene::add_texture(Texture* texture)
+{
+    m_textures.push_back(texture);
+    m_texture_lookup_table[texture->get_name()] = texture;
+}
+
+Texture* Scene::get_texture_by_name(std::string name) const
+{
+    texture_lookup_table_t::const_iterator p = m_texture_lookup_table.find(name);
+    if(p == m_texture_lookup_table.end()) {
+        return NULL;
+    }
+    return (*p).second;
+}
+
+int Scene::get_texture_index_by_name(std::string name) const
+{
+    Texture* texture = get_texture_by_name(name);
+    textures_t::const_iterator p = std::find(m_textures.begin(), m_textures.end(), texture);
+    if(p == m_textures.end()) {
+        return -1;
+    }
+    return std::distance(m_textures.begin(), p);
+}
+
 void Scene::reset()
 {
     m_camera = NULL;
@@ -72,6 +99,7 @@ void Scene::reset()
     m_meshes.clear();
     m_materials.clear();
     m_textures.clear();
+    m_texture_lookup_table.clear();
 }
 
 void Scene::use_program()
