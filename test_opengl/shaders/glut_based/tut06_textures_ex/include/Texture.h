@@ -27,15 +27,9 @@ public:
     {
         return m_name;
     }
-    int get_slot_index() const
-    {
-        return m_slot_index;
-    }
 
 private:
     std::string m_name;
-    static int m_tally_index;
-    int m_slot_index;
 
     static GLuint gen_texture_internal(const void* pixel_data, size_t width, size_t height);
     static GLuint gen_texture_skybox_internal(

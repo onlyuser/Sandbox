@@ -9,21 +9,16 @@
 
 namespace vt {
 
-int Texture::m_tally_index = -1;
-
 Texture::Texture(std::string name, const void* pixel_data, size_t width, size_t height)
-    : m_name(name),
-      m_slot_index(0)
+    : m_name(name)
 {
     if(pixel_data) {
-        m_slot_index = m_tally_index;
         m_id = gen_texture_internal(pixel_data, width, height);
     }
 }
 
 Texture::Texture(std::string name, std::string png_filename)
-    : m_name(name),
-      m_slot_index(0)
+    : m_name(name)
 {
     unsigned char *pixel_data = NULL;
     size_t width  = 0;
@@ -32,7 +27,6 @@ Texture::Texture(std::string name, std::string png_filename)
         return;
     }
     if(pixel_data) {
-        m_slot_index = m_tally_index;
         m_id = gen_texture_internal(pixel_data, width, height);
         delete[] pixel_data;
     }
@@ -46,8 +40,7 @@ Texture::Texture(
         std::string png_filename_neg_y,
         std::string png_filename_pos_z,
         std::string png_filename_neg_z)
-    : m_name(name),
-      m_slot_index(0)
+    : m_name(name)
 {
     unsigned char *pixel_data_pos_x = NULL;
     unsigned char *pixel_data_neg_x = NULL;
@@ -83,7 +76,6 @@ Texture::Texture(
             pixel_data_pos_z &&
             pixel_data_neg_z)
     {
-        m_slot_index = m_tally_index;
         m_id = gen_texture_skybox_internal(
                 pixel_data_pos_x,
                 pixel_data_neg_x,
@@ -129,7 +121,6 @@ GLuint Texture::gen_texture_internal(const void* pixel_data, size_t width, size_
             GL_RGB,           // format
             GL_UNSIGNED_BYTE, // type
             pixel_data);
-    m_tally_index++;
     return id;
 }
 
@@ -211,7 +202,6 @@ GLuint Texture::gen_texture_skybox_internal(
             GL_RGB,                         // format
             GL_UNSIGNED_BYTE,               // type
             pixel_data_neg_z);
-    m_tally_index++;
     return id;
 }
 
