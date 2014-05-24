@@ -15,7 +15,9 @@ Mesh::Mesh(size_t num_vertex, size_t num_tri)
       m_visible(true),
       m_buffers_already_init(false),
       m_material(NULL),
-      m_brush_already_init(false)
+      m_brush_already_init(false),
+      m_texture_index(-1),
+      m_normal_map_texture_index(-1)
 {
     m_vert_coords  = new GLfloat[num_vertex*3];
     m_vert_normal  = new GLfloat[num_vertex*3];

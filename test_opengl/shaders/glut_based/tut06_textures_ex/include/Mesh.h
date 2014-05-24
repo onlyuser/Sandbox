@@ -68,6 +68,24 @@ public:
 
     Brush* get_brush();
 
+    int get_texture_index() const
+    {
+        return m_texture_index;
+    }
+    void set_texture_index(int texture_index)
+    {
+        m_texture_index = texture_index;
+    }
+
+    int get_normal_map_texture_index() const
+    {
+        return m_normal_map_texture_index;
+    }
+    void set_normal_map_texture_index(int normal_map_texture_index)
+    {
+        m_normal_map_texture_index = normal_map_texture_index;
+    }
+
 private:
     size_t                  m_num_vertex;
     size_t                  m_num_tri;
@@ -86,6 +104,8 @@ private:
     Material*               m_material; // TODO: Mesh has one Material
     std::unique_ptr<Brush>  m_brush; // TODO: Mesh has one Brush
     bool                    m_brush_already_init;
+    int                     m_texture_index;
+    int                     m_normal_map_texture_index;
 
     void update_xform();
 };
