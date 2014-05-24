@@ -13,6 +13,14 @@ class Texture : public IdentObject, public BindableObjectIFace
 public:
     Texture(std::string name, const void* pixel_data, size_t width, size_t height);
     Texture(std::string name, std::string png_filename);
+    Texture(
+            std::string name,
+            std::string png_filename_pos_x,
+            std::string png_filename_neg_x,
+            std::string png_filename_pos_y,
+            std::string png_filename_neg_y,
+            std::string png_filename_pos_z,
+            std::string png_filename_neg_z);
     virtual ~Texture();
     void bind() const;
     const std::string &get_name() const

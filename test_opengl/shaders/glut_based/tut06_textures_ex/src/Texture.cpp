@@ -14,18 +14,18 @@ Texture::Texture(std::string name, const void* pixel_data, size_t width, size_t 
 {
     glGenTextures(1, &m_id);
     bind();
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(
             GL_TEXTURE_2D,    // target
-            0,                // level, 0 = base, no minimap,
-            GL_RGB,           // internalformat
+            0,                // level, 0 = base, no mipmap,
+            GL_RGB,           // internal format
             width,            // width
             height,           // height
             0,                // border, always 0 in OpenGL ES
             GL_RGB,           // format
             GL_UNSIGNED_BYTE, // type
             pixel_data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
 Texture::Texture(std::string name, std::string png_filename)
@@ -42,11 +42,32 @@ Texture::Texture(std::string name, std::string png_filename)
 
     // now generate the opengL m_id object
     glGenTextures(1, &m_id);
-    glBindTexture(GL_TEXTURE_2D, m_id);
-    glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*) pixel_data);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    bind();
+    glTexImage2D(
+            GL_TEXTURE_2D,    // target
+            0,                // level, 0 = base, no mipmap,
+            GL_RGBA,          // internal format
+            width,            // width
+            height,           // height
+            0,                // border, always 0 in OpenGL ES
+            GL_RGB,           // format
+            GL_UNSIGNED_BYTE, // type
+            pixel_data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     delete[] pixel_data;
+}
+
+Texture::Texture(
+        std::string name,
+        std::string png_filename_pos_x,
+        std::string png_filename_neg_x,
+        std::string png_filename_pos_y,
+        std::string png_filename_neg_y,
+        std::string png_filename_pos_z,
+        std::string png_filename_neg_z)
+{
 }
 
 Texture::~Texture()
