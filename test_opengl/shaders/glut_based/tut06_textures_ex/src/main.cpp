@@ -97,7 +97,7 @@ int init_resources()
             "src/skybox.v.glsl",
             "src/skybox.f.glsl",
             true,
-            true);
+            false);
     vt::Scene::instance()->add_material(skybox_material);
     skybox->set_material(skybox_material);
     mesh->set_material(material);
