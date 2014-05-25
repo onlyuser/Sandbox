@@ -1,5 +1,5 @@
-#ifndef VT_BRUSH_H_
-#define VT_BRUSH_H_
+#ifndef VT_SHADER_CONTEXT_H_
+#define VT_SHADER_CONTEXT_H_
 
 #include <VarAttribute.h>
 #include <VarUniform.h>
@@ -14,12 +14,12 @@ class Material;
 class Program;
 class Texture;
 
-class Brush
+class ShaderContext
 {
 public:
     typedef std::vector<Texture*> textures_t;
 
-    Brush(
+    ShaderContext(
             Material* material,
             Buffer*   vbo_vert_coords,
             Buffer*   vbo_vert_normal,
@@ -62,8 +62,8 @@ private:
             m_var_uniform_inv_projection_xform,
             m_var_uniform_inv_normal_xform;
     const textures_t &m_textures;
-    bool m_supports_texture_mapping;
-    bool m_supports_normal_mapping;
+    bool m_use_texture_mapping;
+    bool m_use_normal_mapping;
     bool m_skybox;
 };
 

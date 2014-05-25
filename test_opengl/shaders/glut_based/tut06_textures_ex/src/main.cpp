@@ -22,7 +22,7 @@
 
 #include <Buffer.h>
 #include <Camera.h>
-#include <Brush.h>
+#include <ShaderContext.h>
 #include <Light.h>
 #include <Material.h>
 #include <Mesh.h>
@@ -90,8 +90,8 @@ int init_resources()
 //    mesh7->set_visible(false);
 
     vt::Material* material = new vt::Material(
-            "src/cube.v.glsl",
-            "src/cube.f.glsl",
+            "src/normal_mapped.v.glsl",
+            "src/normal_mapped.f.glsl",
             true,
             true,
             false);
@@ -104,8 +104,8 @@ int init_resources()
             true);
     scene->add_material(skybox_material);
     vt::Material* simple_material = new vt::Material(
-            "src/simple.v.glsl",
-            "src/simple.f.glsl",
+            "src/texture_mapped.v.glsl",
+            "src/texture_mapped.f.glsl",
             true,
             false,
             false);

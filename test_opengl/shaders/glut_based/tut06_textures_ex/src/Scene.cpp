@@ -1,5 +1,5 @@
 #include <Scene.h>
-#include <Brush.h>
+#include <ShaderContext.h>
 #include <Camera.h>
 #include <Light.h>
 #include <Mesh.h>
@@ -86,7 +86,7 @@ void Scene::reset()
 void Scene::use_program()
 {
     for(meshes_t::const_iterator q = m_meshes.begin(); q != m_meshes.end(); q++) {
-        (*q)->get_brush()->get_program()->use();
+        (*q)->get_shader_context()->get_program()->use();
     }
 }
 
@@ -110,32 +110,32 @@ void Scene::render()
         i++;
     }
     if(m_skybox) {
-        Brush* brush = m_skybox->get_brush();
-        brush->get_program()->use();
-        brush->set_texture_index(0);
-        brush->set_inv_normal_xform(glm::inverse(m_camera->get_normal_xform()));
-        brush->set_inv_projection_xform(glm::inverse(m_camera->get_projection_xform()));
-        brush->render();
+        ShaderContext* shader_context = m_skybox->get_shader_context();
+        shader_context->get_program()->use();
+        shader_context->set_texture_index(0);
+        shader_context->set_inv_normal_xform(glm::inverse(m_camera->get_normal_xform()));
+        shader_context->set_inv_projection_xform(glm::inverse(m_camera->get_projection_xform()));
+        shader_context->render();
     }
     for(meshes_t::const_iterator q = m_meshes.begin(); q != m_meshes.end(); q++) {
         if(!(*q)->get_visible()) {
             continue;
         }
-        Brush* brush = (*q)->get_brush();
-        brush->get_program()->use();
-        brush->set_mvp_xform(m_camera->get_xform()*(*q)->get_xform());
-        brush->set_texture_index((*q)->get_texture_index());
-        if((*q)->get_material()->supports_normal_mapping()) {
-            brush->set_modelview_xform((*q)->get_xform());
-            brush->set_normal_xform((*q)->get_normal_xform());
-            brush->set_normal_map_texture_index((*q)->get_normal_map_texture_index());
-            brush->set_camera_pos(m_camera_pos);
-            brush->set_light_pos(NUM_LIGHTS, m_light_pos);
-            brush->set_light_color(NUM_LIGHTS, m_light_color);
-            brush->set_light_enabled(NUM_LIGHTS, m_light_enabled);
-            brush->set_light_count(m_lights.size());
+        ShaderContext* shader_context = (*q)->get_shader_context();
+        shader_context->get_program()->use();
+        shader_context->set_mvp_xform(m_camera->get_xform()*(*q)->get_xform());
+        shader_context->set_texture_index((*q)->get_texture_index());
+        if((*q)->get_material()->use_normal_mapping()) {
+            shader_context->set_modelview_xform((*q)->get_xform());
+            shader_context->set_normal_xform((*q)->get_normal_xform());
+            shader_context->set_normal_map_texture_index((*q)->get_normal_map_texture_index());
+            shader_context->set_camera_pos(m_camera_pos);
+            shader_context->set_light_pos(NUM_LIGHTS, m_light_pos);
+            shader_context->set_light_color(NUM_LIGHTS, m_light_color);
+            shader_context->set_light_enabled(NUM_LIGHTS, m_light_enabled);
+            shader_context->set_light_count(m_lights.size());
         }
-        brush->render();
+        shader_context->render();
     }
 }
 

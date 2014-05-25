@@ -6,16 +6,6 @@
 
 namespace vt {
 
-Mesh* PrimitiveFactory::create(PrimitiveFactory::primitive_type_t _type)
-{
-    switch(_type)
-    {
-        case PRIMITIVE_TYPE_UNIT_BOX: return create_box();
-        default:
-            return new Mesh();
-    }
-}
-
 Mesh* PrimitiveFactory::create_grid(int cols, int rows, float width, float height)
 {
     int num_vertex = (rows+1)*(cols+1);

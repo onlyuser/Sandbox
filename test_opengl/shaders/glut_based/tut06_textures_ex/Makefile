@@ -80,7 +80,7 @@ clean_objects : clean_objects_common
 # binaries
 #==================
 
-CPP_STEMS = Brush Buffer Camera IdentObject Light main Material Mesh PrimitiveFactory Program res_texture res_texture2 Scene Shader Texture Util VarAttribute VarUniform XformObject
+CPP_STEMS = ShaderContext Buffer Camera IdentObject Light main Material Mesh PrimitiveFactory Program res_texture res_texture2 Scene Shader Texture Util VarAttribute VarUniform XformObject
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 
 $(BIN_PATH)/main : $(OBJECTS) $(OBJECTS_COMMON)

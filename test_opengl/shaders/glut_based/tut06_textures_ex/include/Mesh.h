@@ -1,7 +1,7 @@
 #ifndef VT_MESH_H_
 #define VT_MESH_H_
 
-#include <Brush.h>
+#include <ShaderContext.h>
 #include <Buffer.h>
 #include <XformObject.h>
 #include <GL/glew.h>
@@ -66,7 +66,7 @@ public:
         return m_material;
     }
 
-    Brush* get_brush();
+    ShaderContext* get_shader_context();
 
     int get_texture_index() const
     {
@@ -87,25 +87,25 @@ public:
     }
 
 private:
-    size_t                  m_num_vertex;
-    size_t                  m_num_tri;
-    bool                    m_visible;
-    GLfloat*                m_vert_coords;
-    GLfloat*                m_vert_normal;
-    GLfloat*                m_vert_tangent;
-    GLfloat*                m_tex_coords;
-    GLushort*               m_tri_indices;
-    std::unique_ptr<Buffer> m_vbo_vert_coords;
-    std::unique_ptr<Buffer> m_vbo_vert_normal;
-    std::unique_ptr<Buffer> m_vbo_vert_tangent;
-    std::unique_ptr<Buffer> m_vbo_tex_coords;
-    std::unique_ptr<Buffer> m_ibo_tri_indices;
-    bool                    m_buffers_already_init;
-    Material*               m_material; // TODO: Mesh has one Material
-    std::unique_ptr<Brush>  m_brush; // TODO: Mesh has one Brush
-    bool                    m_brush_already_init;
-    int                     m_texture_index;
-    int                     m_normal_map_texture_index;
+    size_t                         m_num_vertex;
+    size_t                         m_num_tri;
+    bool                           m_visible;
+    GLfloat*                       m_vert_coords;
+    GLfloat*                       m_vert_normal;
+    GLfloat*                       m_vert_tangent;
+    GLfloat*                       m_tex_coords;
+    GLushort*                      m_tri_indices;
+    std::unique_ptr<Buffer>        m_vbo_vert_coords;
+    std::unique_ptr<Buffer>        m_vbo_vert_normal;
+    std::unique_ptr<Buffer>        m_vbo_vert_tangent;
+    std::unique_ptr<Buffer>        m_vbo_tex_coords;
+    std::unique_ptr<Buffer>        m_ibo_tri_indices;
+    bool                           m_buffers_already_init;
+    Material*                      m_material; // TODO: Mesh has one Material
+    std::unique_ptr<ShaderContext> m_shader_context; // TODO: Mesh has one ShaderContext
+    bool                           m_shader_context_already_init;
+    int                            m_texture_index;
+    int                            m_normal_map_texture_index;
 
     void update_xform();
 };

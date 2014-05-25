@@ -15,7 +15,7 @@ Mesh::Mesh(size_t num_vertex, size_t num_tri)
       m_visible(true),
       m_buffers_already_init(false),
       m_material(NULL),
-      m_brush_already_init(false),
+      m_shader_context_already_init(false),
       m_texture_index(-1),
       m_normal_map_texture_index(-1)
 {
@@ -183,20 +183,20 @@ Buffer* Mesh::get_ibo_tri_indices()
     return m_ibo_tri_indices.get();
 }
 
-Brush* Mesh::get_brush()
+ShaderContext* Mesh::get_shader_context()
 {
-    if(m_brush_already_init || !m_material) { // FIX-ME! -- potential bug if Material not set
-        return m_brush.get();
+    if(m_shader_context_already_init || !m_material) { // FIX-ME! -- potential bug if Material not set
+        return m_shader_context.get();
     }
-    m_brush = std::unique_ptr<Brush>(new Brush(
+    m_shader_context = std::unique_ptr<ShaderContext>(new ShaderContext(
             m_material,
             get_vbo_vert_coords(),
             get_vbo_vert_normal(),
             get_vbo_vert_tangent(),
             get_vbo_tex_coords(),
             get_ibo_tri_indices()));
-    m_brush_already_init = true;
-    return m_brush.get();
+    m_shader_context_already_init = true;
+    return m_shader_context.get();
 }
 
 void Mesh::update_xform()

@@ -13,11 +13,11 @@ namespace vt {
 Material::Material(
         std::string vertex_shader_file,
         std::string fragment_shader_file,
-        bool        supports_texture_mapping,
-        bool        supports_normal_mapping,
+        bool        use_texture_mapping,
+        bool        use_normal_mapping,
         bool        skybox)
-    : m_supports_texture_mapping(supports_texture_mapping),
-      m_supports_normal_mapping(supports_normal_mapping),
+    : m_use_texture_mapping(use_texture_mapping),
+      m_use_normal_mapping(use_normal_mapping),
       m_skybox(skybox)
 {
     std::unique_ptr<Shader> vs, fs;
