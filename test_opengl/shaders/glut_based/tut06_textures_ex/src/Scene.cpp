@@ -7,6 +7,8 @@
 #include <Texture.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include <vector>
+#include <map>
 #include <algorithm>
 #include <iterator>
 

@@ -62,6 +62,13 @@ Brush::Brush(
 void Brush::render()
 {
     m_program->use();
+    int i = 0;
+    for(vt::Brush::textures_t::const_iterator p = m_textures.begin(); p != m_textures.end(); p++)
+    {
+        glActiveTexture(GL_TEXTURE0+i);
+        (*p)->bind();
+        i++;
+    }
     if(m_skybox) {
         glDisable(GL_DEPTH_TEST);
         glBegin(GL_QUADS);
@@ -72,13 +79,6 @@ void Brush::render()
         glEnd();
         glEnable(GL_DEPTH_TEST);
         return;
-    }
-    int i = 0;
-    for(vt::Brush::textures_t::const_iterator p = m_textures.begin(); p != m_textures.end(); p++)
-    {
-        glActiveTexture(GL_TEXTURE0+i);
-        (*p)->bind();
-        i++;
     }
     m_var_attribute_coord3d->vertex_attrib_pointer(
             m_vbo_vert_coords,

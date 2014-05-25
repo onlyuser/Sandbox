@@ -167,21 +167,21 @@ int init_resources()
     light3 = new vt::Light(origin+glm::vec3(0, 0, light_distance), glm::vec3(0, 0, 1));
     scene->add_light(light3);
 
-    skybox->set_texture_index(0);
-    mesh->set_texture_index(  scene->get_texture_index_by_name("mattress_tex"));
-    mesh2->set_texture_index( scene->get_texture_index_by_name("mattress_tex"));
-    mesh3->set_texture_index( scene->get_texture_index_by_name("mattress_tex"));
-    mesh4->set_texture_index( scene->get_texture_index_by_name("mattress_tex"));
-    mesh5->set_texture_index( scene->get_texture_index_by_name("mattress_tex"));
-    mesh6->set_texture_index( scene->get_texture_index_by_name("mattress_tex"));
-    mesh7->set_texture_index( scene->get_texture_index_by_name("mattress_tex"));
-    mesh->set_normal_map_texture_index( scene->get_texture_index_by_name("mattress_normal"));
-    mesh2->set_normal_map_texture_index(scene->get_texture_index_by_name("mattress_normal"));
-    mesh3->set_normal_map_texture_index(scene->get_texture_index_by_name("mattress_normal"));
-    mesh4->set_normal_map_texture_index(scene->get_texture_index_by_name("mattress_normal"));
-    mesh5->set_normal_map_texture_index(scene->get_texture_index_by_name("mattress_normal"));
-    mesh6->set_normal_map_texture_index(scene->get_texture_index_by_name("mattress_normal"));
-    mesh7->set_normal_map_texture_index(scene->get_texture_index_by_name("mattress_normal"));
+    skybox->set_texture_index(skybox->get_material()->get_texture_index_by_name("skybox"));
+    mesh->set_texture_index(  mesh->get_material()->get_texture_index_by_name("mattress_tex"));
+    mesh2->set_texture_index( mesh2->get_material()->get_texture_index_by_name("mattress_tex"));
+    mesh3->set_texture_index( mesh3->get_material()->get_texture_index_by_name("mattress_tex"));
+    mesh4->set_texture_index( mesh4->get_material()->get_texture_index_by_name("mattress_tex"));
+    mesh5->set_texture_index( mesh5->get_material()->get_texture_index_by_name("mattress_tex"));
+    mesh6->set_texture_index( mesh6->get_material()->get_texture_index_by_name("mattress_tex"));
+    mesh7->set_texture_index( mesh7->get_material()->get_texture_index_by_name("mattress_tex"));
+    mesh->set_normal_map_texture_index( mesh->get_material()->get_texture_index_by_name("mattress_normal"));
+    mesh2->set_normal_map_texture_index(mesh2->get_material()->get_texture_index_by_name("mattress_normal"));
+    mesh3->set_normal_map_texture_index(mesh3->get_material()->get_texture_index_by_name("mattress_normal"));
+    mesh4->set_normal_map_texture_index(mesh4->get_material()->get_texture_index_by_name("mattress_normal"));
+    mesh5->set_normal_map_texture_index(mesh5->get_material()->get_texture_index_by_name("mattress_normal"));
+    mesh6->set_normal_map_texture_index(mesh6->get_material()->get_texture_index_by_name("mattress_normal"));
+    mesh7->set_normal_map_texture_index(mesh7->get_material()->get_texture_index_by_name("mattress_normal"));
 
     return 1;
 }

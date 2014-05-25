@@ -1,6 +1,11 @@
 #include <Material.h>
 #include <Program.h>
 #include <Shader.h>
+#include <Texture.h>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iterator>
 #include <memory> // std::unique_ptr
 
 namespace vt {
@@ -27,6 +32,31 @@ Material::Material(
 //        print_log(m_program->id());
         return;
     }
+}
+
+void Material::add_texture(Texture* texture)
+{
+    m_textures.push_back(texture);
+    m_texture_lookup_table[texture->get_name()] = texture;
+}
+
+Texture* Material::get_texture_by_name(std::string name) const
+{
+    texture_lookup_table_t::const_iterator p = m_texture_lookup_table.find(name);
+    if(p == m_texture_lookup_table.end()) {
+        return NULL;
+    }
+    return (*p).second;
+}
+
+int Material::get_texture_index_by_name(std::string name) const
+{
+    Texture* texture = get_texture_by_name(name);
+    textures_t::const_iterator p = std::find(m_textures.begin(), m_textures.end(), texture);
+    if(p == m_textures.end()) {
+        return -1;
+    }
+    return std::distance(m_textures.begin(), p);
 }
 
 }

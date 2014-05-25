@@ -3,6 +3,7 @@
 
 #include <Program.h>
 #include <vector>
+#include <map>
 #include <string>
 #include <memory> // std::unique_ptr
 
@@ -26,10 +27,7 @@ public:
         return m_program.get();
     }
 
-    void add_texture(Texture* texture)
-    {
-        m_textures.push_back(texture);
-    }
+    void add_texture(Texture* texture);
     void clear_textures()
     {
         m_textures.clear();
@@ -51,12 +49,18 @@ public:
         return m_skybox;
     }
 
+    Texture* get_texture_by_name(std::string name) const;
+    int get_texture_index_by_name(std::string name) const;
+
 private:
     std::unique_ptr<Program> m_program;
     textures_t               m_textures; // TODO: Material has multiple Textures
     bool                     m_supports_texture_mapping;
     bool                     m_supports_normal_mapping;
     bool                     m_skybox;
+
+    typedef std::map<std::string, Texture*> texture_lookup_table_t;
+    texture_lookup_table_t m_texture_lookup_table;
 };
 
 }
