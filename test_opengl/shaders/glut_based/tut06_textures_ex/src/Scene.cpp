@@ -72,26 +72,6 @@ Scene::~Scene()
 void Scene::add_texture(Texture* texture)
 {
     m_textures.push_back(texture);
-    m_texture_lookup_table[texture->get_name()] = texture;
-}
-
-Texture* Scene::get_texture_by_name(std::string name) const
-{
-    texture_lookup_table_t::const_iterator p = m_texture_lookup_table.find(name);
-    if(p == m_texture_lookup_table.end()) {
-        return NULL;
-    }
-    return (*p).second;
-}
-
-int Scene::get_texture_index_by_name(std::string name) const
-{
-    Texture* texture = get_texture_by_name(name);
-    textures_t::const_iterator p = std::find(m_textures.begin(), m_textures.end(), texture);
-    if(p == m_textures.end()) {
-        return -1;
-    }
-    return std::distance(m_textures.begin(), p);
 }
 
 void Scene::reset()
@@ -101,7 +81,6 @@ void Scene::reset()
     m_meshes.clear();
     m_materials.clear();
     m_textures.clear();
-    m_texture_lookup_table.clear();
 }
 
 void Scene::use_program()
@@ -145,15 +124,17 @@ void Scene::render()
         Brush* brush = (*q)->get_brush();
         brush->get_program()->use();
         brush->set_mvp_xform(m_camera->get_xform()*(*q)->get_xform());
-        brush->set_modelview_xform((*q)->get_xform());
-        brush->set_normal_xform((*q)->get_normal_xform());
         brush->set_texture_index((*q)->get_texture_index());
-        brush->set_normal_map_texture_index((*q)->get_normal_map_texture_index());
-        brush->set_camera_pos(m_camera_pos);
-        brush->set_light_pos(NUM_LIGHTS, m_light_pos);
-        brush->set_light_color(NUM_LIGHTS, m_light_color);
-        brush->set_light_enabled(NUM_LIGHTS, m_light_enabled);
-        brush->set_light_count(m_lights.size());
+        if((*q)->get_material()->supports_normal_mapping()) {
+            brush->set_modelview_xform((*q)->get_xform());
+            brush->set_normal_xform((*q)->get_normal_xform());
+            brush->set_normal_map_texture_index((*q)->get_normal_map_texture_index());
+            brush->set_camera_pos(m_camera_pos);
+            brush->set_light_pos(NUM_LIGHTS, m_light_pos);
+            brush->set_light_color(NUM_LIGHTS, m_light_color);
+            brush->set_light_enabled(NUM_LIGHTS, m_light_enabled);
+            brush->set_light_count(m_lights.size());
+        }
         brush->render();
     }
 }

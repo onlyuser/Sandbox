@@ -103,14 +103,21 @@ int init_resources()
             false,
             true);
     scene->add_material(skybox_material);
+    vt::Material* simple_material = new vt::Material(
+            "src/simple.v.glsl",
+            "src/simple.f.glsl",
+            true,
+            false,
+            false);
+    scene->add_material(simple_material);
     skybox->set_material(skybox_material);
     mesh->set_material(material);
     mesh2->set_material(material);
     mesh3->set_material(material);
     mesh4->set_material(material);
     mesh5->set_material(material);
-    mesh6->set_material(material);
-    mesh7->set_material(material);
+    mesh6->set_material(simple_material);
+    mesh7->set_material(simple_material);
 
     vt::Texture* texture = new vt::Texture(
             "dex3d",
@@ -180,8 +187,6 @@ int init_resources()
     mesh3->set_normal_map_texture_index(mesh3->get_material()->get_texture_index_by_name("mattress_normal"));
     mesh4->set_normal_map_texture_index(mesh4->get_material()->get_texture_index_by_name("mattress_normal"));
     mesh5->set_normal_map_texture_index(mesh5->get_material()->get_texture_index_by_name("mattress_normal"));
-    mesh6->set_normal_map_texture_index(mesh6->get_material()->get_texture_index_by_name("mattress_normal"));
-    mesh7->set_normal_map_texture_index(mesh7->get_material()->get_texture_index_by_name("mattress_normal"));
 
     return 1;
 }

@@ -63,9 +63,6 @@ public:
         return m_skybox;
     }
 
-    Texture* get_texture_by_name(std::string name) const;
-    int get_texture_index_by_name(std::string name) const;
-
     void reset();
     void use_program();
     void render();
@@ -83,9 +80,6 @@ private:
     GLfloat* m_light_pos;
     GLfloat* m_light_color;
     GLint*   m_light_enabled;
-
-    typedef std::map<std::string, Texture*> texture_lookup_table_t;
-    texture_lookup_table_t m_texture_lookup_table;
 
     Scene();
     ~Scene();

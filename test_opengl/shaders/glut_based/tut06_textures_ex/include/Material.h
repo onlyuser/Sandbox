@@ -28,10 +28,7 @@ public:
     }
 
     void add_texture(Texture* texture);
-    void clear_textures()
-    {
-        m_textures.clear();
-    }
+    void clear_textures();
     const textures_t &get_textures() const
     {
         return m_textures;

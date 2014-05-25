@@ -40,6 +40,12 @@ void Material::add_texture(Texture* texture)
     m_texture_lookup_table[texture->get_name()] = texture;
 }
 
+void Material::clear_textures()
+{
+    m_textures.clear();
+    m_texture_lookup_table.clear();
+}
+
 Texture* Material::get_texture_by_name(std::string name) const
 {
     texture_lookup_table_t::const_iterator p = m_texture_lookup_table.find(name);
