@@ -86,16 +86,17 @@ int init_resources()
     mesh6->set_origin(glm::vec3(0, -2.5, 0));      // cylinder
     mesh7->set_origin(glm::vec3(0, 1.5, 0));       // cone
 
-//    mesh6->set_visible(false);
-//    mesh7->set_visible(false);
+    //mesh6->set_visible(false);
+    //mesh7->set_visible(false);
 
-    vt::Material* material = new vt::Material(
+    vt::Material* normal_mapped_material = new vt::Material(
             "src/normal_mapped.v.glsl",
             "src/normal_mapped.f.glsl",
             true,
             true,
             false);
-    scene->add_material(material);
+    scene->add_material(normal_mapped_material);
+
     vt::Material* skybox_material = new vt::Material(
             "src/skybox.v.glsl",
             "src/skybox.f.glsl",
@@ -103,21 +104,23 @@ int init_resources()
             false,
             true);
     scene->add_material(skybox_material);
-    vt::Material* simple_material = new vt::Material(
+
+    vt::Material* texture_mapped_material = new vt::Material(
             "src/texture_mapped.v.glsl",
             "src/texture_mapped.f.glsl",
             true,
             false,
             false);
-    scene->add_material(simple_material);
+    scene->add_material(texture_mapped_material);
+
     skybox->set_material(skybox_material);
-    mesh->set_material(material);
-    mesh2->set_material(material);
-    mesh3->set_material(material);
-    mesh4->set_material(material);
-    mesh5->set_material(material);
-    mesh6->set_material(simple_material);
-    mesh7->set_material(simple_material);
+    mesh->set_material(normal_mapped_material);
+    mesh2->set_material(normal_mapped_material);
+    mesh3->set_material(normal_mapped_material);
+    mesh4->set_material(normal_mapped_material);
+    mesh5->set_material(normal_mapped_material);
+    mesh6->set_material(texture_mapped_material);
+    mesh7->set_material(texture_mapped_material);
 
     vt::Texture* texture = new vt::Texture(
             "dex3d",
@@ -125,7 +128,8 @@ int init_resources()
             res_texture.width,
             res_texture.height);
     scene->add_texture(texture);
-    material->add_texture(texture);
+    normal_mapped_material->add_texture(texture);
+    texture_mapped_material->add_texture(texture);
 
     vt::Texture* texture2 = new vt::Texture(
             "lode_runner",
@@ -133,19 +137,19 @@ int init_resources()
             res_texture2.width,
             res_texture2.height);
     scene->add_texture(texture2);
-    material->add_texture(texture2);
+    normal_mapped_material->add_texture(texture2);
 
     vt::Texture* texture3 = new vt::Texture(
             "mattress_tex",
             "data/mattress_color.png");
     scene->add_texture(texture3);
-    material->add_texture(texture3);
+    normal_mapped_material->add_texture(texture3);
 
     vt::Texture* texture4 = new vt::Texture(
             "mattress_normal",
             "data/mattress_normal.png");
     scene->add_texture(texture4);
-    material->add_texture(texture4);
+    normal_mapped_material->add_texture(texture4);
 
     vt::Texture* texture5 = new vt::Texture(
             "skybox",
@@ -180,8 +184,8 @@ int init_resources()
     mesh3->set_texture_index( mesh3->get_material()->get_texture_index_by_name("mattress_tex"));
     mesh4->set_texture_index( mesh4->get_material()->get_texture_index_by_name("mattress_tex"));
     mesh5->set_texture_index( mesh5->get_material()->get_texture_index_by_name("mattress_tex"));
-    mesh6->set_texture_index( mesh6->get_material()->get_texture_index_by_name("mattress_tex"));
-    mesh7->set_texture_index( mesh7->get_material()->get_texture_index_by_name("mattress_tex"));
+    mesh6->set_texture_index( mesh6->get_material()->get_texture_index_by_name("dex3d"));
+    mesh7->set_texture_index( mesh7->get_material()->get_texture_index_by_name("dex3d"));
     mesh->set_normal_map_texture_index( mesh->get_material()->get_texture_index_by_name("mattress_normal"));
     mesh2->set_normal_map_texture_index(mesh2->get_material()->get_texture_index_by_name("mattress_normal"));
     mesh3->set_normal_map_texture_index(mesh3->get_material()->get_texture_index_by_name("mattress_normal"));
@@ -265,8 +269,8 @@ void onKeyboard(unsigned char key, int x, int y)
             mesh3->set_texture_index(texture_index);
             mesh4->set_texture_index(texture_index);
             mesh5->set_texture_index(texture_index);
-            mesh6->set_texture_index(texture_index);
-            mesh7->set_texture_index(texture_index);
+            //mesh6->set_texture_index(texture_index);
+            //mesh7->set_texture_index(texture_index);
             break;
         case 'n':
             debug_vert_normals = !debug_vert_normals;
