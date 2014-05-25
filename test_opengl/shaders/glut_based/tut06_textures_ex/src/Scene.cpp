@@ -132,26 +132,9 @@ void Scene::render()
         Brush* brush = m_skybox->get_brush();
         brush->get_program()->use();
         brush->set_texture_index(0);
-//        glm::mat4 modelview_xform = m_camera->get_view_xform();
-//        modelview_xform[3][0] = 0.0;
-//        modelview_xform[3][1] = 0.0;
-//        modelview_xform[3][2] = 0.0;
-//        brush->set_modelview_xform(glm::inverse(modelview_xform));
-        brush->set_normal_xform(glm::inverse(m_camera->get_normal_xform()));
-        brush->set_projection_xform(glm::inverse(m_camera->get_projection_xform()));
-        //brush->render();
-        glDisable(GL_DEPTH_TEST);
-        //glDisable(GL_LIGHTING);
-
-        glBegin(GL_QUADS);
-            glVertex3f(-1.0, -1.0, 0.0);
-            glVertex3f( 1.0, -1.0, 0.0);
-            glVertex3f( 1.0,  1.0, 0.0);
-            glVertex3f(-1.0,  1.0, 0.0);
-        glEnd();
-
-        glEnable(GL_DEPTH_TEST);
-        //glEnable(GL_LIGHTING);
+        brush->set_inv_normal_xform(glm::inverse(m_camera->get_normal_xform()));
+        brush->set_inv_projection_xform(glm::inverse(m_camera->get_projection_xform()));
+        brush->render();
     }
     for(meshes_t::const_iterator q = m_meshes.begin(); q != m_meshes.end(); q++) {
         if(!(*q)->get_visible()) {

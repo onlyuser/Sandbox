@@ -33,7 +33,6 @@ public:
     void render();
     void set_mvp_xform(glm::mat4 mvp_xform);
     void set_modelview_xform(glm::mat4 modelview_xform);
-    void set_projection_xform(glm::mat4 normal_xform);
     void set_normal_xform(glm::mat4 normal_xform);
     void set_texture_index(GLint texture_id);
     void set_normal_map_texture_index(GLint texture_id);
@@ -42,6 +41,8 @@ public:
     void set_light_color(size_t num_lights, GLfloat* light_color_arr);
     void set_light_enabled(size_t num_lights, GLint* light_enabled_arr);
     void set_light_count(GLint light_count);
+    void set_inv_projection_xform(glm::mat4 inv_projection_xform);
+    void set_inv_normal_xform(glm::mat4 inv_normal_xform);
 
 private:
     Program* m_program;
@@ -50,7 +51,6 @@ private:
     std::unique_ptr<VarUniform>
             m_var_uniform_mvp_xform,
             m_var_uniform_modelview_xform,
-            m_var_uniform_projection_xform,
             m_var_uniform_normal_xform,
             m_var_uniform_mytexture,
             m_var_uniform_normal_map_texture,
@@ -58,7 +58,9 @@ private:
             m_var_uniform_light_pos,
             m_var_uniform_light_color,
             m_var_uniform_light_enabled,
-            m_var_uniform_light_count;
+            m_var_uniform_light_count,
+            m_var_uniform_inv_projection_xform,
+            m_var_uniform_inv_normal_xform;
     const textures_t &m_textures;
     bool m_supports_texture_mapping;
     bool m_supports_normal_mapping;

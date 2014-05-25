@@ -53,15 +53,26 @@ Brush::Brush(
         m_var_uniform_light_count        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightCount"));
     }
     if(m_skybox) {
-        m_var_uniform_mytexture        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
-        m_var_uniform_projection_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("inv_projection_xform"));
-        m_var_uniform_normal_xform     = std::unique_ptr<VarUniform>(m_program->get_var_uniform("inv_normal_xform"));
+        m_var_uniform_mytexture            = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
+        m_var_uniform_inv_projection_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("inv_projection_xform"));
+        m_var_uniform_inv_normal_xform     = std::unique_ptr<VarUniform>(m_program->get_var_uniform("inv_normal_xform"));
     }
 }
 
 void Brush::render()
 {
     m_program->use();
+    if(m_skybox) {
+        glDisable(GL_DEPTH_TEST);
+        glBegin(GL_QUADS);
+            glVertex3f(-1.0, -1.0, 0.0);
+            glVertex3f( 1.0, -1.0, 0.0);
+            glVertex3f( 1.0,  1.0, 0.0);
+            glVertex3f(-1.0,  1.0, 0.0);
+        glEnd();
+        glEnable(GL_DEPTH_TEST);
+        return;
+    }
     int i = 0;
     for(vt::Brush::textures_t::const_iterator p = m_textures.begin(); p != m_textures.end(); p++)
     {
@@ -129,11 +140,6 @@ void Brush::set_modelview_xform(glm::mat4 modelview_xform)
     m_var_uniform_modelview_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(modelview_xform));
 }
 
-void Brush::set_projection_xform(glm::mat4 projection_xform)
-{
-    m_var_uniform_projection_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(projection_xform));
-}
-
 void Brush::set_normal_xform(glm::mat4 normal_xform)
 {
     m_var_uniform_normal_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(normal_xform));
@@ -172,6 +178,16 @@ void Brush::set_light_enabled(size_t num_lights, GLint* light_enabled_arr)
 void Brush::set_light_count(GLint light_count)
 {
     m_var_uniform_light_count->uniform_1i(light_count);
+}
+
+void Brush::set_inv_projection_xform(glm::mat4 inv_projection_xform)
+{
+    m_var_uniform_inv_projection_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(inv_projection_xform));
+}
+
+void Brush::set_inv_normal_xform(glm::mat4 inv_normal_xform)
+{
+    m_var_uniform_inv_normal_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(inv_normal_xform));
 }
 
 }
