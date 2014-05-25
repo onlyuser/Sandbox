@@ -184,7 +184,7 @@ GLuint Texture::gen_texture_skybox_internal(
             0,                              // border, always 0 in OpenGL ES
             GL_RGB,                         // format
             GL_UNSIGNED_BYTE,               // type
-            pixel_data_pos_y);
+            pixel_data_neg_y);
     glTexImage2D(
             GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, // target
             0,                              // level, 0 = base, no mipmap,
@@ -194,7 +194,7 @@ GLuint Texture::gen_texture_skybox_internal(
             0,                              // border, always 0 in OpenGL ES
             GL_RGB,                         // format
             GL_UNSIGNED_BYTE,               // type
-            pixel_data_neg_y);
+            pixel_data_pos_y);
     glTexImage2D(
             GL_TEXTURE_CUBE_MAP_POSITIVE_Z, // target
             0,                              // level, 0 = base, no mipmap,

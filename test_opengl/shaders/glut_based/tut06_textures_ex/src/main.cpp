@@ -188,7 +188,7 @@ int init_resources()
 
 void onIdle()
 {
-    float angle = static_cast<float>(glutGet(GLUT_ELAPSED_TIME)) / 1000 * 15; // base 15 degrees per second
+    float angle = static_cast<float>(glutGet(GLUT_ELAPSED_TIME))/1000*15; // base 15 degrees per second
     mesh2->set_orient(glm::vec3(angle*3, angle*2, angle*4));
     glutPostRedisplay();
 }
