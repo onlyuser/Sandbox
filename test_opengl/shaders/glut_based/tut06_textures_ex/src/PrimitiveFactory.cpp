@@ -256,7 +256,7 @@ Mesh* PrimitiveFactory::create_torus(int slices, int stacks, float radius_major,
     return mesh;
 }
 
-Mesh* PrimitiveFactory::create_box(float width, float height, float length, bool skybox)
+Mesh* PrimitiveFactory::create_box(float width, float height, float length)
 {
     Mesh* mesh = new Mesh(24, 12);
 
@@ -368,16 +368,6 @@ Mesh* PrimitiveFactory::create_box(float width, float height, float length, bool
     // bottom
     mesh->set_tri_indices(10, glm::uvec3(20, 21, 22));
     mesh->set_tri_indices(11, glm::uvec3(22, 23, 20));
-
-    if(skybox) {
-        for(int i = 0; i<6; i++) {
-            glm::uvec3 first_vec  = mesh->get_tri_indices(i*2+0);
-            glm::uvec3 second_vec = mesh->get_tri_indices(i*2+1);
-            std::swap(first_vec[1], second_vec[1]);
-            mesh->set_tri_indices(i*2+0, first_vec);
-            mesh->set_tri_indices(i*2+1, second_vec);
-        }
-    }
 
     return mesh;
 }

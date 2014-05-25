@@ -60,7 +60,7 @@ int init_resources()
 {
     vt::Scene *scene = vt::Scene::instance();
 
-    skybox = vt::PrimitiveFactory::create_box(10, 10, 10, true);
+    skybox = vt::PrimitiveFactory::create_skybox();
     scene->set_skybox(skybox);
     mesh = vt::PrimitiveFactory::create_box();
     scene->add_mesh(mesh);
@@ -77,7 +77,6 @@ int init_resources()
     mesh7 = vt::PrimitiveFactory::create_cone(16, 0.5, 1);
     scene->add_mesh(mesh7);
 
-    skybox->set_origin(glm::vec3(-5, -5, -5));     // skybox
     mesh->set_origin(glm::vec3(-0.5, -0.5, -0.5)); // box
     mesh2->set_scale(glm::vec3(0.5, 2, 3));        // scaled box
     mesh3->set_origin(glm::vec3(-5, -5, -1));      // grid
@@ -152,7 +151,7 @@ int init_resources()
     normal_mapped_material->add_texture(texture4);
 
     vt::Texture* texture5 = new vt::Texture(
-            "skybox",
+            "colosseum",
             "data/Colosseum/posx.png",
             "data/Colosseum/negx.png",
             "data/Colosseum/posy.png",
@@ -178,7 +177,7 @@ int init_resources()
     light3 = new vt::Light(origin+glm::vec3(0, 0, light_distance), glm::vec3(0, 0, 1));
     scene->add_light(light3);
 
-    skybox->set_texture_index(skybox->get_material()->get_texture_index_by_name("skybox"));
+    skybox->set_texture_index(skybox->get_material()->get_texture_index_by_name("colosseum"));
     mesh->set_texture_index(  mesh->get_material()->get_texture_index_by_name("mattress_tex"));
     mesh2->set_texture_index( mesh2->get_material()->get_texture_index_by_name("mattress_tex"));
     mesh3->set_texture_index( mesh3->get_material()->get_texture_index_by_name("mattress_tex"));
