@@ -33,6 +33,7 @@ public:
     void render();
     void set_mvp_xform(glm::mat4 mvp_xform);
     void set_modelview_xform(glm::mat4 modelview_xform);
+    void set_projection_xform(glm::mat4 normal_xform);
     void set_normal_xform(glm::mat4 normal_xform);
     void set_texture_index(GLint texture_id);
     void set_normal_map_texture_index(GLint texture_id);
@@ -49,6 +50,7 @@ private:
     std::unique_ptr<VarUniform>
             m_var_uniform_mvp_xform,
             m_var_uniform_modelview_xform,
+            m_var_uniform_projection_xform,
             m_var_uniform_normal_xform,
             m_var_uniform_mytexture,
             m_var_uniform_normal_map_texture,
@@ -60,6 +62,7 @@ private:
     const textures_t &m_textures;
     bool m_supports_texture_mapping;
     bool m_supports_normal_mapping;
+    bool m_skybox;
 };
 
 }

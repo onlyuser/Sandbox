@@ -93,13 +93,15 @@ int init_resources()
             "src/cube.v.glsl",
             "src/cube.f.glsl",
             true,
-            true);
+            true,
+            false);
     scene->add_material(material);
     vt::Material* skybox_material = new vt::Material(
             "src/skybox.v.glsl",
             "src/skybox.f.glsl",
-            true,
-            false);
+            false,
+            false,
+            true);
     scene->add_material(skybox_material);
     skybox->set_material(skybox_material);
     mesh->set_material(material);
@@ -165,7 +167,7 @@ int init_resources()
     light3 = new vt::Light(origin+glm::vec3(0, 0, light_distance), glm::vec3(0, 0, 1));
     scene->add_light(light3);
 
-    skybox->set_texture_index(scene->get_texture_index_by_name("skybox"));
+    skybox->set_texture_index(0);
     mesh->set_texture_index(  scene->get_texture_index_by_name("mattress_tex"));
     mesh2->set_texture_index( scene->get_texture_index_by_name("mattress_tex"));
     mesh3->set_texture_index( scene->get_texture_index_by_name("mattress_tex"));
@@ -375,6 +377,9 @@ int main(int argc, char* argv[])
         fprintf(stderr, "Error: your graphic card does not support OpenGL 2.0\n");
         return 1;
     }
+
+    char* s = (char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+    printf("GLSL version %s\n", s);
 
     if(init_resources()) {
         glutDisplayFunc(onDisplay);

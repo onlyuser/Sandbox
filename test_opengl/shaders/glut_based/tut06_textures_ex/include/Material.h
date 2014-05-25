@@ -19,7 +19,8 @@ public:
             std::string vertex_shader_file,
             std::string fragment_shader_file,
             bool        supports_texture_mapping = false,
-            bool        supports_normal_mapping = false);
+            bool        supports_normal_mapping = false,
+            bool        skybox = false);
     Program* get_program() const
     {
         return m_program.get();
@@ -45,12 +46,17 @@ public:
     {
         return m_supports_normal_mapping;
     }
+    bool skybox() const
+    {
+        return m_skybox;
+    }
 
 private:
     std::unique_ptr<Program> m_program;
     textures_t               m_textures; // TODO: Material has multiple Textures
     bool                     m_supports_texture_mapping;
     bool                     m_supports_normal_mapping;
+    bool                     m_skybox;
 };
 
 }

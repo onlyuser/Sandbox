@@ -29,10 +29,13 @@ Brush::Brush(
       m_ibo_tri_indices(ibo_tri_indices),
       m_textures(material->get_textures()),
       m_supports_texture_mapping(material->supports_texture_mapping()),
-      m_supports_normal_mapping(material->supports_normal_mapping())
+      m_supports_normal_mapping(material->supports_normal_mapping()),
+      m_skybox(material->skybox())
 {
-    m_var_attribute_coord3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("coord3d"));
-    m_var_uniform_mvp_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp_xform"));
+    if(m_supports_texture_mapping || m_supports_normal_mapping) {
+        m_var_attribute_coord3d = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("coord3d"));
+        m_var_uniform_mvp_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mvp_xform"));
+    }
     if(m_supports_texture_mapping) {
         m_var_uniform_mytexture  = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
         m_var_attribute_texcoord = std::unique_ptr<VarAttribute>(m_program->get_var_attribute("texcoord"));
@@ -48,6 +51,11 @@ Brush::Brush(
         m_var_uniform_light_color        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightColor"));
         m_var_uniform_light_enabled      = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightEnabled"));
         m_var_uniform_light_count        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightCount"));
+    }
+    if(m_skybox) {
+        m_var_uniform_mytexture        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
+        m_var_uniform_projection_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("inv_projection_xform"));
+        m_var_uniform_normal_xform     = std::unique_ptr<VarUniform>(m_program->get_var_uniform("inv_normal_xform"));
     }
 }
 
@@ -119,6 +127,11 @@ void Brush::set_mvp_xform(glm::mat4 mvp_xform)
 void Brush::set_modelview_xform(glm::mat4 modelview_xform)
 {
     m_var_uniform_modelview_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(modelview_xform));
+}
+
+void Brush::set_projection_xform(glm::mat4 projection_xform)
+{
+    m_var_uniform_projection_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(projection_xform));
 }
 
 void Brush::set_normal_xform(glm::mat4 normal_xform)
