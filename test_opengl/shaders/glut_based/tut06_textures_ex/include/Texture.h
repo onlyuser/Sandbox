@@ -30,6 +30,7 @@ public:
 
 private:
     std::string m_name;
+    bool m_skybox;
 
     static GLuint gen_texture_internal(const void* pixel_data, size_t width, size_t height);
     static GLuint gen_texture_skybox_internal(
