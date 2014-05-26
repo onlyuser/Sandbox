@@ -9,10 +9,6 @@ varying vec3 cameraVector;
 uniform samplerCube env_map_texture;
 
 void main(void) {
-    // initialize diffuse/specular lighting
-    vec3 diffuse = vec3(0.0, 0.0, 0.0);
-    vec3 specular = vec3(0.0, 0.0, 0.0);
-
     // normalize the camera direction
     vec3 cameraDir = normalize(cameraVector);
 
