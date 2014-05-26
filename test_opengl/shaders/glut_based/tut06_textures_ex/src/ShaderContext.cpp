@@ -147,7 +147,9 @@ void ShaderContext::set_normal_xform(glm::mat4 normal_xform)
 
 void ShaderContext::set_texture_index(GLint texture_id)
 {
-    m_var_uniform_mytexture->uniform_1i(texture_id);
+    if(texture_id < m_textures.size()) {
+        m_var_uniform_mytexture->uniform_1i(texture_id);
+    }
 }
 
 void ShaderContext::set_normal_map_texture_index(GLint texture_id)
