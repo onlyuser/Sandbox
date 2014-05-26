@@ -53,7 +53,7 @@ ShaderContext::ShaderContext(
         m_var_uniform_light_count        = std::unique_ptr<VarUniform>(m_program->get_var_uniform("lightCount"));
     }
     if(m_skybox) {
-        m_var_uniform_mytexture            = std::unique_ptr<VarUniform>(m_program->get_var_uniform("mytexture"));
+        m_var_uniform_mytexture            = std::unique_ptr<VarUniform>(m_program->get_var_uniform("env_map_texture"));
         m_var_uniform_inv_projection_xform = std::unique_ptr<VarUniform>(m_program->get_var_uniform("inv_projection_xform"));
         m_var_uniform_inv_normal_xform     = std::unique_ptr<VarUniform>(m_program->get_var_uniform("inv_normal_xform"));
     }
