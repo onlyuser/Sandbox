@@ -133,6 +133,9 @@ int init_resources()
     mesh6->set_material(texture_mapped_material);
     mesh7->set_material(texture_mapped_material);
 
+    mesh4->set_reflect_to_refract_ratio(0.25); // 25% reflective
+    mesh5->set_reflect_to_refract_ratio(0.75); // 75% reflective
+
     vt::Texture* texture = new vt::Texture(
             "dex3d",
             res_texture.pixel_data,

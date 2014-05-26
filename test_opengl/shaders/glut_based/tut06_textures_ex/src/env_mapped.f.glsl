@@ -5,7 +5,8 @@ const float AIR_REFRACTIVE_INDEX = 1.0;
 const float WATER_REFRACTIVE_INDEX = 1.333;
 
 const float BUMPINESS_FACTOR = 0.001;
-const float REFLECT_TO_REFRACT_RATIO = 0.666;
+
+uniform float reflect_to_refract_ratio;
 
 varying mat3 tbn_xform;
 varying vec3 cameraVector;
@@ -31,5 +32,5 @@ void main(void) {
     vec4 reflected_color = textureCube(env_map_texture, reflected_flipped_cubemap_texcoord);
     vec4 refracted_color = textureCube(env_map_texture, refracted_flipped_cubemap_texcoord);
 
-    gl_FragColor = mix(reflected_color, refracted_color, REFLECT_TO_REFRACT_RATIO); 
+    gl_FragColor = mix(refracted_color, reflected_color, reflect_to_refract_ratio); 
 }

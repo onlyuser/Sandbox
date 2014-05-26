@@ -141,6 +141,7 @@ void Scene::render()
         }
         if((*q)->get_material()->use_env_mapping()) {
             shader_context->set_env_map_texture_index(0);
+            shader_context->set_reflect_to_refract_ratio((*q)->get_reflect_to_refract_ratio());
         }
         shader_context->render();
     }

@@ -95,6 +95,15 @@ public:
         m_env_map_texture_index = env_map_texture_index;
     }
 
+    float get_reflect_to_refract_ratio() const
+    {
+        return m_reflect_to_refract_ratio;
+    }
+    void set_reflect_to_refract_ratio(float reflect_to_refract_ratio)
+    {
+        m_reflect_to_refract_ratio = reflect_to_refract_ratio;
+    }
+
 private:
     size_t                         m_num_vertex;
     size_t                         m_num_tri;
@@ -116,6 +125,7 @@ private:
     int                            m_texture_index;
     int                            m_normal_map_texture_index;
     int                            m_env_map_texture_index;
+    float                          m_reflect_to_refract_ratio;
 
     void update_xform();
 };

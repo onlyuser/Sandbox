@@ -57,6 +57,7 @@ ShaderContext::ShaderContext(
     }
     if(m_use_env_mapping) {
         m_var_uniform_env_map_texture = std::unique_ptr<VarUniform>(m_program->get_var_uniform("env_map_texture"));
+        m_var_uniform_reflect_to_refract_ratio = std::unique_ptr<VarUniform>(m_program->get_var_uniform("reflect_to_refract_ratio"));
     }
     if(m_skybox) {
         m_var_uniform_env_map_texture      = std::unique_ptr<VarUniform>(m_program->get_var_uniform("env_map_texture"));
@@ -205,6 +206,11 @@ void ShaderContext::set_inv_projection_xform(glm::mat4 inv_projection_xform)
 void ShaderContext::set_inv_normal_xform(glm::mat4 inv_normal_xform)
 {
     m_var_uniform_inv_normal_xform->uniform_matrix_4fv(1, GL_FALSE, glm::value_ptr(inv_normal_xform));
+}
+
+void ShaderContext::set_reflect_to_refract_ratio(GLfloat reflect_to_refract_ratio)
+{
+    m_var_uniform_reflect_to_refract_ratio->uniform_1f(reflect_to_refract_ratio);
 }
 
 }
