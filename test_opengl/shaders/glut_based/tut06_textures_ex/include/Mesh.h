@@ -86,6 +86,15 @@ public:
         m_normal_map_texture_index = normal_map_texture_index;
     }
 
+    int get_env_map_texture_index() const
+    {
+        return m_env_map_texture_index;
+    }
+    void set_env_map_texture_index(int env_map_texture_index)
+    {
+        m_env_map_texture_index = env_map_texture_index;
+    }
+
 private:
     size_t                         m_num_vertex;
     size_t                         m_num_tri;
@@ -106,6 +115,7 @@ private:
     bool                           m_shader_context_already_init;
     int                            m_texture_index;
     int                            m_normal_map_texture_index;
+    int                            m_env_map_texture_index;
 
     void update_xform();
 };

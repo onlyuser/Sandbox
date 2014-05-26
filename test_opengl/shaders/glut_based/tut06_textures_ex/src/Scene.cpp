@@ -112,7 +112,7 @@ void Scene::render()
     if(m_skybox) {
         ShaderContext* shader_context = m_skybox->get_shader_context();
         shader_context->get_program()->use();
-        shader_context->set_texture_index(0);
+        shader_context->set_env_map_texture_index(0);
         shader_context->set_inv_normal_xform(glm::inverse(m_camera->get_normal_xform()));
         shader_context->set_inv_projection_xform(glm::inverse(m_camera->get_projection_xform()));
         shader_context->render();
@@ -125,7 +125,7 @@ void Scene::render()
         shader_context->get_program()->use();
         shader_context->set_mvp_xform(m_camera->get_xform()*(*q)->get_xform());
         shader_context->set_texture_index((*q)->get_texture_index());
-        if((*q)->get_material()->use_normal_mapping()) {
+        if((*q)->get_material()->use_normal_mapping() || (*q)->get_material()->use_env_mapping()) {
             shader_context->set_modelview_xform((*q)->get_xform());
             shader_context->set_normal_xform((*q)->get_normal_xform());
             shader_context->set_normal_map_texture_index((*q)->get_normal_map_texture_index());
@@ -134,6 +134,9 @@ void Scene::render()
             shader_context->set_light_color(NUM_LIGHTS, m_light_color);
             shader_context->set_light_enabled(NUM_LIGHTS, m_light_enabled);
             shader_context->set_light_count(m_lights.size());
+        }
+        if((*q)->get_material()->use_env_mapping()) {
+            //shader_context->set_env_map_texture_index(0);
         }
         shader_context->render();
     }

@@ -91,33 +91,45 @@ int init_resources()
     vt::Material* normal_mapped_material = new vt::Material(
             "src/normal_mapped.v.glsl",
             "src/normal_mapped.f.glsl",
-            true,
-            true,
-            false);
+            true,   // use_texture_mapping
+            true,   // use_normal_mapping
+            false,  // use_env_mapping
+            false); // skybox
     scene->add_material(normal_mapped_material);
 
     vt::Material* skybox_material = new vt::Material(
             "src/skybox.v.glsl",
             "src/skybox.f.glsl",
-            false,
-            false,
-            true);
+            false, // use_texture_mapping
+            false, // use_normal_mapping
+            false, // use_env_mapping
+            true); // skybox
     scene->add_material(skybox_material);
 
     vt::Material* texture_mapped_material = new vt::Material(
             "src/texture_mapped.v.glsl",
             "src/texture_mapped.f.glsl",
-            true,
-            false,
-            false);
+            true,   // use_texture_mapping
+            false,  // use_normal_mapping
+            false,  // use_env_mapping
+            false); // skybox
     scene->add_material(texture_mapped_material);
+
+    vt::Material* env_mapped_material = new vt::Material(
+            "src/env_mapped.v.glsl",
+            "src/env_mapped.f.glsl",
+            false,  // use_texture_mapping
+            false,  // use_normal_mapping
+            true,   // use_env_mapping
+            false); // skybox
+    scene->add_material(env_mapped_material);
 
     skybox->set_material(skybox_material);
     mesh->set_material(normal_mapped_material);
     mesh2->set_material(normal_mapped_material);
     mesh3->set_material(normal_mapped_material);
-    mesh4->set_material(normal_mapped_material);
-    mesh5->set_material(normal_mapped_material);
+    mesh4->set_material(env_mapped_material);
+    mesh5->set_material(env_mapped_material);
     mesh6->set_material(texture_mapped_material);
     mesh7->set_material(texture_mapped_material);
 
@@ -143,12 +155,14 @@ int init_resources()
             "data/mattress_color.png");
     scene->add_texture(texture3);
     normal_mapped_material->add_texture(texture3);
+    env_mapped_material->add_texture(texture3);
 
     vt::Texture* texture4 = new vt::Texture(
             "mattress_normal",
             "data/mattress_normal.png");
     scene->add_texture(texture4);
     normal_mapped_material->add_texture(texture4);
+    env_mapped_material->add_texture(texture4);
 
     vt::Texture* texture5 = new vt::Texture(
             "colosseum",
@@ -160,6 +174,7 @@ int init_resources()
             "data/Colosseum/negz.png");
     scene->add_texture(texture5);
     skybox_material->add_texture(texture5);
+    env_mapped_material->add_texture(texture5);
 
     glm::vec3 origin = glm::vec3();
     camera = new vt::Camera(origin+glm::vec3(0, 0, orbit_radius), origin);
@@ -266,8 +281,8 @@ void onKeyboard(unsigned char key, int x, int y)
             mesh->set_texture_index( texture_index);
             mesh2->set_texture_index(texture_index);
             mesh3->set_texture_index(texture_index);
-            mesh4->set_texture_index(texture_index);
-            mesh5->set_texture_index(texture_index);
+            //mesh4->set_texture_index(texture_index);
+            //mesh5->set_texture_index(texture_index);
             //mesh6->set_texture_index(texture_index);
             //mesh7->set_texture_index(texture_index);
             break;

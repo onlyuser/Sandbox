@@ -21,6 +21,7 @@ public:
             std::string fragment_shader_file,
             bool        use_texture_mapping = false,
             bool        use_normal_mapping = false,
+            bool        use_env_mapping = false,
             bool        skybox = false);
     Program* get_program() const
     {
@@ -41,6 +42,10 @@ public:
     {
         return m_use_normal_mapping;
     }
+    bool use_env_mapping() const
+    {
+        return m_use_env_mapping;
+    }
     bool skybox() const
     {
         return m_skybox;
@@ -54,6 +59,7 @@ private:
     textures_t               m_textures; // TODO: Material has multiple Textures
     bool                     m_use_texture_mapping;
     bool                     m_use_normal_mapping;
+    bool                     m_use_env_mapping;
     bool                     m_skybox;
 
     typedef std::map<std::string, Texture*> texture_lookup_table_t;

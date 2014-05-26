@@ -15,9 +15,11 @@ Material::Material(
         std::string fragment_shader_file,
         bool        use_texture_mapping,
         bool        use_normal_mapping,
+        bool        use_env_mapping,
         bool        skybox)
     : m_use_texture_mapping(use_texture_mapping),
       m_use_normal_mapping(use_normal_mapping),
+      m_use_env_mapping(use_env_mapping),
       m_skybox(skybox)
 {
     std::unique_ptr<Shader> vs, fs;
