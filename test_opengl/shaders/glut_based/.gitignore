@@ -1,2 +1,5 @@
 obj-viewer
 glsl_lighting
+fbo
+fboDepth
+fboStencil
