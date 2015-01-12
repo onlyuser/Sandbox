@@ -19,6 +19,7 @@ Sandbox is a collection of experimental code and tutorials.
 * test_lexyacc   -- test for Lex-Yacc
 * test_llvm      -- test for LLVM
 * test_math      -- test for math libraries
+* test_ncurses   -- test for ncurses
 * test_opengl    -- test for OpenGL
 * test_pthread   -- test for pthread
 * test_regex     -- test for posix regex
@@ -126,6 +127,9 @@ References:
 
     <dt>"OpenGL Mathematics (GLM) - A C++ mathematics library for graphics programming - Code samples"</dt>
     <dd>http://glm.g-truc.net/0.9.4/code.html</dd>
+
+    <dt>"NCURSES Programming HOWTO"</dt>
+    <dd>http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/</dd>
 </dl>
 
 Keywords:
