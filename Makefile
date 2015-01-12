@@ -29,6 +29,7 @@ SUBPATHS = \
     test_visitor #\
     test_backtrace \
     test_coroutine \
+    test_ncurses \
     test_opengl \
     test_pthread \
     test_ticpp
