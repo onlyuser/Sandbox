@@ -45,6 +45,9 @@ case $INPUT_MODE in
     "arg")
         $EXEC `cat $INPUT_FILE` | tee $OUTPUT_FILE
         ;;
+    "arg_c++filt")
+        $EXEC `cat $INPUT_FILE` | c++filt -t | tee $OUTPUT_FILE
+        ;;
     *)
         echo "fail! -- invalid input mode"
         exit 1
