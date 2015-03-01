@@ -1,3 +1,7 @@
+// REFERENCE:
+// "Most vexing parse"
+// http://en.wikipedia.org/wiki/Most_vexing_parse
+
 #include <typeinfo>
 #include <iostream>
 
