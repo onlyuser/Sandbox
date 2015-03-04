@@ -10,9 +10,9 @@ int g(int)
     return 0;
 }
 
-typedef int (*h)(int);
+typedef int (*g2)(int);
 
-struct qwe
+struct g3
 {
 };
 
@@ -29,14 +29,14 @@ int main(int argc, char** argv)
     int f(g(x));
     std::cout << typeid(f).name() << std::endl; // int
 
-    // function declaration!! -- because "h" is a type
-    int f2(h(x));
+    // function declaration!! -- because "g2" is a type
+    int f2(g2(x));
     std::cout << typeid(f2).name() << std::endl; // int (int (*)(int))
 
-    // function declaration!! -- because "qwe" is a type
-    // NOTE: "qwe()" is not a default constructor call
-    qwe f3(qwe());
-    std::cout << typeid(f3).name() << std::endl; // qwe (qwe (*)())
+    // function declaration!! -- because "g3" is a type
+    // NOTE: "g3()" is not a default constructor call
+    g3 f3(g3());
+    std::cout << typeid(f3).name() << std::endl; // g3 (g3 (*)())
 
     return 0;
 }
