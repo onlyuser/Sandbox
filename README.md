@@ -15,6 +15,7 @@ Sandbox is a collection of experimental code and tutorials.
 * test_backtrace -- test for backtrace
 * test_c         -- test for c-language curiosities
 * test_coroutine -- test for coroutine
+* test_fork      -- test for fork
 * test_functor   -- test for stl functor
 * test_lexyacc   -- test for Lex-Yacc
 * test_llvm      -- test for LLVM

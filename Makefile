@@ -17,6 +17,7 @@
 
 SUBPATHS = \
     test_c \
+    test_fork \
     test_functor \
     test_lexyacc \
     test_llvm \
