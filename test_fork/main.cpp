@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     // One practical solution I discovered is to fork the main process and
     // sacrifice the child process by allowing it to enter the corrupted
     // program state, then writing the result to disk so it can later be
-    // retrieved by the main process, which waits on the child process.
+    // recovered by the main process, which waits for the child process.
     pid_t child_pid = fork();
     if(!child_pid) {
         // child process
