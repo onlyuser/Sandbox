@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     if(!child_pid) { // child process
         // Get the result.
         // This corrupts program state.
-        // Fortunately, this is the child process
+        // Fortunately, this is the child process.
         int result = 0;
         if(!someone_elses_code_with_undesired_side_effect(&result, 2, 3)) {
             exit(1);
@@ -66,8 +66,9 @@ int main(int argc, char** argv)
         printf("The result is: %s\n", buf);
     }
 
-    // Further down the line, call an innocuous function that crashes on corrupt program state.
-    // This is safe only for the main process, which is what we intended.
+    // Further down the line, call an innocuous function that crashes on
+    // corrupt program state. This is safe only for the main process, which is
+    // what we intended.
     someone_elses_code_manifesting_undesired_side_effect();
 
     return 0;
