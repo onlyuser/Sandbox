@@ -31,31 +31,44 @@ int main(int argc, char** argv)
 #endif
 
     // SOLUTION:
-    // One practical solution I discovered is to fork the main process and
-    // sacrifice the child process by allowing it to enter the corrupted
-    // program state, then writing the result to disk so it can later be
-    // recovered by the main process, which waits for the child process.
+    // One practical solution is to fork the main process and sacrifice the
+    // child process by allowing it to enter the corrupted program state, then
+    // writing the result to disk so it can later be recovered by the main
+    // process, which waits for the child process.
     pid_t child_pid = fork();
-    if(!child_pid) {
-        // child process
+    if(!child_pid) { // child process
+        // Get the result.
+        // This corrupts program state.
+        // Fortunately, this is the child process
         int result = 0;
         if(!someone_elses_code_with_undesired_side_effect(&result, 2, 3)) {
             exit(1);
         }
+
+        // write result to disk for main process to recover
         FILE *file = fopen(TEMP_FILENAME, "wb");
         fprintf(file, "%d", result);
         fclose(file);
-        exit(0); // no longer need this since we already got what we want
-    } else {
-        // parent process
+
+        exit(0); // no longer needed since we already wrote result to disk
+    } else { // parent process
+        // wait for child process to exit
         waitpid(child_pid, NULL, 0);
+
+        // read child process result
         FILE *file = fopen(TEMP_FILENAME, "rb");
         char buf[MAX_BUF_SIZE] = "";
         fgets(buf, sizeof(buf), file);
         fclose(file);
         remove(TEMP_FILENAME);
+
+        // print result
         printf("The result is: %s\n", buf);
     }
+
+    // Further down the line, call an innocuous function that crashes on corrupt program state.
+    // This is safe only for the main process, which is what we intended.
     someone_elses_code_manifesting_undesired_side_effect();
+
     return 0;
 }
