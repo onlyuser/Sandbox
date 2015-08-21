@@ -66,9 +66,10 @@ int main(int argc, char** argv)
         printf("The result is: %s\n", buf);
     }
 
-    // Further down the line, call an innocuous function that crashes on
-    // corrupt program state. This is safe only for the main process, which is
-    // what we intended.
+    // Further down the line, call the innocuous function
+    // "someone_elses_code_manifesting_undesired_side_effect" that crashes on
+    // corrupt program state. This is safe for the main process, which is what
+    // we intended.
     someone_elses_code_manifesting_undesired_side_effect();
 
     return 0;
