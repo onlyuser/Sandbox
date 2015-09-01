@@ -5,16 +5,9 @@
 #include <typeinfo>
 #include <iostream>
 
-int g(int)
-{
-    return 0;
-}
-
-typedef int (*g2)(int);
-
-struct g3
-{
-};
+int g(int) { return 0; }
+struct g2 {};
+typedef int (*g3)(int);
 
 int main(int argc, char** argv)
 {
@@ -30,13 +23,13 @@ int main(int argc, char** argv)
     std::cout << typeid(f).name() << std::endl; // int
 
     // function declaration!! -- because "g2" is a type
-    int f2(g2(x));
-    std::cout << typeid(f2).name() << std::endl; // int (int (*)(int))
+    // NOTE: "g2()" is not a default constructor call
+    g2 f2(g2());
+    std::cout << typeid(f2).name() << std::endl; // g2 (g2 (*)())
 
     // function declaration!! -- because "g3" is a type
-    // NOTE: "g3()" is not a default constructor call
-    g3 f3(g3());
-    std::cout << typeid(f3).name() << std::endl; // g3 (g3 (*)())
+    int f3(g3(x));
+    std::cout << typeid(f3).name() << std::endl; // int (int (*)(int))
 
     return 0;
 }

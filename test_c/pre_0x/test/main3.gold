@@ -1,4 +1,4 @@
 int (int)
 int
+g2 (g2 (*)())
 int (int (*)(int))
-g3 (g3 (*)())
