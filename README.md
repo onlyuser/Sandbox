@@ -131,9 +131,12 @@ References:
 
     <dt>"NCURSES Programming HOWTO"</dt>
     <dd>http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/</dd>
+
+    <dt>"Most vexing parse"</dt>
+    <dd>https://en.wikipedia.org/wiki/Most_vexing_parse</dd>
 </dl>
 
 Keywords:
 ---------
 
-    stl, boost, functor, Lex, Yacc, OpenGL, glm, LLVM, visitor, variant, tinyxml, ticpp, regex, backtrace
+    stl, boost, functor, Lex, Yacc, OpenGL, glm, LLVM, visitor, variant, tinyxml, ticpp, regex, backtrace, Scott Meyer's "Most Vexing Parse"
