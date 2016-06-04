@@ -7,7 +7,6 @@
 // * convert file descriptor to FILE*
 // * pipe std-out from one process to std-in of another process
 
-#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
