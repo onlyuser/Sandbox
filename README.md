@@ -22,6 +22,7 @@ Sandbox is a collection of experimental code and tutorials.
 * test_math      -- test for math libraries
 * test_ncurses   -- test for ncurses
 * test_opengl    -- test for OpenGL
+* test_pipe      -- test for pipe
 * test_pthread   -- test for pthread
 * test_regex     -- test for posix regex
 * test_ticpp     -- test for ticpp
@@ -134,9 +135,12 @@ References:
 
     <dt>"Most vexing parse"</dt>
     <dd>https://en.wikipedia.org/wiki/Most_vexing_parse</dd>
+
+    <dt>"How to get file descriptor of buffer in memory?"</dt>
+    <dd>http://stackoverflow.com/questions/1558772/how-to-get-file-descriptor-of-buffer-in-memory</dd>
 </dl>
 
 Keywords:
 ---------
 
-    stl, boost, functor, Lex, Yacc, OpenGL, glm, LLVM, visitor, variant, tinyxml, ticpp, regex, backtrace, Scott Meyer's "Most Vexing Parse"
+    stl, boost, functor, Lex, Yacc, OpenGL, glm, LLVM, visitor, variant, tinyxml, ticpp, regex, backtrace, Scott Meyer's "Most Vexing Parse", pipe
