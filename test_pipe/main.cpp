@@ -17,12 +17,12 @@ int main()
     int p[2];
     pipe(p);
     pid_t child_pid = fork();
-    if(!child_pid) { // parent process
+    if(!child_pid) { // child process
         close(p[0]); // close read-channel -- indicates we're writing
         FILE* file = fdopen(p[1], "w");
         char buf[] = "qwe\nasd\n";
         fwrite(buf, sizeof(char), strlen(buf)+1, file);
-    } else {         // child process
+    } else {         // parent process
         close(p[1]); // close write-channel -- indicates we're reading
         FILE* file = fdopen(p[0], "r");
         size_t n = 100;
