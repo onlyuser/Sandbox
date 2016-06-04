@@ -12,22 +12,23 @@
 #include <string.h>
 #include <iostream>
 
+#define BUF_MAX 80
+
 int main()
 {
     int p[2];
     pipe(p);
     pid_t child_pid = fork();
     if(!child_pid) { // child process
-        close(p[0]); // close read-channel -- indicates we're writing
+        close(p[0]); // close read-channel -- we're writing
         FILE* file = fdopen(p[1], "w");
         char buf[] = "qwe\nasd\n";
         fwrite(buf, sizeof(char), strlen(buf)+1, file);
     } else {         // parent process
-        close(p[1]); // close write-channel -- indicates we're reading
+        close(p[1]); // close write-channel -- we're reading
         FILE* file = fdopen(p[0], "r");
-        size_t n = 100;
-        char buf[n];
-        fread(buf, sizeof(char), n, file);
+        char buf[BUF_MAX];
+        fread(buf, sizeof(char), sizeof(buf)/sizeof(char), file);
         std::cout << "result: \"" << buf << "\"" << std::endl;
     }
     return 0;
