@@ -22,6 +22,7 @@ SUBPATHS = \
     test_lexyacc \
     test_llvm \
     test_math \
+    test_pipe \
     test_regex \
     test_tinyxml \
     test_tokenize \
