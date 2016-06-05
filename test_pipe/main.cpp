@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <stdlib.h>
 
 #define BUF_MAX 80
 
@@ -23,6 +24,7 @@ int main()
         FILE* file = fdopen(p[1], "w");
         char buf[] = "qwe\nasd\n";
         fwrite(buf, sizeof(char), strlen(buf)+1, file);
+        exit(0);     // exit to ensure no side-effects
     } else {         // parent process
         close(p[1]); // close write-channel -- we're reading
         FILE* file = fdopen(p[0], "r");
