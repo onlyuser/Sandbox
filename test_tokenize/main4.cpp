@@ -23,7 +23,8 @@ int main(int argc, char** argv)
     std::copy(std::istream_iterator<std::string>(iss),
             std::istream_iterator<std::string>(),
             std::back_inserter<std::vector<std::string> >(tokens));
-    for(std::vector<std::string>::iterator p = tokens.begin(); p != tokens.end(); p++)
+    for(std::vector<std::string>::iterator p = tokens.begin(); p != tokens.end(); p++) {
         std::cout << *p << std::endl;
+    }
     return 0;
 }
