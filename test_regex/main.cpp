@@ -13,20 +13,21 @@
 
 int main(int argc, char** argv)
 {
-    if(argc != 2)
-    {
+    if(argc != 2) {
         printf("wrong number of arguments!\n");
         return 1;
     }
     regex_t regex;
-    if(regcomp(&regex, SENDER_REGEX, REG_ICASE|REG_EXTENDED))
+    if(regcomp(&regex, SENDER_REGEX, REG_ICASE|REG_EXTENDED)) {
         printf("regcomp error\n");
+    }
     regmatch_t pmatch[2];
     int status = regexec(&regex, argv[1], 2, pmatch, 0);
     regfree(&regex);
-    if(!status)
+    if(!status) {
         printf("matched from %d (%c) to %d (%c)\n",
                 pmatch[1].rm_so, argv[1][pmatch[1].rm_so],
                 pmatch[1].rm_eo, argv[1][pmatch[1].rm_eo]);
+    }
     return 0;
 }
