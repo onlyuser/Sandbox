@@ -8,7 +8,7 @@ LIB_PATH = $(EXTERN_LIB_PATH)
 SRC_PATH = .
 BUILD_PATH = build
 BIN_PATH = bin
-BIN_STEMS = main main2 main3
+BIN_STEMS = main main2 main3 main4
 BINARIES = $(patsubst %, $(BIN_PATH)/%, $(BIN_STEMS))
 
 INCLUDE_PATHS = $(INCLUDE_PATH) $(COMMON_INCLUDE_PATH) $(EXTERN_INCLUDE_PATH)
@@ -55,7 +55,7 @@ clean_objects :
 # binaries
 #==================
 
-CPP_STEMS = main main2 main3
+CPP_STEMS = main main2 main3 main4
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 ASM_OBJECTS = $(patsubst %, $(BUILD_PATH)/%.cpp.$(ASM_SUFFIX), $(CPP_STEMS))
 
@@ -71,6 +71,10 @@ $(BIN_PATH)/main3 : $(BUILD_PATH)/main3.o
 	mkdir -p $(BIN_PATH)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
+$(BIN_PATH)/main4 : $(BUILD_PATH)/main4.o
+	mkdir -p $(BIN_PATH)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
 .PHONY : clean_binaries
 clean_binaries :
 	-rm $(BINARIES)
@@ -81,7 +85,7 @@ clean_binaries :
 
 TEST_PATH = test
 TEST_SH = $(SCRIPT_PATH)/test.sh
-TEST_FILE_STEMS = main main2 main3
+TEST_FILE_STEMS = main main2 main3 main4
 TEST_FILES = $(patsubst %, $(BUILD_PATH)/%.test, $(TEST_FILE_STEMS))
 TEST_PASS_FILES = $(patsubst %, %.pass, $(TEST_FILES))
 TEST_FAIL_FILES = $(patsubst %, %.fail, $(TEST_FILES))
@@ -97,6 +101,10 @@ $(BUILD_PATH)/main2.test.pass : $(BIN_PATH)/main2 $(TEST_PATH)/main2.test
 $(BUILD_PATH)/main3.test.pass : $(BIN_PATH)/main3 $(TEST_PATH)/main3.test
 	-$(TEST_SH) $(BIN_PATH)/main3 arg_c++filt $(TEST_PATH)/main3.test $(TEST_PATH)/main3.gold \
 			$(BUILD_PATH)/main3.test
+
+$(BUILD_PATH)/main4.test.pass : $(BIN_PATH)/main4 $(TEST_PATH)/main4.test
+	-$(TEST_SH) $(BIN_PATH)/main4 arg_c++filt $(TEST_PATH)/main4.test $(TEST_PATH)/main4.gold \
+			$(BUILD_PATH)/main4.test
 
 .PHONY : test
 test : $(TEST_PASS_FILES)
