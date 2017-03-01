@@ -6,11 +6,18 @@
 
 typedef std::pair<int, std::string> pair_t;
 
-struct LessThan : std::binary_function<pair_t, pair_t, bool>
+struct FindKey : std::unary_function<pair_t, bool>
 {
-    bool operator()(const pair_t& x, const pair_t& y) const
+    pair_t::first_type m_key;
+
+    FindKey(pair_t::first_type key)
     {
-        return x.first < y.first;
+        m_key = key;
+    }
+
+    bool operator()(const pair_t& x) const
+    {
+        return x.first == m_key;
     }
 };
 
@@ -43,9 +50,11 @@ int main(int argc, char** argv)
     myFile.close();
     std::cout << std::endl;
     std::cout << "output:" << std::endl;
-    std::sort(myVec.begin(), myVec.end(), LessThan());
     for(std::vector<pair_t>::iterator p = myVec.begin(); p != myVec.end(); p++) {
-        std::cout << (*p).first << ' ' << (*p).second << std::endl;
+        std::vector<pair_t>::iterator q = std::find_if(myVec.begin(), myVec.end(), FindKey((*p).first));
+        if(q != myVec.end()) {
+            std::cout << (*q).first << ' ' << (*q).second << std::endl;
+        }
     }
     return 0;
 }

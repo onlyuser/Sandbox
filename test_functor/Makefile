@@ -8,7 +8,8 @@ LIB_PATH = $(EXTERN_LIB_PATH)
 SRC_PATH = .
 BUILD_PATH = build
 BIN_PATH = bin
-BINARY = $(BIN_PATH)/test_functor
+BIN_STEMS = main main2
+BINARIES = $(patsubst %, $(BIN_PATH)/%, $(BIN_STEMS))
 
 INCLUDE_PATHS = $(INCLUDE_PATH) $(COMMON_INCLUDE_PATH) $(EXTERN_INCLUDE_PATH)
 INCLUDE_PATH_FLAGS = $(patsubst %, -I%, $(INCLUDE_PATHS))
@@ -33,7 +34,7 @@ TEST_PATH = test
 #==================
 
 .DEFAULT_GOAL : all
-all : $(BINARY)
+all : $(BINARIES)
 
 #==================
 # lib
@@ -55,19 +56,23 @@ clean_objects :
 	-rm $(OBJECTS)
 
 #==================
-# binary
+# binaries
 #==================
 
-CPP_STEMS = main
+CPP_STEMS = main main2
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 
-$(BINARY) : $(OBJECTS) $(LIBS)
+$(BIN_PATH)/main : $(BUILD_PATH)/main.o
 	mkdir -p $(BIN_PATH)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
-.PHONY : clean_binary
-clean_binary :
-	-rm $(BINARY)
+$(BIN_PATH)/main2 : $(BUILD_PATH)/main2.o
+	mkdir -p $(BIN_PATH)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+.PHONY : clean_binaries
+clean_binaries :
+	-rm $(BINARIES)
 
 #==================
 # test
@@ -75,13 +80,13 @@ clean_binary :
 
 TEST_PATH = test
 TEST_SH = $(SCRIPT_PATH)/test.sh
-TEST_FILE_STEMS = functor_input
+TEST_FILE_STEMS = main main2
 TEST_FILES = $(patsubst %, $(BUILD_PATH)/%.test, $(TEST_FILE_STEMS))
 TEST_PASS_FILES = $(patsubst %, %.pass, $(TEST_FILES))
 TEST_FAIL_FILES = $(patsubst %, %.fail, $(TEST_FILES))
 
-$(BUILD_PATH)/%.test.pass : $(BINARY) $(TEST_PATH)/%.test
-	-$(TEST_SH) $(BINARY) $(TEST_PATH)/$*.test $(TEST_PATH)/$*.gold \
+$(BUILD_PATH)/%.test.pass : $(BIN_PATH)/% $(TEST_PATH)/%.test
+	-$(TEST_SH) $(BIN_PATH)/$* $(TEST_PATH)/$*.test $(TEST_PATH)/$*.gold \
 			$(BUILD_PATH)/$*.test
 
 .PHONY : test
@@ -96,5 +101,5 @@ clean_tests :
 #==================
 
 .PHONY : clean
-clean : clean_binary clean_objects clean_tests
+clean : clean_binaries clean_objects clean_tests
 	-rmdir $(BUILD_PATH) $(BIN_PATH)
