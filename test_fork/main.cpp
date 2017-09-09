@@ -14,16 +14,16 @@
 #include <stdlib.h> // atoi, exit
 #include <signal.h> // raise, SIGSEGV
 
-static bool do_crash = false;
+static bool corrupted_program_state = false;
 
 static int do_calculation(int a, int b) {
-    do_crash = true;
+    corrupted_program_state = true;
     return a + b;
 }
 
 static void report_result(int x) {
     std::cout << "Result is: " << x << std::endl;
-    if(do_crash) {
+    if(corrupted_program_state) {
         raise(SIGSEGV);
     }
 }
@@ -38,15 +38,15 @@ int main(int argc, char** argv)
     int b = atoi(argv[2]);
     int result = 0;
 #if 0
-    result = do_calculation(a, b);
+    result = do_calculation(a, b); // code that corrupts program state
 #else
     int p[2];
     pipe(p);
-    pid_t child_pid = fork();
+    pid_t child_pid = fork();           // create sandbox to isolate risky operations
     if(!child_pid) {                    // child process
         close(p[0]);                    // close read-channel -- we're writing
         FILE* file = fdopen(p[1], "w"); // open pipe to parent process
-        result = do_calculation(a, b);  // sandbox code that corrupts program state
+        result = do_calculation(a, b);  // sandboxed code that corrupts program state
         fprintf(file, "%d", result);    // send message to parent process through pipe
         exit(0);                        // exit to ensure no side-effects
     } else {                            // parent process
@@ -55,6 +55,6 @@ int main(int argc, char** argv)
         fscanf(file, "%d", &result);    // receive message from parent process through pipe
     }
 #endif
-    report_result(result);
+    report_result(result); // manifest crash if in corrupted program state
     return 0;
 }
