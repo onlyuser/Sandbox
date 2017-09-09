@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     int b = atoi(argv[2]);
     int result = 0;
 #if 0
-    result = do_calculation(a, b); // code that corrupts program state
+    result = do_calculation(a, b); // execute code that corrupts program state
 #else
     int p[2];
     pipe(p);
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
     if(!child_pid) {                    // child process
         close(p[0]);                    // close read-channel -- we're writing
         FILE* file = fdopen(p[1], "w"); // open pipe to parent process
-        result = do_calculation(a, b);  // sandboxed code that corrupts program state
+        result = do_calculation(a, b);  // execute code that corrupts program state
         fprintf(file, "%d", result);    // send message to parent process through pipe
         exit(0);                        // exit to ensure no side-effects
     } else {                            // parent process
