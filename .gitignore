@@ -2,3 +2,6 @@
 .project
 .settings
 *.swp
+data
+build
+bin

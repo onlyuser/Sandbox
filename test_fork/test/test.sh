@@ -50,7 +50,7 @@ if [ ! -f $GOLD_FILE ]; then
     exit 1
 fi
 
-$EXEC $INPUT_FILE > $TEMP_FILE_0
+$EXEC `cat $INPUT_FILE` > $TEMP_FILE_0
 diff $TEMP_FILE_0 $GOLD_FILE | tee $TEMP_FILE_1
 if [ ${PIPESTATUS[0]} -ne 0 ]; then # $? captures the last pipe
     echo "fail!"

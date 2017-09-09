@@ -58,7 +58,7 @@ clean_objects :
 # binary
 #==================
 
-CPP_STEMS = main someone_elses_code
+CPP_STEMS = main
 OBJECTS = $(patsubst %, $(BUILD_PATH)/%.o, $(CPP_STEMS))
 
 $(BINARY) : $(OBJECTS) $(LIBS)

@@ -1,76 +1,60 @@
-#include <unistd.h> // fork
-#include <sys/wait.h> // waitpid
-#include <stdlib.h> // exit
-#include <stdio.h> // printf
+// REFERENCE:
+// "How to get file descriptor of bufer in memory?"
+// http://stackoverflow.com/questions/1558772/how-to-get-file-descriptor-of-bufer-in-memory
 
-#define TEMP_FILENAME "result.txt"
-#define MAX_BUF_SIZE 20
+// CONCEPTS:
+// * convert in-memory bufer to FILE*
+// * convert file descriptor to FILE*
+// * pipe std-out from one process to std-in of another process
+// * sandbox code that corrupts program state
 
-extern bool someone_elses_code_with_undesired_side_effect(int *result, int a, int b);
-extern void someone_elses_code_manifesting_undesired_side_effect();
+#include <stdio.h> // fdopen, fprintf, fscanf
+#include <unistd.h> // close, fork, pipe
+#include <iostream> // std::cout, std::endl
+#include <stdlib.h> // atoi, exit
+#include <signal.h> // raise, SIGSEGV
+
+static bool do_crash = false;
+
+static int do_calculation(int a, int b) {
+    do_crash = true;
+    return a + b;
+}
+
+static void report_result(int x) {
+    std::cout << "Result is: " << x << std::endl;
+    if(do_crash) {
+        raise(SIGSEGV);
+    }
+}
 
 int main(int argc, char** argv)
 {
-    // PROBLEM:
-    // Suppose we need to call "someone_elses_code_with_undesired_side_effect"
-    // to do useful work, but by calling
-    // "someone_elses_code_with_undesired_side_effect", the program enters a
-    // corrupted state, which causes the program to crash upon any subsequent
-    // call to "someone_elses_code_manifesting_undesired_side_effect", which we
-    // need for later flows. Then how do we work-around this?
-
-    // EXAMPLE:
-    // Enable following code to see program crash on call to
-    // "someone_elses_code_manifesting_undesired_side_effect".
-#if 0
-    int result = 0;
-    someone_elses_code_with_undesired_side_effect(&result, 2, 3);
-    printf("The result is: %d\n", result);
-    someone_elses_code_manifesting_undesired_side_effect();
-    return 0;
-#endif
-
-    // SOLUTION:
-    // One practical solution is to fork the main process and sacrifice the
-    // child process by allowing it to enter the corrupted program state, then
-    // writing the result to disk so it can later be recovered by the main
-    // process, which waits for the child process.
-    pid_t child_pid = fork();
-    if(!child_pid) { // child process
-        // Get the result.
-        // This corrupts program state.
-        // Fortunately, this is the child process.
-        int result = 0;
-        if(!someone_elses_code_with_undesired_side_effect(&result, 2, 3)) {
-            exit(1);
-        }
-
-        // write result to disk for main process to recover
-        FILE *file = fopen(TEMP_FILENAME, "wb");
-        fprintf(file, "%d", result);
-        fclose(file);
-
-        exit(0); // no longer needed since we already wrote result to disk
-    } else { // parent process
-        // wait for child process to exit
-        waitpid(child_pid, NULL, 0);
-
-        // read child process result
-        FILE *file = fopen(TEMP_FILENAME, "rb");
-        char buf[MAX_BUF_SIZE] = "";
-        fgets(buf, sizeof(buf), file);
-        fclose(file);
-        remove(TEMP_FILENAME);
-
-        // print result
-        printf("The result is: %s\n", buf);
+    if(argc != 3) {
+        std::cout << "Error: Expect 2 arguments!" << std::endl;
+        return 1;
     }
-
-    // Further down the line, call the innocuous function
-    // "someone_elses_code_manifesting_undesired_side_effect" that crashes on
-    // corrupt program state. This is safe for the main process, which is what
-    // we intended.
-    someone_elses_code_manifesting_undesired_side_effect();
-
+    int a = atoi(argv[1]);
+    int b = atoi(argv[2]);
+    int result = 0;
+#if 0
+    result = do_calculation(a, b);
+#else
+    int p[2];
+    pipe(p);
+    pid_t child_pid = fork();
+    if(!child_pid) {                    // child process
+        close(p[0]);                    // close read-channel -- we're writing
+        FILE* file = fdopen(p[1], "w"); // open pipe to parent process
+        result = do_calculation(a, b);  // sandbox code that corrupts program state
+        fprintf(file, "%d", result);    // send message to parent process through pipe
+        exit(0);                        // exit to ensure no side-effects
+    } else {                            // parent process
+        close(p[1]);                    // close write-channel -- we're reading
+        FILE* file = fdopen(p[0], "r"); // open pipe to child process
+        fscanf(file, "%d", &result);    // receive message from parent process through pipe
+    }
+#endif
+    report_result(result);
     return 0;
 }

@@ -7,10 +7,11 @@
 // * convert file descriptor to FILE*
 // * pipe std-out from one process to std-in of another process
 
-#include <stdio.h>
-#include <string.h>
-#include <iostream>
-#include <stdlib.h>
+#include <stdio.h> // fdopen, fprintf, fscanf
+#include <unistd.h> // close, fork, pipe
+#include <iostream> // std::cout, std::endl
+#include <stdlib.h> // atoi, exit
+#include <string.h> // strlen
 
 #define BUF_MAX 80
 
@@ -19,18 +20,18 @@ int main()
     int p[2];
     pipe(p);
     pid_t child_pid = fork();
-    if(!child_pid) { // child process
-        close(p[0]); // close read-channel -- we're writing
-        FILE* file = fdopen(p[1], "w");
-        char buf[] = "qwe\nasd\n";
-        fwrite(buf, sizeof(char), strlen(buf)+1, file);
-        exit(0);     // exit to ensure no side-effects
-    } else {         // parent process
-        close(p[1]); // close write-channel -- we're reading
-        FILE* file = fdopen(p[0], "r");
+    if(!child_pid) {                    // child process
+        close(p[0]);                    // close read-channel -- we're writing
+        FILE* file = fdopen(p[1], "w"); // open pipe to parent process
+        char buf[] = "qwe";
+        fwrite(buf, sizeof(char), strlen(buf)+1, file); // send message to parent process through pipe
+        exit(0);                                        // exit to ensure no side-effects
+    } else {                                            // parent process
+        close(p[1]);                                    // close write-channel -- we're reading
+        FILE* file = fdopen(p[0], "r");                 // open pipe to child process
         char buf[BUF_MAX];
-        fread(buf, sizeof(char), sizeof(buf)/sizeof(char), file);
-        std::cout << "result: \"" << buf << "\"" << std::endl;
+        fread(buf, sizeof(char), sizeof(buf)/sizeof(char), file); // receive message from parent process through pipe
+        std::cout << "Result is: " << buf << std::endl;
     }
     return 0;
 }
