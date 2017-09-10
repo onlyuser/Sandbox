@@ -20,16 +20,16 @@ int main()
     int p[2];
     pipe(p);
     pid_t child_pid = fork();
-    if(!child_pid) {                    // child process
-        close(p[0]);                    // close read-channel -- we're writing
-        FILE* file = fdopen(p[1], "w"); // open pipe to parent process
-        char buf[] = "qwe";
+    if(!child_pid) { // child process
+        close(p[0]);                                    // close read-channel -- we're writing
+        FILE* file = fdopen(p[1], "w");                 // open pipe to parent process
+        char buf[] = "qwe";                             // prepare data
         fwrite(buf, sizeof(char), strlen(buf)+1, file); // send message to parent process through pipe
         exit(0);                                        // exit to ensure no side-effects
-    } else {                                            // parent process
-        close(p[1]);                                    // close write-channel -- we're reading
-        FILE* file = fdopen(p[0], "r");                 // open pipe to child process
-        char buf[BUF_MAX];
+    } else { // parent process
+        close(p[1]);                                              // close write-channel -- we're reading
+        FILE* file = fdopen(p[0], "r");                           // open pipe to child process
+        char buf[BUF_MAX];                                        // prepare storage for data
         fread(buf, sizeof(char), sizeof(buf)/sizeof(char), file); // receive message from parent process through pipe
         std::cout << "Result is: " << buf << std::endl;
     }
