@@ -47,12 +47,12 @@ int main(int argc, char** argv)
         close(p[0]);                    // close read-channel -- we're writing
         FILE* file = fdopen(p[1], "w"); // open pipe to parent process
         result = do_calculation(a, b);  // execute code that corrupts program state
-        fprintf(file, "%d", result);    // send message to parent process through pipe
+        fprintf(file, "%d", result);    // send result to parent process through pipe
         exit(0);                        // exit to ensure no side-effects
     } else { // parent process
         close(p[1]);                    // close write-channel -- we're reading
         FILE* file = fdopen(p[0], "r"); // open pipe to child process
-        fscanf(file, "%d", &result);    // receive message from parent process through pipe
+        fscanf(file, "%d", &result);    // receive result from child process through pipe
     }
 #endif
     report_result(result); // manifest crash if in corrupted program state

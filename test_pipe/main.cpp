@@ -30,7 +30,7 @@ int main()
         close(p[1]);                                              // close write-channel -- we're reading
         FILE* file = fdopen(p[0], "r");                           // open pipe to child process
         char buf[BUF_MAX];                                        // prepare storage for data
-        fread(buf, sizeof(char), sizeof(buf)/sizeof(char), file); // receive message from parent process through pipe
+        fread(buf, sizeof(char), sizeof(buf)/sizeof(char), file); // receive message from child process through pipe
         std::cout << "Result is: " << buf << std::endl;
     }
     return 0;
