@@ -1,9 +1,9 @@
 // REFERENCE:
-// "How to get file descriptor of bufer in memory?"
-// http://stackoverflow.com/questions/1558772/how-to-get-file-descriptor-of-bufer-in-memory
+// "How to get file descriptor of buffer in memory?"
+// http://stackoverflow.com/questions/1558772/how-to-get-file-descriptor-of-buffer-in-memory
 
 // CONCEPTS:
-// * convert in-memory bufer to FILE*
+// * convert in-memory buffer to FILE*
 // * convert file descriptor to FILE*
 // * pipe std-out from one process to std-in of another process
 
