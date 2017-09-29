@@ -30,6 +30,7 @@ SUBPATHS = \
     test_variant \
     test_visitor #\
     test_backtrace \
+    test_bpnet \
     test_coroutine \
     test_ncurses \
     test_opengl \
