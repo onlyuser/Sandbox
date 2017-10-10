@@ -5,8 +5,8 @@ Sandbox
 
 Copyright (C) 2011-2017 <mailto:onlyuser@gmail.com>
 
-About:
-------
+About
+-----
 
 Sandbox is a collection of experimental code and tutorials.
 
@@ -31,8 +31,8 @@ Sandbox is a collection of experimental code and tutorials.
 * test_variant   -- test for boost variant
 * test_visitor   -- test for visitor pattern
 
-Requirements:
--------------
+Requirements
+------------
 
 Unix tools and 3rd party components (accessible from $PATH):
 
@@ -50,8 +50,8 @@ Unix tools and 3rd party components (accessible from $PATH):
 
 * $EXTERN_LIB_PATH -- where "libticppd.a" resides
 
-Make targets:
--------------
+Make Targets
+------------
 
 <table>
     <tr><th> target </th><th> action                        </th></tr>
@@ -60,8 +60,8 @@ Make targets:
     <tr><td> clean  </td><td> remove all intermediate files </th></tr>
 </table>
 
-References:
------------
+References
+----------
 
 <dl>
     <dt>"Coroutines in C"</dt>
@@ -116,7 +116,7 @@ References:
     <dd>http://stackoverflow.com/questions/1558772/how-to-get-file-descriptor-of-buffer-in-memory</dd>
 </dl>
 
-Keywords:
----------
+Keywords
+--------
 
     stl, boost, functor, Lex, Yacc, OpenGL, glm, LLVM, visitor, variant, tinyxml, ticpp, regex, backtrace, Scott Meyer's "Most Vexing Parse", pipe

@@ -1,0 +1,51 @@
+lhs_lvalue_ref(rhs_lvalue_ref())
+	lhs_lvalue_ref(Foo& other)
+lhs_lvalue_ref(rhs_rvalue())
+	error: invalid initialization of non-const reference of type ‘Foo&’ from an rvalue of type ‘Foo’
+lhs_lvalue_ref(rhs_rvalue_ref())
+	error: invalid initialization of non-const reference of type ‘Foo&’ from an rvalue of type ‘std::remove_reference<Foo>::type {aka Foo}’
+lhs_const_lvalue_ref(rhs_lvalue_ref())
+	lhs_const_lvalue_ref(const Foo& other)
+lhs_const_lvalue_ref(rhs_rvalue())
+	lhs_const_lvalue_ref(const Foo& other)
+lhs_const_lvalue_ref(rhs_rvalue_ref())
+	lhs_const_lvalue_ref(const Foo& other)
+lhs_rvalue(rhs_lvalue_ref())
+	lhs_rvalue(Foo other)
+lhs_rvalue(rhs_rvalue())
+	lhs_rvalue(Foo other)
+lhs_rvalue(rhs_rvalue_ref())
+	lhs_rvalue(Foo other)
+lhs_const_rvalue(rhs_lvalue_ref())
+	lhs_const_rvalue(const Foo other)
+lhs_const_rvalue(rhs_rvalue())
+	lhs_const_rvalue(const Foo other)
+lhs_const_rvalue(rhs_rvalue_ref())
+	lhs_const_rvalue(const Foo other)
+lhs_rvalue_ref(rhs_lvalue_ref())
+	error: cannot bind ‘Foo’ lvalue to ‘Foo&&’
+lhs_rvalue_ref(rhs_rvalue())
+	lhs_rvalue_ref(Foo&& other)
+lhs_rvalue_ref(rhs_rvalue_ref())
+	lhs_rvalue_ref(Foo&& other)
+lhs_const_rvalue_ref(rhs_lvalue_ref())
+	error: cannot bind ‘Foo’ lvalue to ‘const Foo&&’
+lhs_const_rvalue_ref(rhs_rvalue())
+	lhs_const_rvalue_ref(const Foo&& other)
+lhs_const_rvalue_ref(rhs_rvalue_ref())
+	lhs_const_rvalue_ref(const Foo&& other)
+lhs_unversal_ref(rhs_lvalue_ref())
+Foo
+	lhs_detect(Foo& other)
+lhs_unversal_ref(rhs_rvalue())
+Foo
+	lhs_detect(Foo&& other)
+lhs_unversal_ref(rhs_rvalue_ref())
+Foo
+	lhs_detect(Foo&& other)
+lhs_const_unversal_ref(rhs_lvalue_ref())
+	error: cannot bind ‘Foo’ lvalue to ‘const Foo&&’
+lhs_const_unversal_ref(rhs_rvalue())
+	error: no matching function for call to ‘forward(const Foo&)
+lhs_const_unversal_ref(rhs_rvalue_ref())
+	error: no matching function for call to ‘forward(const Foo&)’

@@ -1,0 +1,64 @@
+A::A("the signed char")
+
+test1
+void float(A&)
+A::A(const A&)
+void float(const A&)
+A::~A("the signed char")
+
+test2
+void f2(A&)
+A::A(const A&)
+void f2(A&&)
+A::~A("the signed char")
+
+test3
+void f2(A&)
+A::A(const A&)
+void f2(A&&)
+A::~A("the signed char")
+
+test4
+A::A("outer")
+ENTER SCOPE
+A::A("inner")
+A::~A("outer")
+LEAVE SCOPE
+A::~A("inner")
+
+test5
+A::A("outer")
+ENTER SCOPE
+A::A("inner")
+A::A(A&&)
+A::operator=(const A&& other)
+A::operator=(const A&& other)
+A::~A()
+A::~A("outer")
+LEAVE SCOPE
+A::~A("inner")
+
+test6
+A::A("hello world")
+A::~A("hello world")
+
+test7
+A::A()
+A::A(A&&, int)
+A::A(A&&, int)
+A::~A("")
+A::~A()
+A::~A()
+
+test8
+A (A (*)())
+A (A (*)())
+
+test9
+A::A("hello world")
+A::~A("hello world")
+
+test10
+A::A("hello world")
+A::~A("hello world")
+A::~A("the signed char")
