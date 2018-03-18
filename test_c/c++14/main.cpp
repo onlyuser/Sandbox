@@ -17,10 +17,26 @@
 // "C++, rvalue references in function parameters"
 // https://stackoverflow.com/questions/30339922/c-rvalue-references-in-function-parameters
 
+// "Move Semantics and Perfect Forwarding in C++11"
+// https://www.codeproject.com/Articles/397492/Move-Semantics-and-Perfect-Forwarding-in-Cplusplus
+
 // CONCEPTS:
 // * rvalue reference
 // * copy elision (return value optimization)
 // * emplace
+
+// TOPICS:
+// * problem statement #1 (copy constructing containers with large heap footprint)
+// * problem statement #2 (auto_ptr tragedy and the dual meaning of const)
+// * solution proposal
+// * value categories
+// * move operation
+// * overload explosion (of all T&/T&& combinations)
+// * perfect forwarding
+// * gotcha #1: Scott Meyer's "Universal References"
+// * gotcha #2: RVO & copy elision
+// * bonus material: emplace & make_shared
+// * take-away review
 
 #include <iostream>
 #include <vector>
@@ -127,7 +143,7 @@ int main(int argc, char** argv)
     std::cout << "\ntest1" << std::endl;
     {
         f(the_a); // lvalue reference prefers "A&"
-        f(g());   // rvalue reference prefers "const A&" over "A&"
+        f(g());   // rvalue reference links to "const A&", but not "A&" (why write to a temporary? that's what rvalue ref is for!)
     }
 
     std::cout << "\ntest2" << std::endl;
@@ -138,8 +154,8 @@ int main(int argc, char** argv)
 
     std::cout << "\ntest3" << std::endl;
     {
-        f2_forward(the_a); // preserves rvalueness despite rvalue collapse rule
-        f2_forward(g());   // preserves rvalueness despite rvalue collapse rule
+        f2_forward(the_a); // preserves rvalueness despite rvalue collapse rule (T& + T&& ==> T&)
+        f2_forward(g());   // preserves rvalueness despite rvalue collapse rule (T& + T&& ==> T&)
     }
 
     std::cout << "\ntest4" << std::endl;

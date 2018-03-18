@@ -45,9 +45,23 @@ public:
 //=============================================================================
 // auto_ptr
 
-//std::auto_ptr<Foo> f()
+//std::auto_ptr<Foo> rhs_auto_ptr()
 //{
 //    return std::auto_ptr<Foo>(new Foo);
+//}
+//
+//void lhs_auto_ptr(const std::auto_ptr<Foo>& other)
+//{
+//    std::cout << "\terror: binding ‘const std::auto_ptr<Foo>’ to reference of type ‘std::auto_ptr<Foo>&’ discards qualifiers" << std::endl;
+//    //std::auto_ptr<Foo> tmp = other;
+//
+//    std::cout << "\terror: no matching function for call to ‘std::auto_ptr<Foo>::auto_ptr(const std::auto_ptr<Foo>&)’" << std::endl;
+//    //const std::auto_ptr<Foo> tmp2 = other;
+//}
+//
+//void test_auto_ptr()
+//{
+//    lhs_auto_ptr(rhs_auto_ptr());
 //}
 
 //=============================================================================
